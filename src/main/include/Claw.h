@@ -34,10 +34,8 @@ class Claw
     void ChangeClawState( ClawState_t ClawState );
     void manualControl( double speedL, double speedR );
     void UpdateSmartDashboardData();
-    void UpdateRoll( double roll );
 
  private:
-   
 
     static constexpr double kMaxClawHeight = 2.9e5;
 
@@ -45,6 +43,3 @@ class Claw
 
 
 };
-/*doalways: AmogusDance
-fofever: AmogusDanceBigFunny
-never: AmogusDanceStopBeFunny*/

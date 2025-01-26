@@ -5,7 +5,7 @@
 
 
 
-void Climber::initClimber()
+void Climber::Init()
 {
    
 }
@@ -16,14 +16,8 @@ void Climber::manualControl( double speedL, double speedR )
     
 }
 
-void Climber::UpdateRoll( double roll )
-{
-    
-}
-
-
 void Climber::updateClimber()
-{ /*Is that freddy five bear? Hor hor hor hor hor*/ 
+{
    
 }
 

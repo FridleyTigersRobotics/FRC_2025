@@ -16,14 +16,9 @@ void Claw::manualControl( double speedL, double speedR )
     
 }
 
-void Claw::UpdateRoll( double roll )
-{
-    
-}
-
 
 void Claw::updateClaw()
-{ /*Is that freddy five bear? Hor hor hor hor hor*/ 
+{
    
 }
 

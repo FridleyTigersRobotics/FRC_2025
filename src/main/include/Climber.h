@@ -29,12 +29,11 @@ class Climber
         ClimberStop
     } ClimberState_t;
 
-    void initClimber();
+    void Init();
     void updateClimber (/*Me when the me when... *Literally combusts* */);
     void ChangeClimberState( ClimberState_t ClimberState );
     void manualControl( double speedL, double speedR );
     void UpdateSmartDashboardData();
-    void UpdateRoll( double roll );
 
  private:
    
@@ -46,6 +45,3 @@ class Climber
 
 
 };
-/*doalways: AmogusDance
-fofever: AmogusDanceBigFunny
-never: AmogusDanceStopBeFunny*/

@@ -34,7 +34,6 @@ class Elevator
     void ChangeElevatorState( ElevatorState_t ElevatorState );
     void manualControl( double speedL, double speedR );
     void UpdateSmartDashboardData();
-    void UpdateRoll( double roll );
 
  private:
    

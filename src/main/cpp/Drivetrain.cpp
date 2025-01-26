@@ -9,39 +9,57 @@
 
 void Drivetrain::updateDrivetrain( units::second_t period, bool fieldRelative ) 
 {
+  frc::ChassisSpeeds ChassisSpeedsToUse;
   m_frontLeft.UpdateEncoders();
   m_frontRight.UpdateEncoders();
   m_backLeft.UpdateEncoders();
   m_backRight.UpdateEncoders();
 
-  frc::ChassisSpeeds FieldRelativeChassisSpeeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-    m_xSpeed, 
-    m_ySpeed, 
-    m_rot, 
-   frc::Rotation2d{units::degree_t { 0/*-GetYaw()*/ }}
-  );
-  frc::ChassisSpeeds RobotRelativeChassisSpeeds = frc::ChassisSpeeds{m_xSpeed, m_ySpeed, m_rot};
-
-   frc::ChassisSpeeds ChassisSpeedsToUse = fieldRelative ? FieldRelativeChassisSpeeds : RobotRelativeChassisSpeeds;
+  if ( fieldRelative )
+  {
+    ChassisSpeedsToUse = \
+      frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+        m_xSpeed, 
+        m_ySpeed, 
+        m_rot, 
+        frc::Rotation2d{ units::degree_t { 0/*-GetYaw()*/ }}
+      );
+  }
+  else
+  {
+    ChassisSpeedsToUse = frc::ChassisSpeeds{ m_xSpeed, m_ySpeed, m_rot };
+  }
 
   frc::ChassisSpeeds ChassisSpeeds = frc::ChassisSpeeds::Discretize( ChassisSpeedsToUse, period );
-  //UpdateOdometry();
+  UpdateOdometry();
   auto states = m_kinematics.ToSwerveModuleStates( ChassisSpeeds );
 
   m_kinematics.DesaturateWheelSpeeds( &states, kMaxSpeed );
 
   auto [fl, fr, bl, br] = states;
 
-  // Check if the wheels don't have a drive velocity to maintain the current wheel orientation.
-  bool hasVelocity = fl.speed != 0_mps || fr.speed != 0_mps || bl.speed != 0_mps || br.speed != 0_mps;
+  
+  //double minimumSpeed = 0.01;
 
-  /*if ( !hasVelocity )
+  // Check if the wheels don't have a drive velocity to maintain the current wheel orientation.
+  bool hasVelocity = true;/*
+    fabs( double{fl.speed} ) <= minimumSpeed || 
+    fabs( double{fr.speed} ) <= minimumSpeed || 
+    fabs( double{bl.speed} ) <= minimumSpeed || 
+    fabs( double{br.speed} ) <= minimumSpeed;*/
+
+  frc::SmartDashboard::PutNumber( "fl.speed", double{fl.speed} );
+  frc::SmartDashboard::PutNumber( "fr.speed", double{fr.speed} );
+  frc::SmartDashboard::PutNumber( "bl.speed", double{bl.speed} );
+  frc::SmartDashboard::PutNumber( "br.speed", double{br.speed} );
+
+  if ( !hasVelocity )
   {
     fl.angle = m_frontLeft.GetState().angle;
     fr.angle = m_frontRight.GetState().angle;
     bl.angle = m_backLeft.GetState().angle;
     br.angle = m_backRight.GetState().angle;
-  }*/
+  }
 
   m_frontLeft.SetDesiredState(fl);
   m_frontRight.SetDesiredState(fr);
@@ -83,14 +101,14 @@ void Drivetrain::UpdateSmartDashboardData()
   #endif
 }
 
-/*
+
 void Drivetrain::UpdateOdometry() {
-  m_odometry.Update(frc::Rotation2d{units::degree_t{GetYaw()}},
-                    {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
-                     m_backLeft.GetPosition(), m_backRight.GetPosition()});
+  m_odometry.Update( frc::Rotation2d{ units::degree_t{ GetYaw() } },
+                    { m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
+                      m_backLeft.GetPosition(), m_backRight.GetPosition()});
 }
-*/
-void Drivetrain::Driveinit(){
+
+void Drivetrain::Init(){
   //m_YawOffset=0;
   //m_imu.ZeroYaw();
   //m_imu.Reset();

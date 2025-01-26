@@ -14,42 +14,10 @@
 #include <cameraserver/CameraServer.h>
 
 
-#if NEW_AUTO_CHOOSER
-std::vector<std::string> AutoModeNames = {
-    "DO NOTHING",
-    "Drive",
-    "ShootCenter",
-    "ShootCenterPickupCenter",
-    "ShootLeftPickupLeft",
-    "ShootRightPickupRight",
-    "CenterShootRun",
-    "ShootRightPickupRightTest",
-    "ShootLeftPickupLeftTest",
-    "ShootRunLeft"
-};
-
-std::string Robot::TranslateAutoModeToAutoString( uint32_t autoModeInt ) {
-    std::string autoString = kAutoNameDefault;
-    
-    if ( autoModeInt < AutoModeNames.size() )
-    {
-      autoString = AutoModeNames[autoModeInt];
-    }
-
-    return autoString;
-}
-
-#endif
 
  void Robot::AutonomousInit() {
    
-  #if NEW_AUTO_CHOOSER
-    m_autoSelectedInteger = frc::SmartDashboard::GetNumber("AutoModeInt", 0 );
-    fmt::print("Auto selected integer: {}\n", m_autoSelectedInteger);
-    m_autoSelected = TranslateAutoModeToAutoString( m_autoSelectedInteger );
-  #else
     m_autoSelected = m_autoChooser.GetSelected();
-  #endif
 
     fmt::print("Auto selected: {}\n", m_autoSelected);
 
@@ -57,40 +25,6 @@ std::string Robot::TranslateAutoModeToAutoString( uint32_t autoModeInt ) {
     {
       autoSequence = &Auto_Drive;
     }
-    else if (m_autoSelected == kShootCenter) 
-    {
-      autoSequence = &Auto_ShootCenter;
-    }
-    else if (m_autoSelected == kShootCenterPickupCenter) 
-    {
-      autoSequence = &Auto_ShootCenterPickupCenter;
-    }
-     else if (m_autoSelected == kShootLeftPickupLeft) 
-    {
-      autoSequence = &ShootLeftPickupLeft;
-    }
-     else if (m_autoSelected == kShootRightPickupRight) 
-    {
-      autoSequence = &ShootRightPickupRight;
-    }
-     else if (m_autoSelected == kCenterShootRun) 
-    {
-      autoSequence = &Auto_CenterShootRun;
-    }
-    else if (m_autoSelected == kShootRightPickupRightTest) 
-    {
-      autoSequence = &ShootRightPickupRightTest;
-    }
-    else if (m_autoSelected == kShootLeftPickupLeftTest) 
-    {
-      autoSequence = &ShootLeftPickupLeftTest;
-    }
-     else if (m_autoSelected == kShootRunLeft) 
-    {
-      autoSequence = &Auto_ShootRunLeft;
-    }
-
-
 
     AutonomousStateInit();
     m_autoStateDone = false; 
@@ -138,9 +72,6 @@ void Robot::AutoAngle(double AngleCrap) {
   m_Drivetrain.m_YawOffset    = -AngleCrap;
   m_DriveTargetAngle          = -AngleCrap;
   m_autoStateDone = true;
-
-
-  //Goal(facing away)=the current angle (if right (-1*120) jf left (+120))
 }
 
 
@@ -166,58 +97,6 @@ void Robot::Drivetrain_Stop() {
   
 }
 
-
-void Robot::MoveArmForPickup()
-{
- 
- 
-  m_autoStateDone = true;
-}
-
-void Robot::MoveArmForShooting()
-{
- 
-
-  if ( m_autoTimer.Get() > 1.0_s )
-  {
-    
-    m_autoStateDone = true;
-  }
-}
-
-
-
-void Robot::AimAndPrepShoot( units::second_t maxTime )
-{
-  
-  //Drive for distance using the limlight aiming. We can use the same thing as we do in tele-op?
-  //Yoink the variables from teleop in robot? hmm...
-  
-  
-
-
-  {
-    m_autoStateDone = true;
-  }
-#if 0
-
-  double angleToTurnTo = tx / 180.0 * (std::numbers::pi*2);
-
-  DriveForDistance( 0.0_m, 0.0_m, angleToTurnTo );
-  m_autoStateDone = true;
-#endif
-}
-
-void Robot::Shoot( units::second_t maxTime )
-{
- 
-
-  if ( m_autoTimer.Get() > maxTime )
-  {
-   
-    m_autoStateDone = true;
-  }
-}
 
 
 void Robot::Wait( units::second_t maxTime )

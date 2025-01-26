@@ -59,8 +59,6 @@ class OldAnalogEncoder :
 
 
 
-
-
 class SwerveModule {
  public:
   SwerveModule(
@@ -77,16 +75,14 @@ class SwerveModule {
   void UpdateEncoders();
 
  private:
- std::string m_name;
- std::string m_driveSpeedName;
- std::string m_driveAngleName;
- std::string m_driveRawAngleName;
-  static constexpr double kWheelRadius = 0.0508;
-  static constexpr int kEncoderResolution = 4096;
-
-
+  SparkMax m_driveMotor;
+  SparkMax m_turningMotor;
+  OldAnalogEncoder m_turningEncoder;
+  std::string m_driveSpeedName;
+  std::string m_driveAngleName;
+  std::string m_driveRawAngleName;
   units::meters_per_second_t m_maxSpeed{ 0.0 };
-
+  SparkRelativeEncoder m_driveEncoder;
 
   static constexpr auto kModuleMaxAngularVelocity =
       std::numbers::pi * 100_rad_per_s;  // radians per second
@@ -94,21 +90,15 @@ class SwerveModule {
   static constexpr auto kModuleMaxAngularAcceleration =
       std::numbers::pi * 200_rad_per_s / 1_s;  // radians per second^2
 
-  SparkMax m_driveMotor;
-  SparkMax m_turningMotor;
+  static constexpr double m_metersPerInch     = 0.0254;
+  static constexpr double m_driveGearRatio    = 8.14; // Gear ratio of our SDS MK4 L1 module.
+  static constexpr double m_wheelDiameter     = 3.9;
+  static constexpr double m_positonConversionFactor = m_wheelDiameter * m_metersPerInch * std::numbers::pi / m_driveGearRatio;
 
-  int m_drivechannel;
-  std::string m_encodername;
-
-
-  SparkRelativeEncoder m_driveEncoder = m_driveMotor.GetEncoder();
-  OldAnalogEncoder m_turningEncoder;
-//Line fourty-nine??? That's CRAZY
   frc::ProfiledPIDController<units::radians> m_turningPIDController{
       1.0,
       0.0,
       0.0,
       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
 
-  double m_PositionConversionFactor;
 };

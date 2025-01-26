@@ -44,8 +44,8 @@ class Drivetrain {
     units::radians_per_second_t rot
     );
 
-  //void UpdateOdometry();
-  void Driveinit();
+  void UpdateOdometry();
+  void Init();
   void ResetYaw();
   void UpdateSmartDashboardData();
   double GetYaw();
