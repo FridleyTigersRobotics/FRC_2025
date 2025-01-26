@@ -4,29 +4,35 @@
 
 
 
-
+// ****************************************************************************
 void Climber::Init()
 {
    
 }
 
-void Climber::manualControl( double speedL, double speedR )
-{
 
+// ****************************************************************************
+void Climber::ManualControl( )
+{
     
 }
 
-void Climber::updateClimber()
+
+// ****************************************************************************
+void Climber::Update()
 {
    
 }
 
-void Climber::ChangeClimberState( ClimberState_t ClimberState )
+
+// ****************************************************************************
+void Climber::ChangeState( ClimberState_t state )
 {
    
 }
 
 
+// ****************************************************************************
 void Climber::UpdateSmartDashboardData( )
 {
 

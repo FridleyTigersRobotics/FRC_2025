@@ -90,23 +90,23 @@ void SwerveModule::UpdateEncoders()
 
 
 void SwerveModule::SetDesiredState(
-  const frc::SwerveModuleState& referenceState
+  frc::SwerveModuleState& referenceState
 ) 
 {
   frc::Rotation2d encoderRotation{units::radian_t{m_turningEncoder.GetDistance()}};
-  // Optimize the reference state to avoid spinning further than 90 degrees
-  auto state = frc::SwerveModuleState::Optimize(referenceState, encoderRotation);
 
+  // Optimize the reference state to avoid spinning further than 90 degrees
+  referenceState.Optimize( encoderRotation );
   // Scale speed by cosine of angle error. This scales down movement
   // perpendicular to the desired direction of travel that can occur when
   // modules change directions. This results in smoother driving.
-  state.speed *= ( state.angle - encoderRotation ).Cos();
+  referenceState.speed *= ( referenceState.angle - encoderRotation ).Cos();
 
   // Calculate the turning motor output from the turning PID controller.
   const auto turnOutput = m_turningPIDController.Calculate(
-      units::radian_t{m_turningEncoder.GetDistance() }, state.angle.Radians());
+      units::radian_t{m_turningEncoder.GetDistance() }, referenceState.angle.Radians());
   
-  double driveMotorOutput = double{ state.speed.value() / m_maxSpeed };
+  double driveMotorOutput = double{ referenceState.speed.value() / m_maxSpeed };
 
   // Set the motor outputs.
   m_driveMotor.Set( driveMotorOutput );

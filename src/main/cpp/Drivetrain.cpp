@@ -7,7 +7,7 @@
 #include <fmt/printf.h>
 #include <math.h>
 
-void Drivetrain::updateDrivetrain( units::second_t period, bool fieldRelative ) 
+void Drivetrain::Update( units::second_t period, bool fieldRelative ) 
 {
   frc::ChassisSpeeds ChassisSpeedsToUse;
   m_frontLeft.UpdateEncoders();

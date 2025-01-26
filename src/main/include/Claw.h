@@ -13,12 +13,6 @@
 #include "units/angular_acceleration.h"
 
 
-#define Claw_MANUAL_CONTROL       ( 0 )
-#define Claw_ENCODER_SYNC_ENABLED ( 0 )
-#define Claw_ENCODER_SYNC_TRACK_L ( 0 )
-#define Claw_GYRO_ENABLED         ( 0 )
-
-
 class Claw
 {
  public:
@@ -29,17 +23,12 @@ class Claw
         ClawStop
     } ClawState_t;
 
-    void initClaw();
-    void updateClaw (/*Me when the me when... *Literally combusts* */);
-    void ChangeClawState( ClawState_t ClawState );
-    void manualControl( double speedL, double speedR );
+    void Init();
+    void Update();
+    void ChangeState( ClawState_t state );
+    void ManualControl();
     void UpdateSmartDashboardData();
 
  private:
-
-    static constexpr double kMaxClawHeight = 2.9e5;
-
-  
-
 
 };

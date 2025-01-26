@@ -2,29 +2,36 @@
 #include <Elevator.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-
-void Elevator::initElevator()
+// ****************************************************************************
+void Elevator::Init()
 {
    
 }
 
-void Elevator::updateElevator()
+
+// ****************************************************************************
+void Elevator::Update()
 {
    
 }
 
-void Elevator::ChangeElevatorState( ElevatorState_t ElevatorState )
+
+// ****************************************************************************
+void Elevator::ChangeState( ElevatorState_t state )
 {
    
 }
 
+
+// ****************************************************************************
 void Elevator::UpdateSmartDashboardData( )
 {
 
 }
 
 
-void Elevator::manualControl( double speedL, double speedR )
+// ****************************************************************************
+void Elevator::ManualControl( )
 {
 
 }

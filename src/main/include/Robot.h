@@ -8,10 +8,6 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <Phoenix5.h>
-#include <Drivetrain.h>
-
-#include <Climber.h>
-
 #include <units/angular_velocity.h>
 #include <units/time.h>
 #include <units/velocity.h>
@@ -19,6 +15,11 @@
 #include <units/voltage.h>
 #include "units/angular_acceleration.h"
 
+// Subsystems
+#include <Drivetrain.h>
+#include <Climber.h>
+#include <Elevator.h>
+#include <Claw.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -66,6 +67,8 @@ class Robot : public frc::TimedRobot {
     // Subsystems
     Drivetrain m_Drivetrain;
     Climber    m_Climber;
+    Elevator   m_Elevator;
+    Claw       m_Claw;
    
 
     bool m_controlModeEndGame = false; // Switches co-controller to end game mode

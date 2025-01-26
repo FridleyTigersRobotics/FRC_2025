@@ -62,7 +62,8 @@ void Robot::TeleopInit()
   // Initialize Subsystems
   m_Drivetrain.Init();
   m_Climber.Init();
-
+  m_Elevator.Init();
+  m_Claw.Init();
 }
 
 
@@ -113,7 +114,10 @@ void Robot::TeleopPeriodic()
 
   
   // Update all subsystems
-  m_Drivetrain.updateDrivetrain( GetPeriod(), m_fieldRelative );
+  m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
+  m_Climber.Update();
+  m_Elevator.Update();
+  m_Claw.Update();
 }
 
 

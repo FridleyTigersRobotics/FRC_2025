@@ -13,12 +13,6 @@
 #include "units/angular_acceleration.h"
 
 
-#define Climber_MANUAL_CONTROL       ( 0 )
-#define Climber_ENCODER_SYNC_ENABLED ( 0 )
-#define Climber_ENCODER_SYNC_TRACK_L ( 0 )
-#define Climber_GYRO_ENABLED         ( 0 )
-
-
 class Climber
 {
  public:
@@ -30,18 +24,11 @@ class Climber
     } ClimberState_t;
 
     void Init();
-    void updateClimber (/*Me when the me when... *Literally combusts* */);
-    void ChangeClimberState( ClimberState_t ClimberState );
-    void manualControl( double speedL, double speedR );
+    void Update();
+    void ChangeState( ClimberState_t state );
+    void ManualControl();
     void UpdateSmartDashboardData();
 
  private:
-   
-
-
-    static constexpr double kMaxClimberHeight = 2.9e5;
-
-  
-
 
 };

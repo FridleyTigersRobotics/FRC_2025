@@ -4,32 +4,36 @@
 
 
 
-
-void Claw::initClaw()
+// ****************************************************************************
+void Claw::Init()
 {
    
 }
 
-void Claw::manualControl( double speedL, double speedR )
-{
 
+// ****************************************************************************
+void Claw::ManualControl()
+{
     
 }
 
 
-void Claw::updateClaw()
+// ****************************************************************************
+void Claw::Update()
 {
    
 }
 
-void Claw::ChangeClawState( ClawState_t ClawState )
+
+// ****************************************************************************
+void Claw::ChangeState( ClawState_t ClawState )
 {
  
 }
 
 
+// ****************************************************************************
 void Claw::UpdateSmartDashboardData( )
 {
 
-   
 }

@@ -33,10 +33,6 @@
     Drivetrain_Stop();
    
    
-   
-    m_Climber.ChangeClimberState( m_Climber.ClimberStop );
-    
-
     TeleopInit(); 
     m_fieldRelative = false;
     m_autoTimer.Stop();
@@ -56,9 +52,9 @@
     AutonomousStateUpdate();
     RunAutoSequence();
     
-    m_Drivetrain.updateDrivetrain( GetPeriod(), m_fieldRelative );
+    m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
     
-    m_Climber.updateClimber();
+    m_Climber.Update();
     
    
     

@@ -30,7 +30,7 @@ class Drivetrain {
   //double m_DriveTargetAngle = 0;
   Drivetrain() {m_imu.ResetDisplacement(); }
 
-  void updateDrivetrain( units::second_t period, bool fieldRelative );
+  void Update( units::second_t period, bool fieldRelative );
 
   void SetSpeeds(
     units::meters_per_second_t  xSpeed,

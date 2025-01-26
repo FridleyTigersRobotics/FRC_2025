@@ -13,12 +13,6 @@
 #include "units/angular_acceleration.h"
 
 
-#define Elevator_MANUAL_CONTROL       ( 0 )
-#define Elevator_ENCODER_SYNC_ENABLED ( 0 )
-#define Elevator_ENCODER_SYNC_TRACK_L ( 0 )
-#define Elevator_GYRO_ENABLED         ( 0 )
-
-
 class Elevator
 {
  public:
@@ -29,10 +23,10 @@ class Elevator
         ElevatorStop
     } ElevatorState_t;
 
-    void initElevator();
-    void updateElevator (/*Me when the me when... *Literally combusts* */);
-    void ChangeElevatorState( ElevatorState_t ElevatorState );
-    void manualControl( double speedL, double speedR );
+    void Init();
+    void Update();
+    void ChangeState( ElevatorState_t state );
+    void ManualControl();
     void UpdateSmartDashboardData();
 
  private:
