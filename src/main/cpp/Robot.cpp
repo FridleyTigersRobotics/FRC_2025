@@ -78,6 +78,7 @@ void Robot::TeleopPeriodic()
   double DriveX = frc::ApplyDeadband( m_driveController.GetLeftY(), DriveDeadband );
   double DriveY = frc::ApplyDeadband( m_driveController.GetLeftX(), DriveDeadband );
 
+#if 0
   double y     = m_driveController.GetRightY();
   double x     = m_driveController.GetRightX();
   double mag   = sqrt( x * x + y * y );
@@ -94,6 +95,14 @@ void Robot::TeleopPeriodic()
 
   double driveRotSpeedUnClamped = m_DriveRotatePid.Calculate( m_Drivetrain.GetYaw() );
   double driveRotSpeed          = std::clamp( driveRotSpeedUnClamped, -0.5, 0.5 );
+  // Get the rate of angular rotation. We are inverting this.
+  const auto rotationSpeed = ( m_DriveRotatePid.GetError() > 3.0 ) ? ( driveRotSpeed * Drivetrain::kMaxAngularSpeed ) : ( units::radians_per_second_t{0.0} );
+
+#else
+  double driveRotSpeed = frc::ApplyDeadband( m_driveController.GetRightX(), DriveDeadband );
+  const auto rotationSpeed = driveRotSpeed * Drivetrain::kMaxAngularSpeed;
+#endif
+
 
   // Get the x speed. We are inverting this because Xbox controllers return
   // negative values when we push forward.
@@ -104,8 +113,7 @@ void Robot::TeleopPeriodic()
   // return positive values when you pull to the right by default.
   const auto ySpeed = DriveY * Drivetrain::kMaxSpeed;
 
-  // Get the rate of angular rotation. We are inverting this.
-  const auto rotationSpeed = ( m_DriveRotatePid.GetError() > 5 ) ? ( driveRotSpeed * Drivetrain::kMaxAngularSpeed ) : ( units::radians_per_second_t{0.0} );
+
 
   frc::SmartDashboard::PutNumber( "xSpeed", double{xSpeed} );
   frc::SmartDashboard::PutNumber( "ySpeed", double{ySpeed} );
@@ -124,8 +132,6 @@ void Robot::TeleopPeriodic()
 
 #ifndef RUNNING_FRC_TESTS
 int main() {
- 
   return frc::StartRobot<Robot>();
-
 }
 #endif
