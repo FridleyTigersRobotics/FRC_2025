@@ -72,7 +72,7 @@ class Robot : public frc::TimedRobot {
    
 
     bool m_controlModeEndGame = false; // Switches co-controller to end game mode
-    bool m_fieldRelative      = false;
+    bool m_fieldRelative      = true;
 
     frc::SlewRateLimiter<units::scalar> m_xspeedLimiter{2 / 1_s};
     frc::SlewRateLimiter<units::scalar> m_yspeedLimiter{2 / 1_s};
@@ -80,6 +80,7 @@ class Robot : public frc::TimedRobot {
 
     frc::Pose2d m_initialPose;
 
+    float Angle = 0;
 
     double m_xyDirP      = 1.000;  
     double m_rotP        = 1.000;  
@@ -187,6 +188,14 @@ class Robot : public frc::TimedRobot {
     [this] (void) -> void { DriveForDistance( -2.0_m, 0.0_m, 0.0_rad, 0.5_mps, 0.0_mps, 0.0_rad_per_s, 5.0_s ); },
     [this] (void) -> void { Drivetrain_Stop(); },
   };
+
+/*  This is garbage. please don't use. Explanation for Anyssa
+    std::vector<std::function<void(void)>> Auto_Drive = {
+    [this] (void) -> void { AutoAngle( 15 ); },
+    [this] (void) -> void { DriveForDistance( -2.0_m, 0.0_m, 0.0_rad, 0.5_mps, 0.0_mps, 0.0_rad_per_s, 5.0_s ); },
+    [this] (void) -> void { Drivetrain_Stop(); },
+  };
+*/
 
   std::vector<std::function<void(void)>> *autoSequence{ &defaultAutoSequence };
 

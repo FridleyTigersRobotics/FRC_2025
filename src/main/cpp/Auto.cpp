@@ -34,7 +34,7 @@
    
    
     TeleopInit(); 
-    m_fieldRelative = false;
+    m_fieldRelative = true;
     m_autoTimer.Stop();
     m_autoTimer.Reset();
     m_autoTimer.Start();

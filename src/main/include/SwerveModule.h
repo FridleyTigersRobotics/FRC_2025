@@ -92,7 +92,7 @@ class SwerveModule {
 
   static constexpr double m_metersPerInch     = 0.0254;
   static constexpr double m_driveGearRatio    = 8.14; // Gear ratio of our SDS MK4 L1 module.
-  static constexpr double m_wheelDiameter     = 3.9;
+  static constexpr double m_wheelDiameter     = 4.0;
   static constexpr double m_positonConversionFactor = m_wheelDiameter * m_metersPerInch * std::numbers::pi / m_driveGearRatio;
 
   frc::ProfiledPIDController<units::radians> m_turningPIDController{

@@ -7,6 +7,7 @@
 #include <fmt/printf.h>
 #include <math.h>
 
+
 void Drivetrain::Update( units::second_t period, bool fieldRelative ) 
 {
   frc::ChassisSpeeds ChassisSpeedsToUse;
@@ -22,7 +23,7 @@ void Drivetrain::Update( units::second_t period, bool fieldRelative )
         m_xSpeed, 
         m_ySpeed, 
         m_rot, 
-        frc::Rotation2d{ units::degree_t { 0/*-GetYaw()*/ }}
+        frc::Rotation2d{ units::degree_t { GetYaw() }}
       );
   }
   else
@@ -65,6 +66,7 @@ void Drivetrain::Update( units::second_t period, bool fieldRelative )
   m_frontRight.SetDesiredState(fr);
   m_backLeft.SetDesiredState(bl);
   m_backRight.SetDesiredState(br);
+  UpdateSmartDashboardData();
 }
 
 
@@ -94,10 +96,11 @@ void Drivetrain::AddToSpeeds(
 
 void Drivetrain::UpdateSmartDashboardData()
 {
-  #if 0
-  frc::SmartDashboard::PutNumber( "Drive_X", double{m_odometry.GetPose().X()} );
-  frc::SmartDashboard::PutNumber( "Drive_y", double{m_odometry.GetPose().Y()} );
-  frc::SmartDashboard::PutNumber( "Drive_Rot", double{m_odometry.GetPose().Rotation().Degrees()} );
+  #if 1
+  frc::SmartDashboard::PutNumber( "Drive_X", double{m_odometry.GetPose().X()});
+  frc::SmartDashboard::PutNumber( "Drive_y", double{m_odometry.GetPose().Y()});
+  frc::SmartDashboard::PutNumber( "Drive_Rot", double{m_odometry.GetPose().Rotation().Degrees()});
+  frc::SmartDashboard::PutNumber( "Yawby bobby", m_imu.GetYaw());
   #endif
 }
 
@@ -109,27 +112,20 @@ void Drivetrain::UpdateOdometry() {
 }
 
 void Drivetrain::Init(){
-  //m_YawOffset=0;
-  //m_imu.ZeroYaw();
-  //m_imu.Reset();
 }
 
 void Drivetrain::ResetYaw()
 {
-  double currentAngle = m_imu.GetAngle() + m_YawOffset;
-  double unwrappedAngle = std::remainder( currentAngle, 360.0 );
-  m_YawOffset=unwrappedAngle;
-  m_imu.ZeroYaw();
-  m_imu.Reset();
+
 }
 
 
 
 double Drivetrain::GetYaw(){
-  return ((m_imu.GetYaw()) + m_YawOffset);
+  return m_imu.GetYaw()*.9695;
 }
 
 
 double Drivetrain::GetAngle(){
-  return ((m_imu.GetAngle()) + m_YawOffset);
+  return m_imu.GetAngle();
 }

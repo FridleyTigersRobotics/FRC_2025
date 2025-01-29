@@ -1,7 +1,23 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+/*
+~~~~~Steps 2 field orientation~~~~~~
+1)Reset
+Starting offset is set from auto
+Current=0, AngleChanged=0
 
+2) Variables
+void awake()
+{
+Current angle Starting offset
+}
+- Angle changed
+  +-|Current angle-Target angle|
+
+3)when drive
+- the when the wheel-AngleChanged???
+*/
 #include <Robot.h>
 #include <frc/MathUtil.h>
 #include <frc/TimedRobot.h>
@@ -22,6 +38,7 @@
 // ****************************************************************************
 void Robot::RobotInit()
 {
+  Angle=0;
   m_Drivetrain.m_imu.Reset();
   frc::CameraServer::StartAutomaticCapture();
   // Autonomous Chooser
@@ -52,7 +69,7 @@ void Robot::TeleopInit()
 
   m_DriveRotatePid.EnableContinuousInput(-180, 180);
 
-  m_fieldRelative = false;
+  m_fieldRelative = true;
 
 
 
@@ -112,9 +129,15 @@ void Robot::TeleopPeriodic()
   // we want a positive value when we pull to the left. Xbox controllers
   // return positive values when you pull to the right by default.
   const auto ySpeed = DriveY * Drivetrain::kMaxSpeed;
+//Eli's dumbass spaghetti code for field oriented
+  Angle=m_Drivetrain.Drivetrain::GetYaw();
+/*
 
+Set Angle to Angle+(How much we're turning times -1)
+-AngleCrap is the thing from the auto chooser.
+Rotate wheels to where they're supposed to be offset by Angle
 
-
+*/
   frc::SmartDashboard::PutNumber( "xSpeed", double{xSpeed} );
   frc::SmartDashboard::PutNumber( "ySpeed", double{ySpeed} );
 

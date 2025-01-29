@@ -51,7 +51,7 @@ class Drivetrain {
   double GetYaw();
   double GetAngle();
   static constexpr units::meters_per_second_t kMaxSpeed =
-      1.0_mps;  // 3 meters per second
+      0.2_mps;  // 3 meters per second
 
 
   static constexpr units::radians_per_second_t kMaxAngularSpeed{
