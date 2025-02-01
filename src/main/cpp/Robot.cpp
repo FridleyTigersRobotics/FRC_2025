@@ -1,23 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-/*
-~~~~~Steps 2 field orientation~~~~~~
-1)Reset
-Starting offset is set from auto
-Current=0, AngleChanged=0
 
-2) Variables
-void awake()
-{
-Current angle Starting offset
-}
-- Angle changed
-  +-|Current angle-Target angle|
-
-3)when drive
-- the when the wheel-AngleChanged???
-*/
 #include <Robot.h>
 #include <frc/MathUtil.h>
 #include <frc/TimedRobot.h>
@@ -68,7 +52,7 @@ void Robot::TeleopInit()
 
   m_DriveRotatePid.EnableContinuousInput(-180, 180);
 
-  m_fieldRelative = false;
+  m_fieldRelative = true;
   Angle=0;
 
   m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
@@ -93,25 +77,66 @@ void Robot::TeleopPeriodic()
   double DriveX = frc::ApplyDeadband( m_driveController.GetLeftY(), DriveDeadband );
   double DriveY = frc::ApplyDeadband( m_driveController.GetLeftX(), DriveDeadband );
 
-#if 0
+
+#if 1
+
   double y     = m_driveController.GetRightY();
   double x     = m_driveController.GetRightX();
   double mag   = sqrt( x * x + y * y );
-  double angle = ((atan2( x , y ) * 180 / std::numbers::pi) +180) * -1;
+  double angle = ((atan2( x , y ) * 180 / std::numbers::pi) +180);
 
   frc::SmartDashboard::PutNumber( "InputAngle", double{angle} );
-
-  if( mag > 0.9 )
+  frc::SmartDashboard::PutNumber( "InputMag", double{mag} );
+  if( mag > 0.8 )
   {
     m_DriveTargetAngle = angle;
     m_DriveRotatePid.SetSetpoint( m_DriveTargetAngle );
   }
 
 
-  double driveRotSpeedUnClamped = m_DriveRotatePid.Calculate( m_Drivetrain.GetYaw() );
-  double driveRotSpeed          = std::clamp( driveRotSpeedUnClamped, -0.5, 0.5 );
+  double driveRotSpeedUnClamped = m_DriveRotatePid.Calculate( m_Drivetrain.GetAngle() );
+  double driveRotSpeed          = std::clamp( driveRotSpeedUnClamped, -1.0, 1.0 );
   // Get the rate of angular rotation. We are inverting this.
-  const auto rotationSpeed = ( m_DriveRotatePid.GetError() > 3.0 ) ? ( driveRotSpeed * Drivetrain::kMaxAngularSpeed ) : ( units::radians_per_second_t{0.0} );
+  const auto rotationSpeedUnClamped = ( m_DriveRotatePid.GetError() > 5.0 ) ? ( driveRotSpeed * ( units::radians_per_second_t{0.0} ) ) : ( units::radians_per_second_t{0.0} );
+  const auto rotationSpeed =  driveRotSpeedUnClamped * Drivetrain::kMaxAngularSpeed;
+
+  frc::SmartDashboard::PutNumber( "Err.", m_DriveRotatePid.GetError());
+  frc::SmartDashboard::PutNumber( "controler_mag",   mag );
+  frc::SmartDashboard::PutNumber( "controler_angle", angle );
+
+  if( mag > 0.9 )
+  {
+    targetWrappedAngle = angle;
+    angleChanged       = true;
+  }
+
+  if ( angleChanged )
+  {
+    double unwrappedRobotAngle = m_Drivetrain.GetAngle();
+    double wrappedRobotAngle   = m_Drivetrain.GetYaw();
+    double angleDelta = targetWrappedAngle - wrappedRobotAngle;
+    if ( angleDelta > 180 )
+    {
+      angleDelta -= 360;
+    }
+    if ( angleDelta <= -180 )
+    {
+      angleDelta += 360;
+    }
+
+    m_DriveTargetAngle = unwrappedRobotAngle + angleDelta;
+  frc::SmartDashboard::PutNumber( "HEADING_unwrappedRobotAngle",       unwrappedRobotAngle);
+  frc::SmartDashboard::PutNumber( "HEADING_angleDelta",       angleDelta);
+
+
+
+
+
+
+
+
+
+
 
 #else
   double driveRotSpeed = frc::ApplyDeadband( m_driveController.GetRightX(), DriveDeadband );
@@ -128,7 +153,7 @@ void Robot::TeleopPeriodic()
   // return positive values when you pull to the right by default.
   const auto ySpeed = DriveY * Drivetrain::kMaxSpeed;
 //Eli's dumbass spaghetti code for field oriented
-if (Angle != 0 && Angle != m_Drivetrain.Drivetrain::m_imu.GetAngle())
+/*if (Angle != 0 && Angle != m_Drivetrain.Drivetrain::m_imu.GetAngle())
 {
   DumbAssOffset + (Angle-m_Drivetrain.Drivetrain::m_imu.GetAngle());
   Angle = m_Drivetrain.Drivetrain::m_imu.GetAngle();
@@ -136,7 +161,7 @@ if (Angle != 0 && Angle != m_Drivetrain.Drivetrain::m_imu.GetAngle())
 else
 {
   Angle = m_Drivetrain.Drivetrain::m_imu.GetAngle();
-}
+}*/
 
 /*
 
@@ -156,12 +181,14 @@ Rotate wheels to where they're supposed to be offset by Angle
   m_Climber.Update();
   m_Elevator.Update();
   m_Claw.Update();
-}
+  }
+  }
 
 
 
 #ifndef RUNNING_FRC_TESTS
-int main() {
+int main()
+{
   return frc::StartRobot<Robot>();
 }
 #endif

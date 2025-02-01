@@ -20,9 +20,12 @@
 #include <Climber.h>
 #include <Elevator.h>
 #include <Claw.h>
+#include "LimelightHelpers.h"
 
 class Robot : public frc::TimedRobot {
  public:
+    double targetWrappedAngle = 0;
+    bool angleChanged = false;
     float Angle = 0;
     float DumbAssOffset = 0;
     void RobotInit() override;
@@ -71,7 +74,7 @@ class Robot : public frc::TimedRobot {
     Climber    m_Climber;
     Elevator   m_Elevator;
     Claw       m_Claw;
-   
+    
 
     bool m_controlModeEndGame = false; // Switches co-controller to end game mode
     bool m_fieldRelative      = true;
@@ -126,7 +129,7 @@ class Robot : public frc::TimedRobot {
     };
 
     double m_DriveTargetAngle = 0;
-    double m_RotP = 0.05;
+    double m_RotP = 0.0001;
 
     frc::PIDController m_DriveRotatePid{
       m_RotP,
