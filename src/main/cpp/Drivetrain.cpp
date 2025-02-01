@@ -22,17 +22,17 @@ void Drivetrain::Update( units::second_t period, bool fieldRelative )
       frc::ChassisSpeeds::FromFieldRelativeSpeeds(
         m_xSpeed, 
         m_ySpeed, 
-        m_rot, 
-        frc::Rotation2d{ units::degree_t { GetYaw() }}
+        m_rot,
+        frc::Rotation2d{ units::degree_t { -GetYaw() }}
       );
   }
   else
   {
     ChassisSpeedsToUse = frc::ChassisSpeeds{ m_xSpeed, m_ySpeed, m_rot };
   }
-
+        frc::SmartDashboard::PutNumber("THE ROT", float{m_rot});
   frc::ChassisSpeeds ChassisSpeeds = frc::ChassisSpeeds::Discretize( ChassisSpeedsToUse, period );
-  UpdateOdometry();
+
   auto states = m_kinematics.ToSwerveModuleStates( ChassisSpeeds );
 
   m_kinematics.DesaturateWheelSpeeds( &states, kMaxSpeed );
@@ -69,6 +69,22 @@ void Drivetrain::Update( units::second_t period, bool fieldRelative )
   UpdateSmartDashboardData();
 }
 
+void Drivetrain::drive(units::meters_per_second_t xSpeed,
+                       units::meters_per_second_t ySpeed,
+                       units::radians_per_second_t rot, bool fieldRelative,
+                       units::second_t period) 
+                       {
+  auto states =
+      m_kinematics.ToSwerveModuleStates(frc::ChassisSpeeds::Discretize(
+          fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+                              xSpeed, ySpeed, rot,
+                              m_odometry.GetEstimatedPosition().Rotation())
+                        : frc::ChassisSpeeds{xSpeed, ySpeed, rot},
+          period));
+          
+          }
+
+
 
 void Drivetrain::SetSpeeds(
   units::meters_per_second_t  xSpeed,
@@ -97,9 +113,9 @@ void Drivetrain::AddToSpeeds(
 void Drivetrain::UpdateSmartDashboardData()
 {
   #if 1
-  frc::SmartDashboard::PutNumber( "Drive_X", double{m_odometry.GetPose().X()});
-  frc::SmartDashboard::PutNumber( "Drive_y", double{m_odometry.GetPose().Y()});
-  frc::SmartDashboard::PutNumber( "Drive_Rot", double{m_odometry.GetPose().Rotation().Degrees()});
+  frc::SmartDashboard::PutNumber( "Drive_X", double{m_odometry.GetEstimatedPosition().X()});
+  frc::SmartDashboard::PutNumber( "Drive_y", double{m_odometry.GetEstimatedPosition().Y()});
+  frc::SmartDashboard::PutNumber( "Drive_Rot", double{m_odometry.GetEstimatedPosition().Rotation().Degrees()});
   frc::SmartDashboard::PutNumber( "Yawby bobby", m_imu.GetYaw());
   #endif
 }

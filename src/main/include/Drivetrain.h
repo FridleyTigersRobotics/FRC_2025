@@ -6,6 +6,7 @@
 
 #include <numbers>
 
+#include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/AnalogGyro.h>
 #include <frc/geometry/Translation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
@@ -25,13 +26,16 @@ using namespace ConstantCrap;
 //32^2=a^2+b^s    512
 
 class Drivetrain {
- public:
+public:
+
   double m_YawOffset = 0;
   //double m_DriveTargetAngle = 0;
   Drivetrain() {m_imu.ResetDisplacement(); }
 
   void Update( units::second_t period, bool fieldRelative );
-
+  void drive(units::meters_per_second_t xSpeed,
+             units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
+             bool fieldRelative, units::second_t period);
   void SetSpeeds(
     units::meters_per_second_t  xSpeed,
     units::meters_per_second_t  ySpeed, 
@@ -55,7 +59,7 @@ class Drivetrain {
 
 
   static constexpr units::radians_per_second_t kMaxAngularSpeed{
-      0.15 * std::numbers::pi};  // 1/2 rotation per second
+      0.5 * std::numbers::pi};  // 1/2 rotation per second
 
  
    units::meters_per_second_t  m_xSpeed{ 0.0 };
@@ -84,9 +88,11 @@ class Drivetrain {
 
   studica::AHRS m_imu { studica::AHRS::NavXComType::kMXP_SPI };
 
-  frc::SwerveDriveKinematics<4> m_kinematics{
+ public:
+   frc::SwerveDriveKinematics<4> m_kinematics{
       m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation,
       m_backRightLocation};
+
 
 
 
@@ -94,10 +100,15 @@ class Drivetrain {
     // Y Positive = Right
     // Rot Positive = Clockwise
 
-  frc::SwerveDriveOdometry<4> m_odometry{
+  frc::SwerveDrivePoseEstimator<4> m_odometry{
       m_kinematics,
       frc::Rotation2d{units::degree_t {GetYaw()}},//m_gyro.GetRotation2d(),
       {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
-       m_backLeft.GetPosition(), m_backRight.GetPosition()}};
+       m_backLeft.GetPosition(), m_backRight.GetPosition()},
+      frc::Pose2d{},
+      {0.1, 0.1, 0.1},
+      {0.1, 0.1, 0.1}};
+
+
 
 };

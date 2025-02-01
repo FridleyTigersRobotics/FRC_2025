@@ -23,6 +23,8 @@
 
 class Robot : public frc::TimedRobot {
  public:
+    float Angle = 0;
+    float DumbAssOffset = 0;
     void RobotInit() override;
     void RobotPeriodic() override;
 
@@ -79,8 +81,6 @@ class Robot : public frc::TimedRobot {
     frc::SlewRateLimiter<units::scalar> m_rotLimiter{10 / 1_s};
 
     frc::Pose2d m_initialPose;
-
-    float Angle = 0;
 
     double m_xyDirP      = 1.000;  
     double m_rotP        = 1.000;  

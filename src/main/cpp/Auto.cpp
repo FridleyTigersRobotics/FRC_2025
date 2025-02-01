@@ -119,7 +119,7 @@ void Robot::AutonomousStateInit()
      m_Drivetrain.m_backLeft.GetPosition(),  m_Drivetrain.m_backRight.GetPosition()},
     frc::Pose2d{}
   );
-  m_initialPose = m_Drivetrain.m_odometry.GetPose();
+  m_initialPose = m_Drivetrain.m_odometry.GetEstimatedPosition();
 }
 
 

@@ -38,7 +38,6 @@ Current angle Starting offset
 // ****************************************************************************
 void Robot::RobotInit()
 {
-  Angle=0;
   m_Drivetrain.m_imu.Reset();
   frc::CameraServer::StartAutomaticCapture();
   // Autonomous Chooser
@@ -69,9 +68,8 @@ void Robot::TeleopInit()
 
   m_DriveRotatePid.EnableContinuousInput(-180, 180);
 
-  m_fieldRelative = true;
-
-
+  m_fieldRelative = false;
+  Angle=0;
 
   m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
   m_AutoXdirPid.Reset( 0.0_m );
@@ -90,7 +88,7 @@ void Robot::TeleopPeriodic()
   frc::SmartDashboard::PutNumber( "GetYaw", double{m_Drivetrain.GetYaw()} );
   frc::SmartDashboard::PutNumber( "m_Drivetrain.m_imu.GetYaw()", double{m_Drivetrain.m_imu.GetYaw()} );
   frc::SmartDashboard::PutNumber( "m_Drivetrain.m_imu.GetAngle()", double{m_Drivetrain.m_imu.GetAngle()} );
-
+  m_Drivetrain.UpdateOdometry();
   double DriveDeadband = 0.1;
   double DriveX = frc::ApplyDeadband( m_driveController.GetLeftY(), DriveDeadband );
   double DriveY = frc::ApplyDeadband( m_driveController.GetLeftX(), DriveDeadband );
@@ -130,7 +128,16 @@ void Robot::TeleopPeriodic()
   // return positive values when you pull to the right by default.
   const auto ySpeed = DriveY * Drivetrain::kMaxSpeed;
 //Eli's dumbass spaghetti code for field oriented
-  Angle=m_Drivetrain.Drivetrain::GetYaw();
+if (Angle != 0 && Angle != m_Drivetrain.Drivetrain::m_imu.GetAngle())
+{
+  DumbAssOffset + (Angle-m_Drivetrain.Drivetrain::m_imu.GetAngle());
+  Angle = m_Drivetrain.Drivetrain::m_imu.GetAngle();
+}
+else
+{
+  Angle = m_Drivetrain.Drivetrain::m_imu.GetAngle();
+}
+
 /*
 
 Set Angle to Angle+(How much we're turning times -1)
