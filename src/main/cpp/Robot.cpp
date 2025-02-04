@@ -19,9 +19,11 @@
 #include <cameraserver/CameraServer.h>
 
 
+
 // ****************************************************************************
 void Robot::RobotInit()
 {
+
   m_Drivetrain.m_imu.Reset();
   frc::CameraServer::StartAutomaticCapture();
   // Autonomous Chooser
@@ -49,7 +51,7 @@ void Robot::DisabledInit()
 // ****************************************************************************
 void Robot::TeleopInit() 
 {
-
+  m_Drivetrain.m_imu.ZeroYaw();
   m_DriveRotatePid.EnableContinuousInput(-180, 180);
 
   m_fieldRelative = true;
@@ -83,7 +85,7 @@ void Robot::TeleopPeriodic()
   double y     = m_driveController.GetRightY();
   double x     = m_driveController.GetRightX();
   double mag   = sqrt( x * x + y * y );
-  double angle = ((atan2( x , y ) * 180 / std::numbers::pi) +180);
+  double angle = ((atan2( x , y ) * 180 / std::numbers::pi)+180);
 
   frc::SmartDashboard::PutNumber( "InputAngle", double{angle} );
   frc::SmartDashboard::PutNumber( "InputMag", double{mag} );
@@ -182,6 +184,8 @@ Rotate wheels to where they're supposed to be offset by Angle
   m_Elevator.Update();
   m_Claw.Update();
   }
+
+
   }
 
 

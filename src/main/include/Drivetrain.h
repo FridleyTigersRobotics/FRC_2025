@@ -81,10 +81,10 @@ public:
 //0.255626 Drive motor #14     0.255626 / (2*std::numbers::pi),      
 //4.980153 Drive motor #16     4.980153 / (2*std::numbers::pi),      
 
-  SwerveModule m_backRight { kBackRightDriveID,  kBackRightSpinID,  kDriveEncoderBackRight,  -4.97+(std::numbers::pi*.9), kMaxSpeed, "BR" };
-  SwerveModule m_frontRight{ kFrontRightDriveID, kFrontRightSpinID, kDriveEncoderFrontRight, -2.75+(std::numbers::pi*.9), kMaxSpeed, "FR" };
-  SwerveModule m_backLeft  { kBackLeftDriveID,   kBackLeftSpinID,   kDriveEncoderBackLeft,   -3.35+(std::numbers::pi*.9), kMaxSpeed, "BL" };
-  SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   -5.6+(std::numbers::pi*.9), kMaxSpeed, "FL" };
+  SwerveModule m_backRight { kBackRightDriveID,  kBackRightSpinID,  kDriveEncoderBackRight,  -4.97/*+(std::numbers::pi*.9)*/, kMaxSpeed, "BR" };
+  SwerveModule m_frontRight{ kFrontRightDriveID, kFrontRightSpinID, kDriveEncoderFrontRight, -2.75/*+(std::numbers::pi*.9)*/, kMaxSpeed, "FR" };
+  SwerveModule m_backLeft  { kBackLeftDriveID,   kBackLeftSpinID,   kDriveEncoderBackLeft,   -3.35/*+(std::numbers::pi*.9)*/, kMaxSpeed, "BL" };
+  SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   -5.6/*+(std::numbers::pi*.9)*/, kMaxSpeed, "FL" };
                                                                 //0.79    1.58
   studica::AHRS m_imu { studica::AHRS::NavXComType::kMXP_SPI };
 

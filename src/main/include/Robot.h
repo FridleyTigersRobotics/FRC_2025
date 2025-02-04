@@ -23,7 +23,7 @@
 #include "LimelightHelpers.h"
 
 class Robot : public frc::TimedRobot {
- public:
+  public:
     double targetWrappedAngle = 0;
     bool angleChanged = false;
     float Angle = 0;
@@ -129,7 +129,7 @@ class Robot : public frc::TimedRobot {
     };
 
     double m_DriveTargetAngle = 0;
-    double m_RotP = 0.0001;
+    double m_RotP = 0.005;
 
     frc::PIDController m_DriveRotatePid{
       m_RotP,
