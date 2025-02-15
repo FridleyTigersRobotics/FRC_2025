@@ -17,7 +17,7 @@
 #include "frc/geometry/Rotation2d.h"
 #include <frc/SPI.h>
 
-using namespace ConstantCrap;
+using namespace Constants;
 
 /**
  * Represents a swerve drive style drivetrain.

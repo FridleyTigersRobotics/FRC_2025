@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ConstantCrap
+namespace Constants
 {
    //-----------|Front|------------
   // 2                           3
@@ -34,13 +34,8 @@ namespace ConstantCrap
     constexpr int kBackRightDriveID     = 3;
 
     // TODO : Check all these, wrist an motor both 18?
-    constexpr int kIntakeMotorcanID     = 22;
-    constexpr int kArmMotorLeftcanID    = 21;
-    constexpr int kArmMotorRightcanID   = 19;
-    constexpr int kWristMotorID         = 20;
-    constexpr int kShooterMotorID       = 18;
-    constexpr int kRightClimberMotor    = 4;
-    constexpr int kLeftClimberMotor     = 3;
+    constexpr int kElevatorMotor0CanID     = 22;
+    constexpr int kElevatorMotor1CanID     = 22;
 
     // DIO IDs
     constexpr int kArmEncoderDIO           = 0;

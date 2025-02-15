@@ -31,13 +31,19 @@ void Robot::RobotInit()
   m_autoChooser.AddOption       ( kAutoDrive,               kAutoDrive );
   frc::SmartDashboard::PutNumber("AutoModeInt", 0 );
   frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
+
+
+
 }
 
 
 // ****************************************************************************
 void Robot::RobotPeriodic()
 {
-
+  m_Drivetrain.UpdateSmartDashboardData();
+  m_Climber.UpdateSmartDashboardData();
+  m_Elevator.UpdateSmartDashboardData();
+  m_Claw.UpdateSmartDashboardData();
 }
 
 

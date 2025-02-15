@@ -11,30 +11,36 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 #include "units/angular_acceleration.h"
-
+#include <rev/SparkMax.h>
+using namespace rev::spark;
 
 class Elevator
 {
  public:
     typedef enum ElevatorState_e
     {
-        ElevatorDown,
-        ElevatorUp,
-        ElevatorStop
+        ElevatorStartingConfig,
+        ElevatorAlgaeFloor,
+        ElevatorAlgaeProcessor,
+        ElevatorAlgaeReefLow,
+        ElevatorAlgaeReefHigh,
+        ElevatorCoralL1,
+        ElevatorCoralL2,
+        ElevatorCoralL3,
+        ElevatorCoralL4
     } ElevatorState_t;
 
     void Init();
     void Update();
     void ChangeState( ElevatorState_t state );
-    void ManualControl();
+    void ManualControl( double speed );
     void UpdateSmartDashboardData();
 
  private:
-   
-
-    static constexpr double kMaxElevatorHeight = 2.9e5;
-
-  
+    SparkMax m_Motor0{ Constants::kElevatorMotor0CanID, SparkLowLevel::MotorType::kBrushless };
+    SparkMax m_Motor1{ Constants::kElevatorMotor1CanID, SparkLowLevel::MotorType::kBrushless };
+    SparkClosedLoopController m_closedLoopController = m_Motor0.GetClosedLoopController();
+    SparkRelativeEncoder m_Motor0Encoder = m_Motor0.GetEncoder();
 
 
 };
