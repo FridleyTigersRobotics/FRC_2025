@@ -33,19 +33,26 @@ namespace Constants
     constexpr int kBackRightSpinID      = 2;
     constexpr int kBackRightDriveID     = 3;
 
-    // TODO : Check all these, wrist an motor both 18?
-    constexpr int kElevatorMotor0CanID     = 22;
-    constexpr int kElevatorMotor1CanID     = 22;
+    constexpr int kAlgaeAngleID  = 20;
+    constexpr int kCoralAgnleID  = 21;
+    constexpr int kElevator0ID   = 22;
+    constexpr int kElevator1ID   = 23;
+    constexpr int kAlgaeIntakeID = 24;
+    constexpr int kCageGrabberID = 25;
+    constexpr int kCoralIntakeID = 26;
+    constexpr int kClimber0ID    = 27;
+    constexpr int kCLimber1ID    = 28;
+    
 
     // DIO IDs
-    constexpr int kArmEncoderDIO           = 0;
-    constexpr int kWristEncoderDIO         = 1;
-    constexpr int kLeftClimberEncoderDIO1  = 4;
-    constexpr int kLeftClimberEncoderDIO2  = 5;
-    constexpr int kRightClimberEncoderDIO1 = 2;
-    constexpr int kRightClimberEncoderDIO2 = 3;
-    constexpr int kRightClimberStopDIO     = 6;
-    constexpr int kLeftClimberStopDIO      = 7;
+    constexpr int kDIO = 0;
+    constexpr int kDIO = 1;
+    constexpr int kDIO = 4;
+    constexpr int kDIO = 5;
+    constexpr int kDIO = 2;
+    constexpr int kDIO = 3;
+    constexpr int kDIO = 6;
+    constexpr int kDIO = 7;
 
 
 }
