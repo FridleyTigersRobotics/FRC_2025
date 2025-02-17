@@ -9,15 +9,23 @@ using namespace rev::spark;
 void Claw::Init()
 {
     SparkMaxConfig config_AlgaeAngleMotor {};
-    //SparkMaxConfig config_CoralAngleMotor {};
+    SparkMaxConfig config_CoralAngleMotor {};
     //SparkMaxConfig config_AlgaeIntakeMotor{};
     //SparkMaxConfig config_CoralIntakeMotor{};
+
+
+    config_CoralAngleMotor
+        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
+        .VoltageCompensation(12.0)
+        .SmartCurrentLimit(20, 20);
+
 
 
     config_AlgaeAngleMotor
         .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
         .VoltageCompensation(12.0)
         .SmartCurrentLimit(4, 4);
+
 
 #if 0
     configMotor0.closedLoop
@@ -48,13 +56,15 @@ void Claw::Init()
         .AllowedClosedLoopError(1, ClosedLoopSlot::kSlot1);
 #endif
 
-    m_CoralAngleMotor.Configure( config_AlgaeAngleMotor, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters );
+    m_CoralAngleMotor.Configure( config_CoralAngleMotor, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters );
+    m_AlgaeAngleMotor.Configure( config_AlgaeAngleMotor, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters );
 }
 
 
 // ****************************************************************************
-void Claw::ManualControl( double coralSpeed )
+void Claw::ManualControl( double coralSpeed, double algaeSpeed )
 {
+    m_CoralMotorSpeed = coralSpeed;
     m_CoralMotorSpeed = coralSpeed;
 }
 
@@ -62,41 +72,79 @@ void Claw::ManualControl( double coralSpeed )
 // ****************************************************************************
 void Claw::Update()
 {
-#if MANUAL_CORAL_CONTROL
-    m_CoralAngleMotor.Set( m_CoralMotorSpeed );
-#else
-    double coralMotorSpeed = 0.0;
-
-    switch ( m_coralState )
+    if ( m_ManualCoralControl )
     {
-        case CoralClawDown:
+        m_CoralAngleMotor.Set( m_CoralMotorSpeed );
+    }
+    else
+    {
+        double coralMotorSpeed = 0.0;
+
+        switch ( m_coralState )
         {
-            if ( m_CoralEncoder.Get() < m_CoralEncoderBottom )
+            case CoralClawDown:
             {
-                coralMotorSpeed = -0.5;
+                if ( m_CoralEncoder.Get() < m_CoralEncoderBottom )
+                {
+                    coralMotorSpeed = -0.5;
+                }
+                break;
             }
-            break;
-        }
-        case CoralClawUp:
-        {
-            if ( m_CoralEncoder.Get() > m_CoralEncoderTop )
+            case CoralClawUp:
             {
-                coralMotorSpeed = 0.5;
+                if ( m_CoralEncoder.Get() > m_CoralEncoderTop )
+                {
+                    coralMotorSpeed = 0.5;
+                }
+                break;
             }
-            break;
+            case CoralClawStop:
+            default:
+            {
+                coralMotorSpeed = 0.0;
+                break;
+            }
         }
-        case CoralClawStop:
-        default:
-        {
-            coralMotorSpeed = 0.0;
-            break;
-        }
+
+        m_CoralAngleMotor.Set( coralMotorSpeed );
     }
 
-    m_CoralAngleMotor.Set( coralMotorSpeed );
+    if ( m_ManualAlgaeControl )
+    {
+        m_AlgaeAngleMotor.Set( m_AlgaeMotorSpeed );
+    }
+    else
+    {
+        double algaeMotorSpeed = 0.0;
 
-#endif
+        switch ( m_algaeState )
+        {
+            case AlgaeClawDown:
+            {
+                if ( m_AlgaeEncoder.Get() < m_AlgaeEncoderBottom )
+                {
+                    algaeMotorSpeed = -0.5;
+                }
+                break;
+            }
+            case AlgaeClawUp:
+            {
+                if ( m_AlgaeEncoder.Get() > m_AlgaeEncoderTop )
+                {
+                    algaeMotorSpeed = 0.5;
+                }
+                break;
+            }
+            case AlgaeClawStop:
+            default:
+            {
+                algaeMotorSpeed = 0.0;
+                break;
+            }
+        }
 
+        m_AlgaeAngleMotor.Set( algaeMotorSpeed );
+    }
 
 }
 

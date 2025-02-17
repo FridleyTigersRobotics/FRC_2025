@@ -16,9 +16,6 @@
 #include <rev/config/SparkMaxConfig.h>
 using namespace rev::spark;
 
-#define MANUAL_CORAL_CONTROL ( 0 )
-
-
 
 class Claw
 {
@@ -30,6 +27,13 @@ class Claw
         ClawStop
     } ClawState_t;
 
+    typedef enum AlgaeClawState_e
+    {
+        AlgaeClawDown,
+        AlgaeClawUp,
+        AlgaeClawStop
+    } AlgaeClawState_t;
+
     typedef enum CoralClawState_e
     {
         CoralClawDown,
@@ -40,15 +44,19 @@ class Claw
     void Init();
     void Update();
     void ChangeState( CoralClawState_t coralState );
-    void ManualControl( double coralSpeed );
+    void ManualControl( double coralSpeed, double algaeSpeed );
     void UpdateSmartDashboardData();
 
  private:
+    bool m_ManualCoralControl = false;
+    bool m_ManualAlgaeControl = true;
 
     CoralClawState_t m_coralState = CoralClawStop;
+    AlgaeClawState_t m_algaeState = AlgaeClawStop;
 
 
     double m_CoralMotorSpeed = 0;
+    double m_AlgaeMotorSpeed = 0;
 
 
 
@@ -58,8 +66,8 @@ class Claw
     SparkMax m_CoralIntakeMotor{ Constants::kCoralIntakeID, SparkLowLevel::MotorType::kBrushless };
 
 
-    constexpr static const double m_AlgaeEncoderMin{ 0.483 };
-    constexpr static const double m_AlgaeEncoderMax{ 0.766 };
+    constexpr static const double m_AlgaeEncoderBottom{ 0.483 };
+    constexpr static const double m_AlgaeEncoderTop{ 0.766 };
     constexpr static const double m_CoralEncoderTop{ 0.288 + 0.05 };
     constexpr static const double m_CoralEncoderBottom{ 0.627 - 0.05 };
 
