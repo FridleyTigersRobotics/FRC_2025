@@ -20,6 +20,35 @@ void Claw::Init()
         .SmartCurrentLimit(20, 20);
 
 
+    // config_CoralAngleMotor.closedLoop
+    //     .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+    //     // Set PID values for position control. We don't need to pass a closed
+    //     // loop slot, as it will default to slot 0.
+    //     .P(0.1)
+    //     .I(0)
+    //     .D(0)
+    //     .OutputRange(-1, 1)
+    //     // Set PID values for velocity control in slot 1
+    //     .P(0.0001, ClosedLoopSlot::kSlot1)
+    //     .I(0, ClosedLoopSlot::kSlot1)
+    //     .D(0, ClosedLoopSlot::kSlot1)
+    //     .VelocityFF(1.0 / 5767, ClosedLoopSlot::kSlot1)
+    //     .OutputRange(-1, 1, ClosedLoopSlot::kSlot1);
+
+    // config_CoralAngleMotor.closedLoop
+    //     .maxMotion
+    //     // Set MAXMotion parameters for position control. We don't need to pass
+    //     // a closed loop slot, as it will default to slot 0.
+    //     .MaxVelocity(1000)
+    //     .MaxAcceleration(1000)
+    //     .AllowedClosedLoopError(1)
+    //     // Set MAXMotion parameters for velocity control in slot 1
+    //     .MaxAcceleration(500, ClosedLoopSlot::kSlot1)
+    //     .MaxVelocity(6000, ClosedLoopSlot::kSlot1)
+    //     .AllowedClosedLoopError(1, ClosedLoopSlot::kSlot1);
+
+
+
 
     config_AlgaeAngleMotor
         .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
@@ -65,7 +94,7 @@ void Claw::Init()
 void Claw::ManualControl( double coralSpeed, double algaeSpeed )
 {
     m_CoralMotorSpeed = coralSpeed;
-    m_CoralMotorSpeed = coralSpeed;
+    m_AlgaeMotorSpeed = algaeSpeed;
 }
 
 
@@ -123,7 +152,7 @@ void Claw::Update()
             {
                 if ( m_AlgaeEncoder.Get() < m_AlgaeEncoderBottom )
                 {
-                    algaeMotorSpeed = -0.5;
+                    algaeMotorSpeed = 0.5;
                 }
                 break;
             }
@@ -131,7 +160,7 @@ void Claw::Update()
             {
                 if ( m_AlgaeEncoder.Get() > m_AlgaeEncoderTop )
                 {
-                    algaeMotorSpeed = 0.5;
+                    algaeMotorSpeed = -0.5;
                 }
                 break;
             }

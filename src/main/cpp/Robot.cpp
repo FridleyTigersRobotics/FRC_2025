@@ -184,31 +184,31 @@ Rotate wheels to where they're supposed to be offset by Angle
   m_Drivetrain.SetSpeeds( xSpeed, ySpeed, rotationSpeed );
 
 
-  // if ( m_driveController.GetAButton() )
-  // {
-  //   m_Claw.ChangeState(  m_Claw.CoralClawStop );
-  // }
-  // else if ( m_driveController.GetBButton() )
-  // {
-  //   m_Claw.ChangeState(  m_Claw.CoralClawStop );
-  // }
-  // else
-  // {
-  //   m_Claw.ChangeState( m_Claw.CoralClawStop );
-  // }
-
   if ( m_driveController.GetAButton() )
   {
-    m_Claw.ManualControl( 0.0, 0.5 );
+    m_Claw.ChangeState(  m_Claw.CoralClawUp );
   }
   else if ( m_driveController.GetBButton() )
   {
-    m_Claw.ManualControl( 0.0, -0.5 );
+    m_Claw.ChangeState(  m_Claw.CoralClawDown );
   }
   else
   {
-    m_Claw.ManualControl( 0.0, 0.0 );
+    m_Claw.ChangeState( m_Claw.CoralClawStop );
   }
+
+  // if ( m_driveController.GetAButton() )
+  // {
+  //   m_Claw.ManualControl( 0.0, 0.5 );
+  // }
+  // else if ( m_driveController.GetBButton() )
+  // {
+  //   m_Claw.ManualControl( 0.0, -0.5 );
+  // }
+  // else
+  // {
+  //   m_Claw.ManualControl( 0.0, 0.0 );
+  // }
 
 
   
