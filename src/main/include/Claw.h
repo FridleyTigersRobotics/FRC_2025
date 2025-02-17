@@ -11,7 +11,7 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 #include "units/angular_acceleration.h"
-
+#include <frc/DutyCycleEncoder.h>
 
 class Claw
 {
@@ -31,4 +31,6 @@ class Claw
 
  private:
 
+    frc::DutyCycleEncoder m_AlgaeEncoder { Constants::kCoralEncoderDIO };
+    frc::DutyCycleEncoder m_CoralEncoder { Constants::kAlgaeEncoderDIO };
 };

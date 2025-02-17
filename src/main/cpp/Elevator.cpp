@@ -46,7 +46,7 @@ void Elevator::Init()
 
 
     configMotor1
-        .Follow( Constants::kElevatorMotor0CanID, true ) // Inverted
+        .Follow( Constants::kElevator0ID, true ) // Inverted
         .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
         .VoltageCompensation(12.0)
         .SmartCurrentLimit(20);
@@ -60,6 +60,8 @@ void Elevator::Init()
 // ****************************************************************************
 void Elevator::Update()
 {
+
+#if 0
   if (frc::SmartDashboard::GetBoolean("Control Mode", false)) {
     /*
      * Get the target velocity from SmartDashboard and set it as the setpoint
@@ -83,6 +85,13 @@ void Elevator::Update()
         targetPosition, SparkMax::ControlType::kMAXMotionPositionControl,
         ClosedLoopSlot::kSlot0);
   }
+#else
+  m_Motor0.Set(0);
+  m_Motor1.Set(0);
+#endif
+
+
+
 }
 
 

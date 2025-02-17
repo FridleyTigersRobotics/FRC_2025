@@ -45,14 +45,14 @@ namespace Constants
     
 
     // DIO IDs
-    constexpr int kDIO = 0;
-    constexpr int kDIO = 1;
-    constexpr int kDIO = 4;
-    constexpr int kDIO = 5;
-    constexpr int kDIO = 2;
-    constexpr int kDIO = 3;
-    constexpr int kDIO = 6;
-    constexpr int kDIO = 7;
+    //constexpr int kDIO = 0;
+    //constexpr int kDIO = 1;
+    //constexpr int kDIO = 4;
+    constexpr int kCoralEncoderDIO = 5;
+    constexpr int kAlgaeEncoderDIO = 2;
+    //constexpr int kDIO = 3;
+    //constexpr int kDIO = 6;
+    //constexpr int kDIO = 7;
 
 
 }

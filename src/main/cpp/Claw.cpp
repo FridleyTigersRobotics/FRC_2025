@@ -35,5 +35,6 @@ void Claw::ChangeState( ClawState_t ClawState )
 // ****************************************************************************
 void Claw::UpdateSmartDashboardData( )
 {
-
+    frc::SmartDashboard::PutNumber("Intake: Algae Encoder Value", m_AlgaeEncoder.Get());
+    frc::SmartDashboard::PutNumber("Intake: Coral Encoder Value", m_CoralEncoder.Get());
 }

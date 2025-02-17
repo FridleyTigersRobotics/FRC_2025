@@ -37,8 +37,8 @@ class Elevator
     void UpdateSmartDashboardData();
 
  private:
-    SparkMax m_Motor0{ Constants::kElevatorMotor0CanID, SparkLowLevel::MotorType::kBrushless };
-    SparkMax m_Motor1{ Constants::kElevatorMotor1CanID, SparkLowLevel::MotorType::kBrushless };
+    SparkMax m_Motor0{ Constants::kElevator0ID, SparkLowLevel::MotorType::kBrushless };
+    SparkMax m_Motor1{ Constants::kElevator1ID, SparkLowLevel::MotorType::kBrushless };
     SparkClosedLoopController m_closedLoopController = m_Motor0.GetClosedLoopController();
     SparkRelativeEncoder m_Motor0Encoder = m_Motor0.GetEncoder();
 
