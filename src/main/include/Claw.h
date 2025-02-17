@@ -12,6 +12,13 @@
 #include <units/voltage.h>
 #include "units/angular_acceleration.h"
 #include <frc/DutyCycleEncoder.h>
+#include <rev/SparkMax.h>
+#include <rev/config/SparkMaxConfig.h>
+using namespace rev::spark;
+
+#define MANUAL_CORAL_CONTROL ( 0 )
+
+
 
 class Claw
 {
@@ -23,14 +30,39 @@ class Claw
         ClawStop
     } ClawState_t;
 
+    typedef enum CoralClawState_e
+    {
+        CoralClawDown,
+        CoralClawUp,
+        CoralClawStop
+    } CoralClawState_t;
+
     void Init();
     void Update();
-    void ChangeState( ClawState_t state );
-    void ManualControl();
+    void ChangeState( CoralClawState_t coralState );
+    void ManualControl( double coralSpeed );
     void UpdateSmartDashboardData();
 
  private:
 
-    frc::DutyCycleEncoder m_AlgaeEncoder { Constants::kCoralEncoderDIO };
-    frc::DutyCycleEncoder m_CoralEncoder { Constants::kAlgaeEncoderDIO };
+    CoralClawState_t m_coralState = CoralClawStop;
+
+
+    double m_CoralMotorSpeed = 0;
+
+
+
+    SparkMax m_AlgaeAngleMotor { Constants::kAlgaeAngleID, SparkLowLevel::MotorType::kBrushless };
+    SparkMax m_CoralAngleMotor { Constants::kCoralAgnleID, SparkLowLevel::MotorType::kBrushless };
+    SparkMax m_AlgaeIntakeMotor{ Constants::kAlgaeIntakeID, SparkLowLevel::MotorType::kBrushless };
+    SparkMax m_CoralIntakeMotor{ Constants::kCoralIntakeID, SparkLowLevel::MotorType::kBrushless };
+
+
+    constexpr static const double m_AlgaeEncoderMin{ 0.483 };
+    constexpr static const double m_AlgaeEncoderMax{ 0.766 };
+    constexpr static const double m_CoralEncoderTop{ 0.288 + 0.05 };
+    constexpr static const double m_CoralEncoderBottom{ 0.627 - 0.05 };
+
+    frc::DutyCycleEncoder m_AlgaeEncoder { Constants::kAlgaeEncoderDIO };
+    frc::DutyCycleEncoder m_CoralEncoder { Constants::kCoralEncoderDIO };
 };

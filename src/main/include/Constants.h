@@ -49,7 +49,7 @@ namespace Constants
     //constexpr int kDIO = 1;
     //constexpr int kDIO = 4;
     constexpr int kCoralEncoderDIO = 5;
-    constexpr int kAlgaeEncoderDIO = 2;
+    constexpr int kAlgaeEncoderDIO = 6;
     //constexpr int kDIO = 3;
     //constexpr int kDIO = 6;
     //constexpr int kDIO = 7;

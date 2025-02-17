@@ -25,14 +25,18 @@ void Robot::RobotInit()
 {
 
   m_Drivetrain.m_imu.Reset();
-  frc::CameraServer::StartAutomaticCapture();
+  //frc::CameraServer::StartAutomaticCapture();
   // Autonomous Chooser
   m_autoChooser.SetDefaultOption( kAutoNameDefault,         kAutoNameDefault );
   m_autoChooser.AddOption       ( kAutoDrive,               kAutoDrive );
   frc::SmartDashboard::PutNumber("AutoModeInt", 0 );
   frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
 
-
+  // Initialize Subsystems
+  m_Drivetrain.Init();
+  m_Climber.Init();
+  m_Elevator.Init();
+  m_Claw.Init();
 
 }
 
@@ -66,11 +70,7 @@ void Robot::TeleopInit()
   m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
   m_AutoXdirPid.Reset( 0.0_m );
 
-  // Initialize Subsystems
-  m_Drivetrain.Init();
-  m_Climber.Init();
-  m_Elevator.Init();
-  m_Claw.Init();
+
 }
 
 
@@ -86,7 +86,7 @@ void Robot::TeleopPeriodic()
   double DriveY = frc::ApplyDeadband( m_driveController.GetLeftX(), DriveDeadband );
 
 
-#if 1
+#if 0
 
   double y     = m_driveController.GetRightY();
   double x     = m_driveController.GetRightX();
@@ -183,16 +183,29 @@ Rotate wheels to where they're supposed to be offset by Angle
 
   m_Drivetrain.SetSpeeds( xSpeed, ySpeed, rotationSpeed );
 
+
+  if ( m_driveController.GetAButton() )
+  {
+    m_Claw.ChangeState(  m_Claw.CoralClawUp );
+  }
+  else if ( m_driveController.GetBButton() )
+  {
+    m_Claw.ChangeState(  m_Claw.CoralClawDown );
+  }
+  else
+  {
+    m_Claw.ChangeState( m_Claw.CoralClawStop );
+  }
+
+
+
   
   // Update all subsystems
   m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
   m_Climber.Update();
   m_Elevator.Update();
   m_Claw.Update();
-  }
-
-
-  }
+}
 
 
 
