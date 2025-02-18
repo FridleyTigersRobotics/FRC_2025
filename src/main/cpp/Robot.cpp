@@ -226,15 +226,15 @@ Rotate wheels to where they're supposed to be offset by Angle
 
   // if( m_driveController.GetXButton() ) //winch in (climber down, robot climb up)
   // {
-  //  m_Climber.ManualControl( 0.2 ); 
+  //  m_Climber.ManualControl( 0.2, 0.0 ); 
   // }
   // else if ( m_driveController.GetYButton() )// winch out
   // {
-  //   m_Climber.ManualControl( -0.2 );
+  //   m_Climber.ManualControl( -0.2, 0.0 );
   // }
   // else
   // {
-  //   m_Climber.ManualControl( 0.0 );
+  //   m_Climber.ManualControl( 0.0, 0.0 );
   // }
   
 
@@ -242,9 +242,13 @@ Rotate wheels to where they're supposed to be offset by Angle
   {
    m_Climber.ChangeState( m_Climber.ClimberReset ); 
   }
-  else if ( m_driveController.GetYButton() )// winch out
+  if ( m_driveController.GetYButton() )
   {
-   m_Climber.ChangeState( m_Climber.ClimberStop ); 
+   m_Climber.ChangeState( m_Climber.GrabSpin ); 
+  }
+  else if ( !m_driveController.GetYButton() )
+  {
+    m_Climber.ChangeState( m_Climber.ClimberStop );
   }
   
 
