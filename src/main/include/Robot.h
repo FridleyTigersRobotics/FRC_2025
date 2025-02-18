@@ -192,14 +192,6 @@ class Robot : public frc::TimedRobot {
     [this] (void) -> void { Drivetrain_Stop(); },
   };
 
-/*  This is garbage. please don't use. Explanation for Anyssa
-    std::vector<std::function<void(void)>> Auto_Drive = {
-    [this] (void) -> void { AutoAngle( 15 ); },
-    [this] (void) -> void { DriveForDistance( -2.0_m, 0.0_m, 0.0_rad, 0.5_mps, 0.0_mps, 0.0_rad_per_s, 5.0_s ); },
-    [this] (void) -> void { Drivetrain_Stop(); },
-  };
-*/
-
   std::vector<std::function<void(void)>> *autoSequence{ &defaultAutoSequence };
 
 };

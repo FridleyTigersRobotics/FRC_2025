@@ -49,6 +49,3 @@ class Elevator
 
 
 };
-/*doalways: AmogusDance
-fofever: AmogusDanceBigFunny
-never: AmogusDanceStopBeFunny*/

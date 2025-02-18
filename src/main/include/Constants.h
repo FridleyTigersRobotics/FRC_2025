@@ -2,21 +2,6 @@
 
 namespace Constants
 {
-   //-----------|Front|------------
-  // 2                           3
-  //  7-6--------------------8-9
-  //  |----YAY CODE TEAM!------|
-  //  |------------------------|
-  //  |------------------------|
-  //  |------Tom is smart------|
-  //  |------Eli is smart------|
-  //  |----Mina is smartish----|
-  //  |----Kewsar is smart-----|
-  //  |----Hail Bing Skrong----|
-  //  |-Bing Skrong is strong--|
-  //  5-4--------------------3-2
-//  1                           0
-
     // Analog IDs
     constexpr int kDriveEncoderBackRight  = 0;
     constexpr int kDriveEncoderBackLeft   = 1;
@@ -56,7 +41,7 @@ namespace Constants
     //constexpr int kDIO = 6;
     //constexpr int kDIO = 7;
 
-    // Encoder Values
+    // Climber Control Values
     constexpr long kEncClimbUp = 599010;
     constexpr double kClimbCalibrateSpeed = 0.3;
     constexpr double kGrabSpeed = 0.5;

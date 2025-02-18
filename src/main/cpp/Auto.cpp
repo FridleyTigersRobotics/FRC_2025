@@ -145,5 +145,3 @@ void Robot::RunAutoSequence()
     (*autoSequence)[m_autoState]();
   }
 }
-
-// i can smell you
