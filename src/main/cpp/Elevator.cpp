@@ -15,7 +15,7 @@ void Elevator::Init()
     configMotor0
         .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
         .VoltageCompensation(12.0)
-        .SmartCurrentLimit(20);
+        .SmartCurrentLimit(40,40);
 
     configMotor0.closedLoop
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
@@ -24,7 +24,7 @@ void Elevator::Init()
         .P(0.1)
         .I(0)
         .D(0)
-        .OutputRange(-1, 1)
+        .OutputRange(-0.8, 0.8)
         // Set PID values for velocity control in slot 1
         .P(0.0001, ClosedLoopSlot::kSlot1)
         .I(0, ClosedLoopSlot::kSlot1)
@@ -36,8 +36,8 @@ void Elevator::Init()
         .maxMotion
         // Set MAXMotion parameters for position control. We don't need to pass
         // a closed loop slot, as it will default to slot 0.
-        .MaxVelocity(1000)
-        .MaxAcceleration(1000)
+        .MaxVelocity(3000)
+        .MaxAcceleration(8000)
         .AllowedClosedLoopError(1)
         // Set MAXMotion parameters for velocity control in slot 1
         .MaxAcceleration(500, ClosedLoopSlot::kSlot1)
@@ -49,7 +49,7 @@ void Elevator::Init()
         .Follow( Constants::kElevator0ID, true ) // Inverted
         .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
         .VoltageCompensation(12.0)
-        .SmartCurrentLimit(20);
+        .SmartCurrentLimit(40,40);
 
 
     m_Motor0.Configure( configMotor0, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters );
@@ -86,8 +86,20 @@ void Elevator::Update()
         ClosedLoopSlot::kSlot0);
   }
 #else
-  m_Motor0.Set(0);
-  m_Motor1.Set(0);
+
+  if ( m_ManualElevatorControlEnabled )
+  {
+    m_Motor0.Set( m_ManualElevatorSpeed );
+  }
+  else
+  {
+    m_closedLoopController.SetReference(
+      m_ElevatorTargetPosition, 
+      SparkMax::ControlType::kMAXMotionPositionControl,
+      ClosedLoopSlot::kSlot0
+    );
+
+  }
 #endif
 
 
@@ -96,9 +108,9 @@ void Elevator::Update()
 
 
 // ****************************************************************************
-void Elevator::ChangeState( ElevatorState_t state )
+void Elevator::ChangeState( double position )
 {
-   
+  m_ElevatorTargetPosition = position;
 }
 
 
@@ -107,6 +119,8 @@ void Elevator::UpdateSmartDashboardData( )
 {
   frc::SmartDashboard::PutNumber("Motor 0 Actual Position", m_Motor0Encoder.GetPosition());
   frc::SmartDashboard::PutNumber("Motor 0 Actual Velocity", m_Motor0Encoder.GetVelocity());
+
+  frc::SmartDashboard::PutNumber("m_ElevatorTargetPosition", m_ElevatorTargetPosition);
 
   if (frc::SmartDashboard::GetBoolean("Reset Encoder", false)) {
     frc::SmartDashboard::PutBoolean("Reset Encoder", false);
@@ -120,6 +134,6 @@ void Elevator::UpdateSmartDashboardData( )
 // ****************************************************************************
 void Elevator::ManualControl( double speed )
 {
-
+  m_ManualElevatorSpeed = speed;
 }
 

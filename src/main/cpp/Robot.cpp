@@ -70,7 +70,7 @@ void Robot::TeleopInit()
   m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
   m_AutoXdirPid.Reset( 0.0_m );
   m_Climber.TeleopInit();
-
+  m_Claw.TeleopInit();
 }
 
 
@@ -186,30 +186,43 @@ Rotate wheels to where they're supposed to be offset by Angle
 
   // if ( m_driveController.GetAButton() )
   // {
-  //   m_Claw.ChangeState(  m_Claw.CoralClawStop );
+  //   m_Claw.ChangeState(  m_Claw.CoralClawUp );
   // }
   // else if ( m_driveController.GetBButton() )
   // {
-  //   m_Claw.ChangeState(  m_Claw.CoralClawStop );
+  //   m_Claw.ChangeState(  m_Claw.CoralClawDown );
   // }
   // else
   // {
   //   m_Claw.ChangeState( m_Claw.CoralClawStop );
   // }
 
+  // if ( m_driveController.GetAButton() )
+  // {
+  //   m_Claw.ManualControl( 0.0, 0.5 );
+  // }
+  // else if ( m_driveController.GetBButton() )
+  // {
+  //   m_Claw.ManualControl( 0.0, -0.5 );
+  // }
+  // else
+  // {
+  //   m_Claw.ManualControl( 0.0, 0.0 );
+  // }
+
+
   if ( m_driveController.GetAButton() )
   {
-    m_Claw.ManualControl( 0.0, 0.5 );
+    m_Elevator.ChangeState( 60.0 );
   }
   else if ( m_driveController.GetBButton() )
   {
-    m_Claw.ManualControl( 0.0, -0.5 );
+    m_Elevator.ChangeState( 0.0 );
   }
   else
   {
-    m_Claw.ManualControl( 0.0, 0.0 );
+    m_Elevator.ChangeState( 0.0 );
   }
-
 
   // if( m_driveController.GetXButton() ) //winch in (climber down, robot climb up)
   // {
