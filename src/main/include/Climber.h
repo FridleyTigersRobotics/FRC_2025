@@ -26,7 +26,7 @@ class Climber
     void Init();
     void Update();
     void ChangeState( ClimberState_t state );
-    void ManualControl();
+    void ManualControl( );
     void UpdateSmartDashboardData();
 
  private:

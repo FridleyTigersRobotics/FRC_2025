@@ -34,7 +34,7 @@ void Claw::Init()
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed
         // loop slot, as it will default to slot 0.
-        .P(1.0)
+        .P(4.0)
         .I(0)
         .D(0)
         .OutputRange(-0.5, 0.5)
@@ -49,9 +49,9 @@ void Claw::Init()
         .maxMotion
         // Set MAXMotion parameters for position control. We don't need to pass
         // a closed loop slot, as it will default to slot 0.
-        .MaxVelocity(1000)
-        .MaxAcceleration(1000)
-        .AllowedClosedLoopError(1)
+        .MaxVelocity(2000)
+        .MaxAcceleration(2000)
+        .AllowedClosedLoopError(0.5)
         // Set MAXMotion parameters for velocity control in slot 1
         .MaxAcceleration(500, ClosedLoopSlot::kSlot1)
         .MaxVelocity(6000, ClosedLoopSlot::kSlot1)

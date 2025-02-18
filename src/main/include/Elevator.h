@@ -32,11 +32,16 @@ class Elevator
 
     void Init();
     void Update();
-    void ChangeState( ElevatorState_t state );
+    void ChangeState( double position );
     void ManualControl( double speed );
     void UpdateSmartDashboardData();
 
  private:
+
+    bool   m_ManualElevatorControlEnabled = false;
+    double m_ManualElevatorSpeed = 0;
+    double m_ElevatorTargetPosition = 0.0;
+
     SparkMax m_Motor0{ Constants::kElevator0ID, SparkLowLevel::MotorType::kBrushless };
     SparkMax m_Motor1{ Constants::kElevator1ID, SparkLowLevel::MotorType::kBrushless };
     SparkClosedLoopController m_closedLoopController = m_Motor0.GetClosedLoopController();
