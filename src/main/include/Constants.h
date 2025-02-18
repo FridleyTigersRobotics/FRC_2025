@@ -40,19 +40,23 @@ namespace Constants
     constexpr int kAlgaeIntakeID = 24;
     constexpr int kCageGrabberID = 25;
     constexpr int kCoralIntakeID = 26;
-    constexpr int kClimber0ID    = 27;
-    constexpr int kCLimber1ID    = 28;
+    constexpr int kClimberEastID    = 27;
+    constexpr int kClimberWestID    = 28;
     
 
     // DIO IDs
-    //constexpr int kDIO = 0;
-    //constexpr int kDIO = 1;
-    //constexpr int kDIO = 4;
+    constexpr int kWestEncoderLDIO = 0;
+    constexpr int kWestEncoderHDIO = 1;
+    constexpr int kEastEncoderLDIO = 2;
+    constexpr int kEastEncoderHDIO = 3;
+    constexpr int kClimbSwitchDIO = 4;
     constexpr int kCoralEncoderDIO = 5;
     constexpr int kAlgaeEncoderDIO = 6;
     //constexpr int kDIO = 3;
     //constexpr int kDIO = 6;
     //constexpr int kDIO = 7;
 
-
+    // Encoder Values
+    constexpr long kEncClimbUp = 599010;
+    constexpr double kClimbCalibrateSpeed = 0.3;
 }

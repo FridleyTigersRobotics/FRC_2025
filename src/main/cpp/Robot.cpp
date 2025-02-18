@@ -69,7 +69,7 @@ void Robot::TeleopInit()
 
   m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
   m_AutoXdirPid.Reset( 0.0_m );
-
+  m_Climber.TeleopInit();
 
 }
 
@@ -211,7 +211,30 @@ Rotate wheels to where they're supposed to be offset by Angle
   }
 
 
+  // if( m_driveController.GetXButton() ) //winch in (climber down, robot climb up)
+  // {
+  //  m_Climber.ManualControl( 0.2 ); 
+  // }
+  // else if ( m_driveController.GetYButton() )// winch out
+  // {
+  //   m_Climber.ManualControl( -0.2 );
+  // }
+  // else
+  // {
+  //   m_Climber.ManualControl( 0.0 );
+  // }
   
+
+  if( m_driveController.GetXButton() ) //winch in (climber down, robot climb up)
+  {
+   m_Climber.ChangeState( m_Climber.ClimberReset ); 
+  }
+  else if ( m_driveController.GetYButton() )// winch out
+  {
+   m_Climber.ChangeState( m_Climber.ClimberStop ); 
+  }
+  
+
   // Update all subsystems
   m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
   m_Climber.Update();
