@@ -42,6 +42,7 @@ class Claw
     } CoralClawState_t;
 
     void Init();
+    void TeleopInit();
     void Update();
     void ChangeState( CoralClawState_t coralState );
     void ManualControl( double coralSpeed, double algaeSpeed );
@@ -58,12 +59,15 @@ class Claw
     double m_CoralMotorSpeed = 0;
     double m_AlgaeMotorSpeed = 0;
 
-
+    double m_CoralTargetPosition = 0;
 
     SparkMax m_AlgaeAngleMotor { Constants::kAlgaeAngleID, SparkLowLevel::MotorType::kBrushless };
     SparkMax m_CoralAngleMotor { Constants::kCoralAgnleID, SparkLowLevel::MotorType::kBrushless };
     SparkMax m_AlgaeIntakeMotor{ Constants::kAlgaeIntakeID, SparkLowLevel::MotorType::kBrushless };
     SparkMax m_CoralIntakeMotor{ Constants::kCoralIntakeID, SparkLowLevel::MotorType::kBrushless };
+
+    SparkClosedLoopController m_CoralMotorClosedLoopController = m_CoralAngleMotor.GetClosedLoopController();
+    SparkRelativeEncoder m_CoralMotorEncoder = m_CoralAngleMotor.GetEncoder();
 
 
     constexpr static const double m_AlgaeEncoderBottom{ 0.483 };

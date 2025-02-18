@@ -70,7 +70,7 @@ void Robot::TeleopInit()
   m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
   m_AutoXdirPid.Reset( 0.0_m );
 
-
+  m_Claw.TeleopInit();
 }
 
 
