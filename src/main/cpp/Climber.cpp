@@ -8,7 +8,8 @@
 void Climber::Init()
 {
    winch_calibrated=false;
-   m_ClimberState = ClimberStop;
+   m_ClimberWinchState = ClimberWinchStop;
+   m_ClimberGrabberState = GrabStop;
    m_CageEncoder.SetPosition(0.0);
 }
 
@@ -17,7 +18,8 @@ void Climber::Init()
 void Climber::TeleopInit()
 {
    winch_calibrated=false;
-   m_ClimberState = ClimberStop;
+   m_ClimberWinchState = ClimberWinchStop;
+   m_ClimberGrabberState = GrabStop;
    m_CageEncoder.SetPosition(0.0);
    m_GrabberPid.SetIntegratorRange( -0.1, 0.1 ); //stops integrator wind-up
    m_GrabberPid.SetTolerance(1.0);
@@ -30,7 +32,8 @@ void Climber::ManualControl( double climbSpeed , double grabSpeed )
 {
     m_ClimbSpeed = climbSpeed;
     m_GrabSpeed = grabSpeed;
-    m_ClimberState = ClimberStop;
+    m_ClimberWinchState = ClimberWinchStop;
+    m_ClimberGrabberState = GrabStop;
 }
 
 
@@ -50,7 +53,7 @@ void Climber::Update()
         winch_calibrated = true;
     }
 
-    if (m_ClimberState == ClimberReset)
+    if (m_ClimberWinchState == ClimberWinchReset)
     {
         if(winch_calibrated==false)
         {
@@ -66,37 +69,47 @@ void Climber::Update()
         {
             m_ClimbMotorEast.Set( 0.0 );
             m_ClimbMotorWest.Set( 0.0 );
-            m_ClimberState = ClimberStop;
+            m_ClimberWinchState = ClimberWinchStop;
         }
     }
+    
+    if (m_ClimberWinchState == ClimberWinchStop)
+    {
+        m_ClimbMotorEast.Set( 0.0 );
+        m_ClimbMotorWest.Set( 0.0 );
 
-    if(m_ClimberState == GrabSpin)
+        
+    }
+    
+    if(m_ClimberGrabberState == GrabHorizontal)
     {
         m_GrabberPid.SetSetpoint(Constants::kGrab90);
         double grabMotorValue = m_GrabberPid.Calculate(m_CageEncoder.GetPosition());
         grabMotorValue = std::clamp(grabMotorValue, -0.5, 0.5 );
         m_CageGrabberMotor.Set(grabMotorValue);
     }
-    
-    if (m_ClimberState == ClimberStop)
-    {
-        m_ClimbMotorEast.Set( 0.0 );
-        m_ClimbMotorWest.Set( 0.0 );
 
+    if(m_ClimberGrabberState == GrabVertical)
+    {
         m_GrabberPid.SetSetpoint(0.00);
         double grabMotorValue = m_GrabberPid.Calculate(m_CageEncoder.GetPosition());
         grabMotorValue = std::clamp(grabMotorValue, -Constants::kGrabSpeed, Constants::kGrabSpeed );
         m_CageGrabberMotor.Set(grabMotorValue);
     }
-        
+
+    if(m_ClimberGrabberState == GrabStop)
+    {
+        m_CageGrabberMotor.Set(0.00);
+    }
 }
 
 
 
 // ****************************************************************************
-void Climber::ChangeState( ClimberState_t state )
+void Climber::ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gstate )
 {
-   m_ClimberState = state;
+   m_ClimberWinchState = Cstate;
+   m_ClimberGrabberState = Gstate;
 }
 
 

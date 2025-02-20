@@ -95,15 +95,15 @@ void Robot::TestPeriodic()
 
   if( m_driveController.GetXButton() ) //winch in (climber down, robot climb up)
   {
-   m_Climber.ChangeState( m_Climber.ClimberReset ); 
+   m_Climber.ChangeState( m_Climber.ClimberWinchReset, m_Climber.GrabStop ); 
   }
   if ( m_driveController.GetYButton() )
   {
-   m_Climber.ChangeState( m_Climber.GrabSpin ); 
+   m_Climber.ChangeState( m_Climber.ClimberWinchStop, m_Climber.GrabHorizontal ); 
   }
   else if ( !m_driveController.GetYButton() )
   {
-    m_Climber.ChangeState( m_Climber.ClimberStop );
+    m_Climber.ChangeState( m_Climber.ClimberWinchStop, m_Climber.GrabVertical );
   }
   
 
