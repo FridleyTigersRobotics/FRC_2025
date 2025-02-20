@@ -8,15 +8,60 @@
 #include <math.h>
 
 
-void Drivetrain::Update( units::second_t period, bool fieldRelative ) 
+
+Drivetrain::Drivetrain( ) 
+{
+  m_DriveRotatePid.EnableContinuousInput(-180, 180);
+  m_imu.ResetDisplacement();
+}
+
+
+void Drivetrain::Drive( double DriveX, double DriveY, double RotX, double RotY, bool fieldRelative  ) 
+{
+  m_fieldRelative = fieldRelative;
+  units::radians_per_second_t rotationSpeed{ 0.0 };
+  units::meters_per_second_t  xSpeed = DriveX * Drivetrain::kMaxSpeed;
+  units::meters_per_second_t  ySpeed = DriveY * Drivetrain::kMaxSpeed;
+
+  if ( m_fieldRelative )
+  {
+    double mag   = sqrt( RotX * RotX + RotY * RotY );
+    double angle = 180.0 * atan2( RotX , RotY ) / std::numbers::pi;
+
+    frc::SmartDashboard::PutNumber( "InputAngle", double{angle} );
+    frc::SmartDashboard::PutNumber( "InputMag", double{mag} );
+
+    if( mag > 0.8 )
+    {
+      m_DriveTargetAngle = angle;
+      m_DriveRotatePid.SetSetpoint( m_DriveTargetAngle );
+    }
+
+    double currentAngle           = GetYaw();
+    double driveRotSpeedUnClamped = m_DriveRotatePid.Calculate( currentAngle );
+    double driveRotSpeed          = std::clamp( driveRotSpeedUnClamped, -1.0, 1.0 );
+    // Get the rate of angular rotation. We are inverting this.
+    //const auto rotationSpeedUnClamped = ( m_DriveRotatePid.GetError() > 5.0 ) ? ( driveRotSpeed * ( units::radians_per_second_t{0.0} ) ) : ( units::radians_per_second_t{0.0} );
+    rotationSpeed =  driveRotSpeed * Drivetrain::kMaxAngularSpeed;
+
+    frc::SmartDashboard::PutNumber( "Err.", m_DriveRotatePid.GetError());
+  }
+  else
+  {
+    double driveRotSpeed = RotX;
+    rotationSpeed = driveRotSpeed * Drivetrain::kMaxAngularSpeed;
+  }
+
+  SetSpeeds( xSpeed, ySpeed, rotationSpeed );
+}
+
+
+
+void Drivetrain::Update( units::second_t period ) 
 {
   frc::ChassisSpeeds ChassisSpeedsToUse;
-  m_frontLeft.UpdateEncoders();
-  m_frontRight.UpdateEncoders();
-  m_backLeft.UpdateEncoders();
-  m_backRight.UpdateEncoders();
 
-  if ( fieldRelative )
+  if ( m_fieldRelative )
   {
     ChassisSpeedsToUse = \
       frc::ChassisSpeeds::FromFieldRelativeSpeeds(
@@ -30,7 +75,7 @@ void Drivetrain::Update( units::second_t period, bool fieldRelative )
   {
     ChassisSpeedsToUse = frc::ChassisSpeeds{ m_xSpeed, m_ySpeed, m_rot };
   }
-        frc::SmartDashboard::PutNumber("THE ROT", float{m_rot});
+
   frc::ChassisSpeeds ChassisSpeeds = frc::ChassisSpeeds::Discretize( ChassisSpeedsToUse, period );
 
   auto states = m_kinematics.ToSwerveModuleStates( ChassisSpeeds );
@@ -69,22 +114,6 @@ void Drivetrain::Update( units::second_t period, bool fieldRelative )
   UpdateSmartDashboardData();
 }
 
-void Drivetrain::drive(units::meters_per_second_t xSpeed,
-                       units::meters_per_second_t ySpeed,
-                       units::radians_per_second_t rot, bool fieldRelative,
-                       units::second_t period) 
-                       {
-  auto states =
-      m_kinematics.ToSwerveModuleStates(frc::ChassisSpeeds::Discretize(
-          fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                              xSpeed, ySpeed, rot,
-                              m_odometry.GetEstimatedPosition().Rotation())
-                        : frc::ChassisSpeeds{xSpeed, ySpeed, rot},
-          period));
-          
-          }
-
-
 
 void Drivetrain::SetSpeeds(
   units::meters_per_second_t  xSpeed,
@@ -112,12 +141,15 @@ void Drivetrain::AddToSpeeds(
 
 void Drivetrain::UpdateSmartDashboardData()
 {
-  #if 1
-  frc::SmartDashboard::PutNumber( "Drive_X", double{m_odometry.GetEstimatedPosition().X()});
-  frc::SmartDashboard::PutNumber( "Drive_y", double{m_odometry.GetEstimatedPosition().Y()});
-  frc::SmartDashboard::PutNumber( "Drive_Rot", double{m_odometry.GetEstimatedPosition().Rotation().Degrees()});
-  frc::SmartDashboard::PutNumber( "Yawby bobby", m_imu.GetYaw());
-  #endif
+  frc::SmartDashboard::PutNumber( "Drive_xSpeed", double{m_xSpeed} );
+  frc::SmartDashboard::PutNumber( "Drive_ySpeed", double{m_ySpeed} );
+  frc::SmartDashboard::PutNumber( "Drive_rot",    double{m_rot} );
+
+  frc::SmartDashboard::PutNumber( "Drive_PoseX",   double{m_odometry.GetEstimatedPosition().X()});
+  frc::SmartDashboard::PutNumber( "Drive_PoseY",   double{m_odometry.GetEstimatedPosition().Y()});
+  frc::SmartDashboard::PutNumber( "Drive_PoseRot", double{m_odometry.GetEstimatedPosition().Rotation().Degrees()});
+  frc::SmartDashboard::PutNumber( "Drive_NavxYaw",      m_imu.GetYaw());
+  frc::SmartDashboard::PutNumber( "Drive_NavxAccumYaw", m_imu.GetAngle());
 }
 
 
@@ -138,7 +170,7 @@ void Drivetrain::ResetYaw()
 
 
 double Drivetrain::GetYaw(){
-  return m_imu.GetYaw()*.9695;
+  return m_imu.GetYaw();
 }
 
 

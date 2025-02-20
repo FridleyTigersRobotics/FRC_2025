@@ -52,7 +52,7 @@
     AutonomousStateUpdate();
     RunAutoSequence();
     
-    m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
+    m_Drivetrain.Update( GetPeriod() );
     
     m_Climber.Update();
     
@@ -62,13 +62,6 @@
 
 
 
-
-
-void Robot::AutoAngle(double AngleCrap) {
-  m_Drivetrain.m_YawOffset    = -AngleCrap;
-  m_DriveTargetAngle          = -AngleCrap;
-  m_autoStateDone = true;
-}
 
 
 void Robot::Drivetrain_Stop() {

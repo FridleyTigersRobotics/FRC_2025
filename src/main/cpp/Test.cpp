@@ -15,5 +15,101 @@
 
 void Robot::TestInit()
 {
-    
+    m_Drivetrain.m_imu.ZeroYaw();
+     m_fieldRelative = true;
+
+    m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
+    m_AutoXdirPid.Reset( 0.0_m );
+    m_Climber.TeleopInit();
+    m_Claw.TeleopInit();
+}
+
+
+// ****************************************************************************
+void Robot::TestPeriodic() 
+{ 
+  m_Drivetrain.UpdateOdometry();
+  double DriveDeadband = 0.1;
+  double DriveX = frc::ApplyDeadband( m_driveController.GetLeftY(), DriveDeadband );
+  double DriveY = frc::ApplyDeadband( m_driveController.GetLeftX(), DriveDeadband );
+  double driveRotSpeed = frc::ApplyDeadband( m_driveController.GetRightX(), DriveDeadband );
+  const auto rotationSpeed = driveRotSpeed * Drivetrain::kMaxAngularSpeed;
+  const auto xSpeed = DriveX * Drivetrain::kMaxSpeed;
+  const auto ySpeed = DriveY * Drivetrain::kMaxSpeed;
+
+  frc::SmartDashboard::PutNumber( "xSpeed", double{xSpeed} );
+  frc::SmartDashboard::PutNumber( "ySpeed", double{ySpeed} );
+
+  m_Drivetrain.SetSpeeds( xSpeed, ySpeed, rotationSpeed );
+
+
+  // if ( m_driveController.GetAButton() )
+  // {
+  //   m_Claw.ChangeState(  m_Claw.CoralClawUp );
+  // }
+  // else if ( m_driveController.GetBButton() )
+  // {
+  //   m_Claw.ChangeState(  m_Claw.CoralClawDown );
+  // }
+  // else
+  // {
+  //   m_Claw.ChangeState( m_Claw.CoralClawStop );
+  // }
+
+  // if ( m_driveController.GetAButton() )
+  // {
+  //   m_Claw.ManualControl( 0.0, 0.5 );
+  // }
+  // else if ( m_driveController.GetBButton() )
+  // {
+  //   m_Claw.ManualControl( 0.0, -0.5 );
+  // }
+  // else
+  // {
+  //   m_Claw.ManualControl( 0.0, 0.0 );
+  // }
+
+
+  if ( m_driveController.GetAButtonPressed() )
+  {
+    m_Elevator.ChangeState( m_Elevator.ElevatorCoralL4 );
+  }
+  if ( m_driveController.GetBButtonPressed() )
+  {
+    m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
+  }
+
+  // if( m_driveController.GetXButton() ) //winch in (climber down, robot climb up)
+  // {
+  //  m_Climber.ManualControl( 0.2, 0.0 ); 
+  // }
+  // else if ( m_driveController.GetYButton() )// winch out
+  // {
+  //   m_Climber.ManualControl( -0.2, 0.0 );
+  // }
+  // else
+  // {
+  //   m_Climber.ManualControl( 0.0, 0.0 );
+  // }
+  
+
+  if( m_driveController.GetXButton() ) //winch in (climber down, robot climb up)
+  {
+   m_Climber.ChangeState( m_Climber.ClimberReset ); 
+  }
+  if ( m_driveController.GetYButton() )
+  {
+   m_Climber.ChangeState( m_Climber.GrabSpin ); 
+  }
+  else if ( !m_driveController.GetYButton() )
+  {
+    m_Climber.ChangeState( m_Climber.ClimberStop );
+  }
+  
+
+  // Update all subsystems
+  m_Drivetrain.Update( GetPeriod() );
+  m_Climber.Update();
+  m_Elevator.Update();
+  m_Claw.Update();
 }

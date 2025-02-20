@@ -108,9 +108,59 @@ void Elevator::Update()
 
 
 // ****************************************************************************
-void Elevator::ChangeState( double position )
+void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
 {
-  m_ElevatorTargetPosition = position;
+
+    switch ( ElevatorPosition )
+    {
+        case ElevatorAlgaeFloor:
+        {
+            m_ElevatorTargetPosition = 10.0;
+            break;
+        }
+        case ElevatorAlgaeProcessor:
+        {
+            m_ElevatorTargetPosition = 15.0;
+            break;
+        }
+        case ElevatorAlgaeReefLow:
+        {
+            m_ElevatorTargetPosition = 40.0;
+            break;
+        }
+        case ElevatorAlgaeReefHigh:
+        {
+            m_ElevatorTargetPosition = 60.0;
+            break;
+        }
+        case ElevatorCoralL1:
+        {
+            m_ElevatorTargetPosition = 30.0;
+            break;
+        }
+        case ElevatorCoralL2:
+        {
+            m_ElevatorTargetPosition = 5.0;
+            break;
+        }
+        case ElevatorCoralL3:
+        {
+            m_ElevatorTargetPosition = 70.0;
+            break;
+        }
+        case ElevatorCoralL4:
+        {
+            m_ElevatorTargetPosition = 90.0;
+            break;
+        }
+
+        default:
+        case ElevatorStartingConfig:
+        {
+
+            break;
+        }
+    }
 }
 
 

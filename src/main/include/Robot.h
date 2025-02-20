@@ -24,15 +24,12 @@
 
 class Robot : public frc::TimedRobot {
   public:
-    double targetWrappedAngle = 0;
-    bool angleChanged = false;
-    float Angle = 0;
-    float DumbAssOffset = 0;
+
     void RobotInit() override;
     void RobotPeriodic() override;
 
     void TestInit() override;
-
+    void TestPeriodic() override;
 
     void AutonomousInit() override;
     void AutonomousPeriodic() override;
@@ -54,16 +51,11 @@ class Robot : public frc::TimedRobot {
       units::radians_per_second_t rotSpeed,
       units::time::second_t       maxTime
    );
-   void MoveArmForPickup();
-   void MoveArmForShooting();
-   void AimAndPrepShoot( units::second_t maxTime );
-   void Shoot( units::second_t maxTime );
    void Wait( units::second_t maxTime );
 
     void RunAutoSequence();
     void AutonomousStateInit();
     void AutonomousStateUpdate();
-    void AutoAngle(double AngleCrap);
 
  private:
     frc::XboxController m_driveController{0};
@@ -75,8 +67,6 @@ class Robot : public frc::TimedRobot {
     Elevator   m_Elevator;
     Claw       m_Claw;
     
-
-    bool m_controlModeEndGame = false; // Switches co-controller to end game mode
     bool m_fieldRelative      = true;
 
     frc::SlewRateLimiter<units::scalar> m_xspeedLimiter{2 / 1_s};
@@ -128,16 +118,6 @@ class Robot : public frc::TimedRobot {
       //{units::radians_per_second_t{1}, units::radians_per_second_squared_t{1}}
     };
 
-    double m_DriveTargetAngle = 0;
-    double m_RotP = 0.005;
-
-    frc::PIDController m_DriveRotatePid{
-      m_RotP,
-      0.00,
-      0.0//,
-      //{units::degrees_per_second_t{90.0}, units::degrees_per_second_squared_t{90.0}}
-    };
-
     double m_limeVelMax = 1;
     double m_limeAccMax = 1;    
     double m_limeP      = 1;
@@ -187,7 +167,6 @@ class Robot : public frc::TimedRobot {
 
   // TESTED
   std::vector<std::function<void(void)>> Auto_Drive = {
-    [this] (void) -> void { AutoAngle( 0 ); },
     [this] (void) -> void { DriveForDistance( -2.0_m, 0.0_m, 0.0_rad, 0.5_mps, 0.0_mps, 0.0_rad_per_s, 5.0_s ); },
     [this] (void) -> void { Drivetrain_Stop(); },
   };

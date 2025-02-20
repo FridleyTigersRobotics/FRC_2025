@@ -32,7 +32,7 @@ class Elevator
 
     void Init();
     void Update();
-    void ChangeState( double position );
+    void ChangeState( ElevatorState_t ElevatorPosition );
     void ManualControl( double speed );
     void UpdateSmartDashboardData();
 

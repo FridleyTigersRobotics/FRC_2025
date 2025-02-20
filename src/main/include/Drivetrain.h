@@ -28,14 +28,25 @@ using namespace Constants;
 class Drivetrain {
 public:
 
+  bool m_fieldRelative = false;
   double m_YawOffset = 0;
-  //double m_DriveTargetAngle = 0;
-  Drivetrain() {m_imu.ResetDisplacement(); }
+  double m_RotP = 0.005;
 
-  void Update( units::second_t period, bool fieldRelative );
-  void drive(units::meters_per_second_t xSpeed,
-             units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
-             bool fieldRelative, units::second_t period);
+  frc::PIDController m_DriveRotatePid{
+    m_RotP,
+    0.00,
+    0.0//,
+    //{units::degrees_per_second_t{90.0}, units::degrees_per_second_squared_t{90.0}}
+  };
+
+  double m_DriveTargetAngle = 0;
+
+  Drivetrain();
+
+  void Update( units::second_t period );
+
+  void Drive( double DriveX, double DriveY, double RotX, double RotY, bool fieldRelative  ) ;
+
   void SetSpeeds(
     units::meters_per_second_t  xSpeed,
     units::meters_per_second_t  ySpeed, 
@@ -81,34 +92,27 @@ public:
 //0.255626 Drive motor #14     0.255626 / (2*std::numbers::pi),      
 //4.980153 Drive motor #16     4.980153 / (2*std::numbers::pi),      
 
-  SwerveModule m_backRight { kBackRightDriveID,  kBackRightSpinID,  kDriveEncoderBackRight,  -4.97/*+(std::numbers::pi*.9)*/, kMaxSpeed, "BR" };
-  SwerveModule m_frontRight{ kFrontRightDriveID, kFrontRightSpinID, kDriveEncoderFrontRight, -2.75/*+(std::numbers::pi*.9)*/, kMaxSpeed, "FR" };
-  SwerveModule m_backLeft  { kBackLeftDriveID,   kBackLeftSpinID,   kDriveEncoderBackLeft,   -3.35/*+(std::numbers::pi*.9)*/, kMaxSpeed, "BL" };
-  SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   -5.6/*+(std::numbers::pi*.9)*/, kMaxSpeed, "FL" };
-                                                                //0.79    1.58
+  SwerveModule m_backRight { kBackRightDriveID,  kBackRightSpinID,  kDriveEncoderBackRight,  -4.97, kMaxSpeed, "BR" };
+  SwerveModule m_frontRight{ kFrontRightDriveID, kFrontRightSpinID, kDriveEncoderFrontRight, -2.75, kMaxSpeed, "FR" };
+  SwerveModule m_backLeft  { kBackLeftDriveID,   kBackLeftSpinID,   kDriveEncoderBackLeft,   -3.35, kMaxSpeed, "BL" };
+  SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   -5.6, kMaxSpeed, "FL" };
   studica::AHRS m_imu { studica::AHRS::NavXComType::kMXP_SPI };
 
  public:
    frc::SwerveDriveKinematics<4> m_kinematics{
-      m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation,
+      m_frontLeftLocation, 
+      m_frontRightLocation, 
+      m_backLeftLocation,
       m_backRightLocation};
 
 
 
-
-    // X Postive = Backwards
-    // Y Positive = Right
-    // Rot Positive = Clockwise
-
   frc::SwerveDrivePoseEstimator<4> m_odometry{
       m_kinematics,
-      frc::Rotation2d{units::degree_t {GetYaw()}},//m_gyro.GetRotation2d(),
+      frc::Rotation2d{},
       {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
        m_backLeft.GetPosition(), m_backRight.GetPosition()},
       frc::Pose2d{},
       {0.1, 0.1, 0.1},
       {0.1, 0.1, 0.1}};
-
-
-
 };

@@ -21,43 +21,6 @@ using namespace rev::spark;
 #include <rev/sparkmax.h>
 
 
-class OldAnalogEncoder : 
-  frc::AnalogEncoder
-{
-    using frc::AnalogEncoder::AnalogEncoder;
-    double m_DistancePerRotation = 0;
-    double m_PositionOffset = 0;
-    double m_Distance = 0;
-  public:
-    void Update( void )
-    {
-      m_Distance = Get();
-    }
-
-    double GetDistance( void ) const
-    {
-      return std::remainder( m_PositionOffset + m_Distance * m_DistancePerRotation, m_DistancePerRotation );
-    }
-
-    double GetRawPos( void ) const
-    {
-      return m_Distance * m_DistancePerRotation;
-    }
-
-    void SetDistancePerRotation( double distPerRot )
-    {
-      m_DistancePerRotation = distPerRot;
-    }
-
-    void SetPositionOffset( double posOffset )
-    {
-      m_PositionOffset = posOffset;
-    }
-};
-
-
-
-
 
 class SwerveModule {
  public:
@@ -72,17 +35,18 @@ class SwerveModule {
   frc::SwerveModuleState GetState() const;
   frc::SwerveModulePosition GetPosition() const;
   void SetDesiredState( frc::SwerveModuleState& state );
-  void UpdateEncoders();
 
  private:
   SparkMax m_driveMotor;
   SparkMax m_turningMotor;
-  OldAnalogEncoder m_turningEncoder;
+  frc::AnalogEncoder m_turningAbsoluteEncoder;
+
   std::string m_driveSpeedName;
   std::string m_driveAngleName;
   std::string m_driveRawAngleName;
   units::meters_per_second_t m_maxSpeed{ 0.0 };
-  SparkRelativeEncoder m_driveEncoder;
+  SparkRelativeEncoder m_driveMotorEncoder;
+  SparkRelativeEncoder m_turnMotorEncoder;
 
   static constexpr auto kModuleMaxAngularVelocity =
       std::numbers::pi * 100_rad_per_s;  // radians per second
@@ -91,9 +55,17 @@ class SwerveModule {
       std::numbers::pi * 200_rad_per_s / 1_s;  // radians per second^2
 
   static constexpr double m_metersPerInch     = 0.0254;
-  static constexpr double m_driveGearRatio    = 8.14; // Gear ratio of our SDS MK4 L1 module.
-  static constexpr double m_wheelDiameter     = 4.0;
-  static constexpr double m_positonConversionFactor = m_wheelDiameter * m_metersPerInch * std::numbers::pi / m_driveGearRatio;
+  static constexpr double m_driveGearRatio    = 8.14; // Drivegear ratio of our SDS MK4 L1 module.
+  static constexpr double m_wheelDiameterInch = 4.0;  // inches
+  static constexpr double m_drivePositonConversionFactor = m_wheelDiameterInch * m_metersPerInch * std::numbers::pi / m_driveGearRatio;
+  // Velocity is returned in rotations per minute, convert to meters per second.
+  static constexpr double m_driveVelocityConversionFactor = m_drivePositonConversionFactor / 60.0;
+
+  static constexpr double m_turnGearRatio    = 8.14; // Turning gear ratio of our SDS MK4 L1 module.
+  static constexpr double m_turnPositonConversionFactor = 2 * std::numbers::pi / m_turnGearRatio; // 2pi per rev
+  // Velocity is returned in rotations per minute, convert to 2pi per second.
+  static constexpr double m_turnVelocityConversionFactor = m_turnPositonConversionFactor / 60.0;
+
 
   frc::ProfiledPIDController<units::radians> m_turningPIDController{
       1.0,
