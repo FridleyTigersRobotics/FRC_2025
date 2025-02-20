@@ -61,17 +61,17 @@ SwerveModule::SwerveModule(
     m_turningMotor.Configure(configTurn,  SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
 
     m_driveMotorEncoder.SetPosition( 0 );
-    m_driveMotorEncoder.SetPosition( turningEncoderOffset );
+    m_turnMotorEncoder.SetPosition( turningEncoderOffset );
 }
 
 frc::SwerveModuleState SwerveModule::GetState() const {
   return { units::meters_per_second_t{ m_driveMotorEncoder.GetVelocity()   },
-           units::radian_t           { m_driveMotorEncoder.GetPosition() } };
+           units::radian_t           { m_turnMotorEncoder.GetPosition() } };
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() const {
   return { units::meter_t  { m_driveMotorEncoder.GetPosition()   },
-           units::radian_t { m_driveMotorEncoder.GetPosition() } };
+           units::radian_t { m_turnMotorEncoder.GetPosition() } };
 }
 
 
@@ -80,7 +80,7 @@ void SwerveModule::SetDesiredState(
   frc::SwerveModuleState& referenceState
 ) 
 {
-  units::radian_t encoderRads{m_driveMotorEncoder.GetPosition()};
+  units::radian_t encoderRads{m_turnMotorEncoder.GetPosition()};
   frc::Rotation2d encoderRotation{encoderRads};
 
   // Optimize the reference state to avoid spinning further than 90 degrees
