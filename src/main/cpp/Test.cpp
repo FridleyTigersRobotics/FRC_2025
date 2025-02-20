@@ -78,32 +78,32 @@ void Robot::TestPeriodic()
   {
     m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
   }
-
-  // if( m_driveController.GetXButton() ) //winch in (climber down, robot climb up)
-  // {
-  //  m_Climber.ManualControl( 0.2, 0.0 ); 
-  // }
-  // else if ( m_driveController.GetYButton() )// winch out
-  // {
-  //   m_Climber.ManualControl( -0.2, 0.0 );
-  // }
-  // else
-  // {
-  //   m_Climber.ManualControl( 0.0, 0.0 );
-  // }
   
 
-  if( m_driveController.GetXButton() ) //winch in (climber down, robot climb up)
+  if(m_buttons.GetRawButton(1))//winch in
   {
-   m_Climber.ChangeState( m_Climber.ClimberWinchReset, m_Climber.GrabStop ); 
+    m_Climber.ChangeState( m_Climber.ClimberWinchInManual, m_Climber.GrabMaintain );
   }
-  if ( m_driveController.GetYButton() )
+  else if(m_buttons.GetRawButton(4))//winch out
   {
-   m_Climber.ChangeState( m_Climber.ClimberWinchStop, m_Climber.GrabHorizontal ); 
+    m_Climber.ChangeState( m_Climber.ClimberWinchOutManual, m_Climber.GrabMaintain );
   }
-  else if ( !m_driveController.GetYButton() )
+  else
   {
-    m_Climber.ChangeState( m_Climber.ClimberWinchStop, m_Climber.GrabVertical );
+    m_Climber.ChangeState( m_Climber.ClimberWinchStop, m_Climber.GrabMaintain );
+  }
+
+  if(m_buttons.GetRawButton(2))//grab
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabHorizontal );
+  }
+  else if(m_buttons.GetRawButton(5))//release
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabVertical );
+  }
+  else
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabStop); // do want to stop grabber state here
   }
   
 

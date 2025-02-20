@@ -69,6 +69,7 @@ void Robot::TeleopInit()
   m_AutoXdirPid.Reset( 0.0_m );
   m_Climber.TeleopInit();
   m_Claw.TeleopInit();
+
 }
 
 
@@ -85,6 +86,36 @@ void Robot::TeleopPeriodic()
 
   m_Drivetrain.Drive( DriveX, DriveY, RotX, RotY, m_fieldRelative );
 
+  if(m_buttons.GetRawButton(1))//winch in
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchInManual, m_Climber.GrabMaintain );
+  }
+  else if(m_buttons.GetRawButton(4))//winch out
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchOutManual, m_Climber.GrabMaintain );
+  }
+  else
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchStop, m_Climber.GrabMaintain );
+  }
+
+  if(m_buttons.GetRawButton(2))//grab
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabHorizontal );
+  }
+  else if(m_buttons.GetRawButton(5))//release
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabVertical );
+  }
+  else
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabMaintain); // don't want to stop grabber state here
+  }
+
+  if(m_buttons.GetRawButton(7))//calibrate climber
+  {
+    m_Climber.ChangeState( m_Climber.ClimberWinchCalibrate, m_Climber.GrabMaintain );
+  }
 
 
   // Update all subsystems

@@ -44,6 +44,7 @@ namespace Constants
     // Climber Control Values
     constexpr long kEncClimbUp = 599010;
     constexpr double kClimbCalibrateSpeed = 0.3;
+    constexpr double kClimbSpeed = 0.5;
     constexpr double kGrabSpeed = 0.5;
     constexpr double kGrabberPidP{16.0e-2};
     constexpr double kGrabberPidI{8.0e-1};

@@ -36,14 +36,18 @@ class Climber
         ClimberWinchOut,
         ClimberWinchIn,
         ClimberWinchStop,
-        ClimberWinchReset
+        ClimberWinchCalibrate,
+        ClimberWinchInManual,
+        ClimberWinchOutManual,
+        ClimberWinchMaintain
     } ClimberWinchState_t;
 
         typedef enum ClimberGrabberState_e
     {
         GrabVertical,
         GrabHorizontal,
-        GrabStop
+        GrabStop,
+        GrabMaintain
     } ClimberGrabberState_t;
     
 
@@ -51,7 +55,7 @@ class Climber
     void TeleopInit();
     void Update();
     void ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gstate );
-    void ManualControl( double climbSpeed, double grabSpeed );
+    void ManualControl();
     void UpdateSmartDashboardData();
 
  private:
@@ -62,9 +66,6 @@ class Climber
     frc::Encoder m_climberEncoderEast {Constants::kEastEncoderLDIO,Constants::kEastEncoderHDIO};
     rev::spark::SparkMax m_CageGrabberMotor { Constants::kCageGrabberID, rev::spark::SparkLowLevel::MotorType::kBrushless };
 
-    double m_ClimbSpeed = 0;
-    double m_GrabSpeed = 0;
-    bool m_ManualClimbControl = false;
     bool winch_calibrated = false;
     long maxClimbWest = Constants::kEncClimbUp;
     long maxClimbEast = -(Constants::kEncClimbUp);

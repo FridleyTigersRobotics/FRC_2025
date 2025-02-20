@@ -11,6 +11,9 @@ void Climber::Init()
    m_ClimberWinchState = ClimberWinchStop;
    m_ClimberGrabberState = GrabStop;
    m_CageEncoder.SetPosition(0.0);
+   m_GrabberPid.SetIntegratorRange( -0.1, 0.1 ); //stops integrator wind-up
+   m_GrabberPid.SetTolerance(1.0);
+   m_GrabberPid.Reset();
 }
 
 
@@ -19,33 +22,20 @@ void Climber::TeleopInit()
 {
    winch_calibrated=false;
    m_ClimberWinchState = ClimberWinchStop;
-   m_ClimberGrabberState = GrabStop;
-   m_CageEncoder.SetPosition(0.0);
-   m_GrabberPid.SetIntegratorRange( -0.1, 0.1 ); //stops integrator wind-up
-   m_GrabberPid.SetTolerance(1.0);
-   m_GrabberPid.Reset();
+   m_ClimberGrabberState = GrabVertical;
 }
 
 
 // ****************************************************************************
-void Climber::ManualControl( double climbSpeed , double grabSpeed )
+void Climber::ManualControl()
 {
-    m_ClimbSpeed = climbSpeed;
-    m_GrabSpeed = grabSpeed;
-    m_ClimberWinchState = ClimberWinchStop;
-    m_ClimberGrabberState = GrabStop;
+
 }
 
 
 // ****************************************************************************
 void Climber::Update()
 {
-     if ( m_ManualClimbControl )
-    {
-        m_ClimbMotorEast.Set( m_ClimbSpeed );
-        m_ClimbMotorWest.Set( -m_ClimbSpeed );
-    }
-
     if ( winch_limit.Get() )
     {
         m_climberEncoderEast.Reset();
@@ -53,11 +43,54 @@ void Climber::Update()
         winch_calibrated = true;
     }
 
-    if (m_ClimberWinchState == ClimberWinchReset)
+    if(m_ClimberWinchState == ClimberWinchInManual)
+    {
+        if(!winch_limit.Get())
+        {
+            m_ClimbMotorEast.Set( Constants::kClimbSpeed ); //winch in (climber down, robot climb up)
+            m_ClimbMotorWest.Set( -Constants::kClimbSpeed );
+        }
+        else
+        {
+            m_ClimbMotorEast.Set( 0.00 ); //winch in (climber down, robot climb up)
+            m_ClimbMotorWest.Set( 0.00 );
+        }
+       
+    }
+
+    if(m_ClimberWinchState == ClimberWinchOutManual)
+    {
+        if(winch_calibrated == false)
+        {
+             m_ClimbMotorEast.Set( -Constants::kClimbSpeed ); //winch out (climber up)
+             m_ClimbMotorWest.Set( Constants::kClimbSpeed );  
+        }
+        else if(winch_calibrated == true)
+        {
+            if( m_climberEncoderWest.Get() < maxClimbWest )
+            {
+                m_ClimbMotorEast.Set( -Constants::kClimbCalibrateSpeed);
+                m_ClimbMotorWest.Set( Constants::kClimbCalibrateSpeed );  
+            }
+            else if( m_climberEncoderWest.Get() >= maxClimbWest )
+            {
+                m_ClimbMotorEast.Set( 0.0 );
+                m_ClimbMotorWest.Set( 0.0 );
+            }
+        }
+        
+    }
+
+    //if(m_ClimberWinchState == ClimberWinchMaintain)
+    //{
+    //    //do not change state, ignore update in Climber::ChangeState
+    //}
+
+    if (m_ClimberWinchState == ClimberWinchCalibrate)
     {
         if(winch_calibrated==false)
         {
-            m_ClimbMotorEast.Set( Constants::kClimbCalibrateSpeed ); // //winch in (climber down, robot climb up)
+            m_ClimbMotorEast.Set( Constants::kClimbCalibrateSpeed ); //winch in (climber down, robot climb up)
             m_ClimbMotorWest.Set( -Constants::kClimbCalibrateSpeed );  
         }
         else if( winch_calibrated==true && ( m_climberEncoderWest.Get() < maxClimbWest ) )
@@ -76,9 +109,7 @@ void Climber::Update()
     if (m_ClimberWinchState == ClimberWinchStop)
     {
         m_ClimbMotorEast.Set( 0.0 );
-        m_ClimbMotorWest.Set( 0.0 );
-
-        
+        m_ClimbMotorWest.Set( 0.0 ); 
     }
     
     if(m_ClimberGrabberState == GrabHorizontal)
@@ -108,8 +139,16 @@ void Climber::Update()
 // ****************************************************************************
 void Climber::ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gstate )
 {
-   m_ClimberWinchState = Cstate;
-   m_ClimberGrabberState = Gstate;
+   if(m_ClimberWinchState != ClimberWinchMaintain)
+   {
+    m_ClimberWinchState = Cstate;
+   }
+
+   if(m_ClimberGrabberState != GrabMaintain)
+   {
+    m_ClimberGrabberState = Gstate;
+   }
+
 }
 
 
