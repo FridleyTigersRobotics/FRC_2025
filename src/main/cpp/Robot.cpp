@@ -99,6 +99,8 @@ void Robot::TeleopPeriodic()
   frc::SmartDashboard::PutNumber( "xSpeed", double{xSpeed} );
   frc::SmartDashboard::PutNumber( "ySpeed", double{ySpeed} );
 
+  frc::SmartDashboard::PutBoolean("button 1", m_buttons.GetRawButton(1));
+
   m_Drivetrain.SetSpeeds( xSpeed, ySpeed, rotationSpeed );
   if(m_buttons.GetRawButton(1))//winch in
   {

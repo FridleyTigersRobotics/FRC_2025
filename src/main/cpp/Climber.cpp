@@ -42,7 +42,7 @@ void Climber::Update()
         m_climberEncoderWest.Reset();
         winch_calibrated = true;
     }
-
+    
     if(m_ClimberWinchState == ClimberWinchInManual)
     {
         if(!winch_limit.Get())
@@ -116,7 +116,7 @@ void Climber::Update()
     {
         m_GrabberPid.SetSetpoint(Constants::kGrab90);
         double grabMotorValue = m_GrabberPid.Calculate(m_CageEncoder.GetPosition());
-        grabMotorValue = std::clamp(grabMotorValue, -0.5, 0.5 );
+        grabMotorValue = std::clamp(grabMotorValue, -0.75, 0.75 );
         m_CageGrabberMotor.Set(grabMotorValue);
     }
 
@@ -139,12 +139,12 @@ void Climber::Update()
 // ****************************************************************************
 void Climber::ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gstate )
 {
-   if(m_ClimberWinchState != ClimberWinchMaintain)
+   if(Cstate != ClimberWinchMaintain)
    {
     m_ClimberWinchState = Cstate;
    }
 
-   if(m_ClimberGrabberState != GrabMaintain)
+   if(Gstate != GrabMaintain)
    {
     m_ClimberGrabberState = Gstate;
    }
@@ -159,5 +159,5 @@ void Climber::UpdateSmartDashboardData( )
     frc::SmartDashboard::PutNumber("Climb Winch Encoder West", m_climberEncoderWest.Get());
     frc::SmartDashboard::PutNumber("Climb Winch Encoder East", m_climberEncoderEast.Get());
     frc::SmartDashboard::PutNumber("Climber: Cage Grabber", m_CageEncoder.GetPosition());
-   
+    frc::SmartDashboard::PutNumber("grabber staus", m_ClimberGrabberState);
 }
