@@ -21,13 +21,16 @@ void Claw::Init()
     //SparkMaxConfig config_CoralIntakeMotor{};
 
 
+
+
+
     config_CoralAngleMotor
-        .SetIdleMode(SparkMaxConfig::IdleMode::kCoast)
+        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
         .VoltageCompensation(12.0)
         .SmartCurrentLimit(10, 10);
 
     config_CoralAngleMotor.encoder
-        .Inverted( true )
+        //.Inverted( true )
         .PositionConversionFactor( 1.0 / 40.0 )
         .VelocityConversionFactor( 1.0 / 40.0* (1.0/60.0) );
 
@@ -62,7 +65,7 @@ void Claw::Init()
 
 
     config_AlgaeAngleMotor
-        .SetIdleMode(SparkMaxConfig::IdleMode::kCoast)
+        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
         .VoltageCompensation(12.0)
         .SmartCurrentLimit(10, 10);
 
@@ -95,7 +98,7 @@ void Claw::Init()
         .AllowedClosedLoopError(1, ClosedLoopSlot::kSlot1);
 
     config_AlgaeAngleMotor.encoder
-        .Inverted( true )
+        //.Inverted( true )
         .PositionConversionFactor( 1.0 / 45.0 )
         .VelocityConversionFactor( 1.0 / 45.0 * (1.0/60.0) );
 
@@ -114,6 +117,24 @@ void Claw::Init()
     m_AlgaePid.SetIntegratorRange( -0.1, 0.1 ); //stops integrator wind-up
     m_AlgaePid.SetTolerance(1.0);
     m_AlgaePid.Reset();
+
+
+    SparkMaxConfig config_AlgaeAngleMotor1 {};
+    SparkMaxConfig config_CoralAngleMotor1 {};
+    config_CoralAngleMotor1
+        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
+        .VoltageCompensation(12.0)
+        .SmartCurrentLimit(20, 20);
+
+
+    config_CoralAngleMotor1
+        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
+        .VoltageCompensation(12.0)
+        .SmartCurrentLimit(20, 20);
+    m_CoralIntakeMotor.Configure( config_CoralAngleMotor1, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters );
+    m_AlgaeIntakeMotor.Configure( config_AlgaeAngleMotor1, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters );
+
+
 }
 
 
@@ -134,24 +155,22 @@ void Claw::Update()
     }
     else
     {
-        double coralMotorSpeed = 0.0;
-
         switch ( m_coralState )
         {
-            case CoralClawDown:
+            case CoralL1:
             {
-                m_CoralTargetPosition = 0.0;
+                m_CoralTargetPosition = 0.625;
                 break;
             }
-            case CoralClawUp:
+            case CoralL2:
             {
-                m_CoralTargetPosition = 0.0;
+                m_CoralTargetPosition = 0.625;
                 break;
             }
-            case CoralClawStop:
+            case CoralUp:
             default:
             {
-                m_CoralTargetPosition = 0.0;
+                m_CoralTargetPosition = m_CoralEncoderTop;
                 break;
             }
         }
@@ -163,59 +182,61 @@ void Claw::Update()
     }
     else
     {
-        double algaeMotorSpeed = 0.0;
-
         switch ( m_algaeState )
         {
-            case AlgaeClawDown:
+            case AlgaeGround:
             {
-                m_AlgaeTargetPosition = 0.0;
+                m_AlgaeTargetPosition = 0.48;
                 break;
             }
-            case AlgaeClawUp:
+            case AlgaeL1:
             {
-                m_AlgaeTargetPosition = 0.0;
+                m_AlgaeTargetPosition = 0.48;
                 break;
             }
-            case AlgaeClawStop:
+            case AlgaeL2:
+            {
+                m_AlgaeTargetPosition = 0.48;
+                break;
+            }
+            case AlgaeUp:
             default:
             {
-                m_AlgaeTargetPosition = 0.0;
+                m_AlgaeTargetPosition = m_AlgaeEncoderTop;
                 break;
             }
         }
-
-        m_AlgaeAngleMotor.Set( algaeMotorSpeed );
     }
 
-    //if ( m_CoralEncoder.Get() > m_CoralEncoderTop )
-    {
-        m_CoralMotorClosedLoopController.SetReference(
-            m_CoralTargetPosition, 
-            SparkMax::ControlType::kMAXMotionPositionControl,
-            ClosedLoopSlot::kSlot0
-        );
-    }
+    // //if ( m_CoralEncoder.Get() > m_CoralEncoderTop )
+    // {
+    //     m_CoralMotorClosedLoopController.SetReference(
+    //         m_CoralTargetPosition, 
+    //         SparkMax::ControlType::kMAXMotionPositionControl,
+    //         ClosedLoopSlot::kSlot0
+    //     );
+    // }
 
-    //m_CoralPid.SetSetpoint(???);
-    //double coralMotorValue = m_CoralPid.Calculate(m_CoralEncoder.GetPosition());
-    //coralMotorValue = std::clamp(coralMotorValue, -0.5, 0.5 );
-    //m_CoralAngleMotor.Set(coralMotorValue);
+    m_CoralPid.SetSetpoint(m_CoralTargetPosition);
+    double coralMotorValue = m_CoralPid.Calculate(m_CoralEncoder.Get());
+    coralMotorValue = std::clamp(coralMotorValue, -0.5, 0.5 );
+    m_CoralAngleMotor.Set(-coralMotorValue);
 
 
     //if ( m_CoralEncoder.Get() > m_CoralEncoderTop )
-    {
-        m_AlgaeMotorClosedLoopController.SetReference(
-            m_AlgaeTargetPosition, 
-            SparkMax::ControlType::kMAXMotionPositionControl,
-            ClosedLoopSlot::kSlot0
-        );
-    }
+    // {
+    //     m_AlgaeMotorClosedLoopController.SetReference(
+    //         m_AlgaeTargetPosition, 
+    //         SparkMax::ControlType::kMAXMotionPositionControl,
+    //         ClosedLoopSlot::kSlot0
+    //     );
+    // }
 
-    //m_AlgaePid.SetSetpoint(???);
-    //double algaeMotorValue = m_AlgaePid.Calculate(m_AlgaeEncoder.GetPosition());
-    //algaeMotorValue = std::clamp(algaeMotorValue, -0.5, 0.5 );
-    //m_AlgaeAngleMotor.Set(algaeMotorValue);
+    m_AlgaePid.SetSetpoint( m_AlgaeTargetPosition );
+
+    double algaeMotorValue = m_AlgaePid.Calculate(m_AlgaeEncoder.Get());
+    algaeMotorValue = std::clamp(algaeMotorValue, -0.5, 0.5 );
+    m_AlgaeAngleMotor.Set(-algaeMotorValue);
 }
 
 
@@ -226,6 +247,16 @@ void Claw::ChangeState( CoralClawState_t coralState, AlgaeClawState_t algaeState
     m_algaeState = algaeState;
 }
 
+// ****************************************************************************
+void Claw::ChangeCIntakeState( double coralIntake)
+{
+    m_CoralIntakeMotor.Set(coralIntake);
+
+}
+void Claw::ChangeAIntakeState(double algaeIntake )
+{
+    m_AlgaeIntakeMotor.Set(algaeIntake);
+}
 
 // ****************************************************************************
 void Claw::UpdateSmartDashboardData( )
@@ -238,4 +269,5 @@ void Claw::UpdateSmartDashboardData( )
 
     frc::SmartDashboard::PutNumber("Intake: Coral Motor Encoder Value", m_CoralMotorEncoder.GetPosition());
     frc::SmartDashboard::PutNumber("Intake: Coral Target Value", m_CoralTargetPosition);
+    frc::SmartDashboard::PutNumber("Intake: Algae Target Value", m_AlgaeTargetPosition);
 }

@@ -13,7 +13,7 @@ void Elevator::Init()
     SparkMaxConfig configMotor1{};
 
     configMotor0
-        .SetIdleMode(SparkMaxConfig::IdleMode::kCoast)
+        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
         .VoltageCompensation(12.0)
         .SmartCurrentLimit(40,40);
 
@@ -112,22 +112,22 @@ void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
     {
         case ElevatorAlgaeFloor:
         {
-            m_ElevatorTargetPosition = 10.0;
+            m_ElevatorTargetPosition = 6.785;
             break;
         }
         case ElevatorAlgaeProcessor:
         {
-            m_ElevatorTargetPosition = 15.0;
+            m_ElevatorTargetPosition = 6.785;
             break;
         }
         case ElevatorAlgaeReefLow:
         {
-            m_ElevatorTargetPosition = 40.0;
+            m_ElevatorTargetPosition = 48.55;
             break;
         }
         case ElevatorAlgaeReefHigh:
         {
-            m_ElevatorTargetPosition = 60.0;
+            m_ElevatorTargetPosition = 78.2;
             break;
         }
         case ElevatorCoralL1:
@@ -154,7 +154,7 @@ void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
         default:
         case ElevatorStartingConfig:
         {
-
+            m_ElevatorTargetPosition = 0.0;
             break;
         }
     }

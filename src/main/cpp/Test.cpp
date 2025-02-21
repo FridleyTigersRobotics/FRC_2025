@@ -70,16 +70,23 @@ void Robot::TestPeriodic()
   // }
 
 
-  if ( m_driveController.GetAButtonPressed() )
+  if ( m_buttons.GetRawButton(1) )
   {
     m_Elevator.ChangeState( m_Elevator.ElevatorCoralL4 );
   }
+
+
+
+
+  
   if ( m_driveController.GetBButtonPressed() )
   {
     m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
   }
   
 
+
+#if 0
   if(m_buttons.GetRawButton(1))//winch in
   {
     m_Climber.ChangeState( m_Climber.ClimberWinchInManual, m_Climber.GrabMaintain );
@@ -105,7 +112,7 @@ void Robot::TestPeriodic()
   {
     m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabStop); // do want to stop grabber state here
   }
-  
+#endif
 
   // Update all subsystems
   m_Drivetrain.Update( GetPeriod(), m_fieldRelative );

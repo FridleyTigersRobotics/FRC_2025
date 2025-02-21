@@ -102,6 +102,77 @@ void Robot::TeleopPeriodic()
   frc::SmartDashboard::PutBoolean("button 1", m_buttons.GetRawButton(1));
 
   m_Drivetrain.SetSpeeds( xSpeed, ySpeed, rotationSpeed );
+
+  // Algae Reef Low
+  if(m_buttons.GetRawButton(1))
+  {
+    m_Elevator.ChangeState( m_Elevator.ElevatorAlgaeReefLow );
+    m_Claw.ChangeState( m_Claw.CoralUp, m_Claw.AlgaeL1 );
+  }
+  
+  // Algae Reef High
+  if(m_buttons.GetRawButton(2))
+  {
+    m_Elevator.ChangeState( m_Elevator.ElevatorAlgaeReefHigh );
+    m_Claw.ChangeState( m_Claw.CoralUp, m_Claw.AlgaeL2 );
+  }
+
+
+  // Algae Reef High
+  if(m_buttons.GetRawButton(2))
+  {
+    m_Elevator.ChangeState( m_Elevator.ElevatorAlgaeReefHigh );
+    m_Claw.ChangeState( m_Claw.CoralUp, m_Claw.AlgaeL2 );
+  }
+
+
+
+
+
+
+  // Algae Reef High
+  if(m_buttons.GetRawButton(3))
+  {
+    m_Elevator.ChangeState( m_Elevator.ElevatorAlgaeReefHigh );
+    m_Claw.ChangeState( m_Claw.CoralL1, m_Claw.AlgaeUp );
+  }
+
+
+
+
+  if(m_buttons.GetRawButton(7))
+  {
+    m_Claw.ChangeCIntakeState( 1.0);
+  }
+  else
+  {
+    m_Claw.ChangeCIntakeState( 0.0);
+  }
+
+  if(m_buttons.GetRawButton(8))
+  {
+    m_Claw.ChangeAIntakeState( 1.0 );
+  }
+
+  
+  if(m_buttons.GetRawButton(8))
+  {
+    m_Claw.ChangeAIntakeState( 1.0 );
+  }
+
+  else
+  {
+    m_Claw.ChangeAIntakeState( 0.0 );
+  }
+
+
+  if(m_buttons.GetRawButton(10))
+  {
+    m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
+    m_Claw.ChangeState( m_Claw.CoralUp, m_Claw.AlgaeUp );
+  }
+
+#if 0
   if(m_buttons.GetRawButton(1))//winch in
   {
     m_Climber.ChangeState( m_Climber.ClimberWinchInManual, m_Climber.GrabMaintain );
@@ -132,7 +203,7 @@ void Robot::TeleopPeriodic()
   {
     m_Climber.ChangeState( m_Climber.ClimberWinchCalibrate, m_Climber.GrabMaintain );
   }
-
+#endif
 
   // Update all subsystems
   m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
