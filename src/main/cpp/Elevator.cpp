@@ -13,7 +13,7 @@ void Elevator::Init()
     SparkMaxConfig configMotor1{};
 
     configMotor0
-        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
+        .SetIdleMode(SparkMaxConfig::IdleMode::kCoast)
         .VoltageCompensation(12.0)
         .SmartCurrentLimit(40,40);
 
@@ -47,7 +47,7 @@ void Elevator::Init()
 
     configMotor1
         .Follow( Constants::kElevator0ID, true ) // Inverted
-        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
+        .SetIdleMode(SparkMaxConfig::IdleMode::kCoast)
         .VoltageCompensation(12.0)
         .SmartCurrentLimit(40,40);
 
@@ -101,9 +101,6 @@ void Elevator::Update()
 
   }
 #endif
-
-
-
 }
 
 
@@ -167,7 +164,7 @@ void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
 // ****************************************************************************
 void Elevator::UpdateSmartDashboardData( )
 {
-  frc::SmartDashboard::PutNumber("Motor 0 Actual Position", m_Motor0Encoder.GetPosition());
+  frc::SmartDashboard::PutNumber("Elevator Position", m_Motor0Encoder.GetPosition());
   frc::SmartDashboard::PutNumber("Motor 0 Actual Velocity", m_Motor0Encoder.GetVelocity());
 
   frc::SmartDashboard::PutNumber("m_ElevatorTargetPosition", m_ElevatorTargetPosition);

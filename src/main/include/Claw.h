@@ -20,13 +20,6 @@ using namespace rev::spark;
 class Claw
 {
  public:
-    typedef enum ClawState_e
-    {
-        ClawDown,
-        ClawUp,
-        ClawStop
-    } ClawState_t;
-
     typedef enum AlgaeClawState_e
     {
         AlgaeClawDown,
@@ -44,7 +37,7 @@ class Claw
     void Init();
     void TeleopInit();
     void Update();
-    void ChangeState( CoralClawState_t coralState );
+    void ChangeState( CoralClawState_t coralState, AlgaeClawState_t algaeState );
     void ManualControl( double coralSpeed, double algaeSpeed );
     void UpdateSmartDashboardData();
 
@@ -60,6 +53,7 @@ class Claw
     double m_AlgaeMotorSpeed = 0;
 
     double m_CoralTargetPosition = 0;
+    double m_AlgaeTargetPosition = 0;
 
     SparkMax m_AlgaeAngleMotor { Constants::kAlgaeAngleID, SparkLowLevel::MotorType::kBrushless };
     SparkMax m_CoralAngleMotor { Constants::kCoralAgnleID, SparkLowLevel::MotorType::kBrushless };
@@ -67,7 +61,10 @@ class Claw
     SparkMax m_CoralIntakeMotor{ Constants::kCoralIntakeID, SparkLowLevel::MotorType::kBrushless };
 
     SparkClosedLoopController m_CoralMotorClosedLoopController = m_CoralAngleMotor.GetClosedLoopController();
-    SparkRelativeEncoder m_CoralMotorEncoder = m_CoralAngleMotor.GetEncoder();
+    SparkRelativeEncoder      m_CoralMotorEncoder              = m_CoralAngleMotor.GetEncoder();
+
+    SparkClosedLoopController m_AlgaeMotorClosedLoopController = m_CoralAngleMotor.GetClosedLoopController();
+    SparkRelativeEncoder      m_AlgaeMotorEncoder              = m_CoralAngleMotor.GetEncoder();
 
 
     constexpr static const double m_AlgaeEncoderBottom{ 0.483 };
@@ -77,4 +74,9 @@ class Claw
 
     frc::DutyCycleEncoder m_AlgaeEncoder { Constants::kAlgaeEncoderDIO };
     frc::DutyCycleEncoder m_CoralEncoder { Constants::kCoralEncoderDIO };
+
+    frc::PIDController m_CoralPid {4.0, 0.0, 0.0};
+    frc::PIDController m_AlgaePid {4.0, 0.0, 0.0};
+
+
 };
