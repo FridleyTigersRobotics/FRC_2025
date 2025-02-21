@@ -52,7 +52,7 @@
     AutonomousStateUpdate();
     RunAutoSequence();
     
-    m_Drivetrain.Update( GetPeriod() );
+    m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
     
     m_Climber.Update();
     
