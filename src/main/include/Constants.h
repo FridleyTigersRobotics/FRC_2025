@@ -42,7 +42,7 @@ namespace Constants
     //constexpr int kDIO = 7;
 
     // Climber Control Values
-    constexpr long kEncClimbUp = 599010;
+    constexpr long kEncClimbUp = 636791;
     constexpr double kClimbCalibrateSpeed = 0.3;
     constexpr double kClimbSpeed = 0.5;
     constexpr double kGrabSpeed = 0.5;
