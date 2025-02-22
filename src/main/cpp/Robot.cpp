@@ -98,79 +98,35 @@ void Robot::TeleopPeriodic()
 
   frc::SmartDashboard::PutNumber( "xSpeed", double{xSpeed} );
   frc::SmartDashboard::PutNumber( "ySpeed", double{ySpeed} );
-
-  frc::SmartDashboard::PutBoolean("button 1", m_buttons.GetRawButton(1));
-
   m_Drivetrain.SetSpeeds( xSpeed, ySpeed, rotationSpeed );
 
-  // Algae Reef Low
-  if(m_buttons.GetRawButton(1))
+ if(m_buttons.GetRawButton(1))//coral up
   {
-    m_Elevator.ChangeState( m_Elevator.ElevatorAlgaeReefLow );
-    m_Claw.ChangeState( m_Claw.CoralUp, m_Claw.AlgaeL1 );
+    m_Claw.ChangeState( m_Claw.AngleUp, m_Claw.intakeStop );
   }
-  
-  // Algae Reef High
-  if(m_buttons.GetRawButton(2))
+  else if(m_buttons.GetRawButton(2))//coral down
   {
-    m_Elevator.ChangeState( m_Elevator.ElevatorAlgaeReefHigh );
-    m_Claw.ChangeState( m_Claw.CoralUp, m_Claw.AlgaeL2 );
-  }
-
-
-  // Algae Reef High
-  if(m_buttons.GetRawButton(2))
-  {
-    m_Elevator.ChangeState( m_Elevator.ElevatorAlgaeReefHigh );
-    m_Claw.ChangeState( m_Claw.CoralUp, m_Claw.AlgaeL2 );
-  }
-
-
-
-
-
-
-  // Algae Reef High
-  if(m_buttons.GetRawButton(3))
-  {
-    m_Elevator.ChangeState( m_Elevator.ElevatorAlgaeReefHigh );
-    m_Claw.ChangeState( m_Claw.CoralL1, m_Claw.AlgaeUp );
-  }
-
-
-
-
-  if(m_buttons.GetRawButton(7))
-  {
-    m_Claw.ChangeCIntakeState( 1.0);
+    m_Claw.ChangeState( m_Claw.AngleDn, m_Claw.intakeStop );
   }
   else
   {
-    m_Claw.ChangeCIntakeState( 0.0);
+    m_Claw.ChangeState( m_Claw.AngleStop, m_Claw.intakeStop );
   }
 
-  if(m_buttons.GetRawButton(8))
+#if 0
+  if(m_buttons.GetRawButton(1))//intake
   {
-    m_Claw.ChangeAIntakeState( 1.0 );
+    m_Claw.ChangeState( m_Claw.AngleStop, m_Claw.intakeIntake );
   }
-
-  
-  if(m_buttons.GetRawButton(8))
+  else if(m_buttons.GetRawButton(2))//intake reverse
   {
-    m_Claw.ChangeAIntakeState( 1.0 );
+    m_Claw.ChangeState( m_Claw.AngleStop, m_Claw.intakeReverse );
   }
-
   else
   {
-    m_Claw.ChangeAIntakeState( 0.0 );
+    m_Claw.ChangeState( m_Claw.AngleStop, m_Claw.intakeStop );
   }
-
-
-  if(m_buttons.GetRawButton(10))
-  {
-    m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
-    m_Claw.ChangeState( m_Claw.CoralUp, m_Claw.AlgaeUp );
-  }
+#endif
 
 #if 0
   if(m_buttons.GetRawButton(1))//winch in

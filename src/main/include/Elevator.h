@@ -20,10 +20,7 @@ class Elevator
     typedef enum ElevatorState_e
     {
         ElevatorStartingConfig,
-        ElevatorAlgaeFloor,
-        ElevatorAlgaeProcessor,
-        ElevatorAlgaeReefLow,
-        ElevatorAlgaeReefHigh,
+        ElevatorCoralIntake,
         ElevatorCoralL1,
         ElevatorCoralL2,
         ElevatorCoralL3,
@@ -46,6 +43,7 @@ class Elevator
     SparkMax m_Motor1{ Constants::kElevator1ID, SparkLowLevel::MotorType::kBrushless };
     SparkClosedLoopController m_closedLoopController = m_Motor0.GetClosedLoopController();
     SparkRelativeEncoder m_Motor0Encoder = m_Motor0.GetEncoder();
+    SparkRelativeEncoder m_Motor1Encoder = m_Motor1.GetEncoder();
 
 
 };

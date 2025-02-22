@@ -116,7 +116,7 @@ void Climber::Update()
     {
         m_GrabberPid.SetSetpoint(Constants::kGrab90);
         double grabMotorValue = m_GrabberPid.Calculate(m_CageEncoder.GetPosition());
-        grabMotorValue = std::clamp(grabMotorValue, -0.75, 0.75 );
+        grabMotorValue = std::clamp(grabMotorValue, -Constants::kGrabSpeed, Constants::kGrabSpeed );
         m_CageGrabberMotor.Set(grabMotorValue);
     }
 
@@ -155,7 +155,7 @@ void Climber::ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gst
 // ****************************************************************************
 void Climber::UpdateSmartDashboardData( )
 {
-    frc::SmartDashboard::PutBoolean("Winch Limit", winch_limit.Get());
+    frc::SmartDashboard::PutBoolean("Winch Limit Switch", winch_limit.Get());
     frc::SmartDashboard::PutNumber("Climb Winch Encoder West", m_climberEncoderWest.Get());
     frc::SmartDashboard::PutNumber("Climb Winch Encoder East", m_climberEncoderEast.Get());
     frc::SmartDashboard::PutNumber("Climber: Cage Grabber", m_CageEncoder.GetPosition());

@@ -107,7 +107,7 @@ void Elevator::Update()
 // ****************************************************************************
 void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
 {
-
+    #if 0
     switch ( ElevatorPosition )
     {
         case ElevatorAlgaeFloor:
@@ -158,6 +158,7 @@ void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
             break;
         }
     }
+    #endif
 }
 
 

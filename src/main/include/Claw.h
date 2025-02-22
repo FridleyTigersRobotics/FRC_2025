@@ -20,66 +20,41 @@ using namespace rev::spark;
 class Claw
 {
  public:
-    typedef enum AlgaeClawState_e
+    typedef enum CoralAngleState_e
     {
-        AlgaeUp,
-        AlgaeGround,
-        AlgaeL1,
-        AlgaeL2
-    } AlgaeClawState_t;
+        AngleUp,
+        AngleDn,
+        AngleStop
+    } CoralAngleState_t;
 
-    typedef enum CoralClawState_e
+    typedef enum coralIntakeState_e
     {
-        CoralUp,
-        CoralL1,
-        CoralL2
-    } CoralClawState_t;
+        intakeStop,
+        intakeIntake,
+        intakeReverse
+    } CoralIntakeState_t;
 
     void Init();
     void TeleopInit();
     void Update();
-    void ChangeState( CoralClawState_t coralState, AlgaeClawState_t algaeState );
-   void ChangeAIntakeState( double algaeIntake );
-   void ChangeCIntakeState( double coralIntake );
-    void ManualControl( double coralSpeed, double algaeSpeed );
+    void ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate );
+    void ManualControl();
     void UpdateSmartDashboardData();
 
  private:
+    SparkMax m_CoralAngleMotor { Constants::kCoralAngleID, SparkLowLevel::MotorType::kBrushless };
+    SparkMax m_CoralIntakeMotor { Constants::kCoralIntakeID, SparkLowLevel::MotorType::kBrushless };
+    SparkRelativeEncoder m_CoralIntakeEncoder = m_CoralIntakeMotor.GetEncoder();
+
+    double setvalCoralEncoderTop = Constants::kCoralEncoderTop;
+    double setvalCoralEncoderBottom = Constants::kCoralEncoderBottom;
+   
+    CoralAngleState_t m_coralAngleState = AngleStop;
+    CoralIntakeState_t m_coralIntakeState = intakeStop;
+
     bool m_ManualCoralControl = false;
-    bool m_ManualAlgaeControl = false;
-
-    CoralClawState_t m_coralState = CoralUp;
-    AlgaeClawState_t m_algaeState = AlgaeUp;
-
-
-    double m_CoralMotorSpeed = 0;
-    double m_AlgaeMotorSpeed = 0;
-
-    double m_CoralTargetPosition = m_CoralEncoderTop;
-    double m_AlgaeTargetPosition = m_AlgaeEncoderTop;
-
-    SparkMax m_AlgaeAngleMotor { Constants::kAlgaeAngleID, SparkLowLevel::MotorType::kBrushless };
-    SparkMax m_CoralAngleMotor { Constants::kCoralAgnleID, SparkLowLevel::MotorType::kBrushless };
-    SparkMax m_AlgaeIntakeMotor{ Constants::kAlgaeIntakeID, SparkLowLevel::MotorType::kBrushless };
-    SparkMax m_CoralIntakeMotor{ Constants::kCoralIntakeID, SparkLowLevel::MotorType::kBrushless };
-
-    SparkClosedLoopController m_CoralMotorClosedLoopController = m_CoralAngleMotor.GetClosedLoopController();
-    SparkRelativeEncoder      m_CoralMotorEncoder              = m_CoralAngleMotor.GetEncoder();
-
-    SparkClosedLoopController m_AlgaeMotorClosedLoopController = m_CoralAngleMotor.GetClosedLoopController();
-    SparkRelativeEncoder      m_AlgaeMotorEncoder              = m_CoralAngleMotor.GetEncoder();
-
-
-    constexpr static const double m_AlgaeEncoderBottom{ 0.483 };
-    constexpr static const double m_AlgaeEncoderTop{ 0.766 };
-    constexpr static const double m_CoralEncoderTop{ 0.288 + 0.05 };
-    constexpr static const double m_CoralEncoderBottom{ 0.627 - 0.05 };
-
-    frc::DutyCycleEncoder m_AlgaeEncoder { Constants::kAlgaeEncoderDIO };
-    frc::DutyCycleEncoder m_CoralEncoder { Constants::kCoralEncoderDIO };
-
-    frc::PIDController m_CoralPid {2.0, 0.0, 0.0};
-    frc::PIDController m_AlgaePid {2.0, 0.0, 0.0};
-
+    
+    frc::DutyCycleEncoder m_CoralAngleEncoder { Constants::kCoralEncoderDIO };
+    frc::PIDController m_CoralAnglePid {Constants::kCoralAnglePidP, Constants::kCoralAnglePidI, Constants::kCoralAnglePidD};
 
 };

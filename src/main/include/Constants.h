@@ -19,7 +19,7 @@ namespace Constants
     constexpr int kBackRightDriveID     = 3;
 
     constexpr int kAlgaeAngleID  = 20;
-    constexpr int kCoralAgnleID  = 21;
+    constexpr int kCoralAngleID  = 21;
     constexpr int kElevator0ID   = 22;
     constexpr int kElevator1ID   = 23;
     constexpr int kAlgaeIntakeID = 24;
@@ -45,10 +45,20 @@ namespace Constants
     constexpr long kEncClimbUp = 636791;
     constexpr double kClimbCalibrateSpeed = 0.3;
     constexpr double kClimbSpeed = 0.5;
-    constexpr double kGrabSpeed = 0.5;
+    constexpr double kGrabSpeed = 0.75;
     constexpr double kGrabberPidP{16.0e-2};
     constexpr double kGrabberPidI{8.0e-1};
     constexpr double kGrabberPidD{0.00};
     constexpr double kGrab90{11.00};
 
+    //Claw Control Values
+    constexpr double kCoralEncoderTop = { 0.288 + 0.05 };
+    constexpr double kCoralEncoderBottom = { 0.627 - 0.05 };
+    constexpr double kCoralAnglePidP = {3.00};
+    constexpr double kCoralAnglePidI = {0.50};
+    constexpr double kCoralAnglePidD ={0.00};
+    constexpr double kIntakeSpeed = 0.5;
+    constexpr double kCoralAngleUp = 0.300;
+    constexpr double kCoralAngleDn = 0.610;
+    constexpr double kCoralAngleSpeed = 0.75;
 }
