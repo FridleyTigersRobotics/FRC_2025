@@ -159,7 +159,7 @@ void Robot::TeleopPeriodic()
     m_Climber.ChangeState( m_Climber.ClimberWinchInManual, m_Climber.GrabHorizontal );
 
   }
-  if(!m_buttons.GetRawButton(5) && !m_buttons.GetRawButton(6))//climber stop
+  if(!m_buttons.GetRawButton(6) && !m_buttons.GetRawButton(9))//climber stop
   {
     m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeMaintain );
     m_Elevator.ChangeState( m_Elevator.ElevatorMaintain );
