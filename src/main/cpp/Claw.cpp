@@ -90,7 +90,20 @@ void Claw::Update( bool elevatormoving )
         angleMotorValue = std::clamp(angleMotorValue, -Constants::kCoralAngleSpeed, Constants::kCoralAngleSpeed );
         m_CoralAngleMotor.Set(angleMotorValue);
     }
-    
+    if(m_coralAngleState == AnglePlaceTopCoral)
+    {
+        if(elevatormoving)
+        {
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
+        }
+        if(!elevatormoving)
+        {
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleTopPlace);
+        }
+        double angleMotorValue = m_CoralAnglePid.Calculate(m_CoralAngleEncoder.Get());
+        angleMotorValue = std::clamp(angleMotorValue, -Constants::kCoralAngleSpeed, Constants::kCoralAngleSpeed );
+        m_CoralAngleMotor.Set(angleMotorValue);
+    }
     
 }
 

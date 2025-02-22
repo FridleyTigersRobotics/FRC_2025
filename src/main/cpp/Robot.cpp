@@ -127,7 +127,7 @@ void Robot::TeleopPeriodic()
   }
   if(m_buttons.GetRawButton(4))//Coral L4
   {
-    m_Claw.ChangeState( m_Claw.AnglePlaceCoral, m_Claw.intakeStop );
+    m_Claw.ChangeState( m_Claw.AnglePlaceTopCoral, m_Claw.intakeStop );
     m_Elevator.ChangeState( m_Elevator.ElevatorCoralL4 );
   }
   if(m_buttons.GetRawButton(7))//Coral Intake

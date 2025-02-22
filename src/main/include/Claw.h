@@ -25,6 +25,7 @@ class Claw
         AngleUp,
         AngleDn,
         AnglePlaceCoral,
+        AnglePlaceTopCoral,
         AngleStop,
         AngleMaintain
     } CoralAngleState_t;

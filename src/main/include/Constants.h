@@ -44,7 +44,7 @@ namespace Constants
     // Climber Control Values
     constexpr long kEncClimbUp = 636791;
     constexpr double kClimbCalibrateSpeed = 0.3;
-    constexpr double kClimbSpeed = 0.5;
+    constexpr double kClimbSpeed = 0.75;
     constexpr double kGrabSpeed = 0.75;
     constexpr double kGrabberPidP{16.0e-2};
     constexpr double kGrabberPidI{8.0e-1};
@@ -62,13 +62,14 @@ namespace Constants
     constexpr double kCoralAngleDn = 0.610;
     constexpr double kCoralAngleSpeed = 0.75;
     constexpr double kCoralAnglePlace = 0.450;
+    constexpr double kCoralAngleTopPlace = 0.3650;
 
     //Elevator Control Values
     constexpr double kPosStart = 0.00;
-    constexpr double kPosCoralL1 = 30.0;
-    constexpr double kPosCoralL2 = 50.0;
-    constexpr double kPosCoralL3 = 70.0;
-    constexpr double kPosCoralL4 = 90.0;
+    constexpr double kPosCoralL1 = 2.01;//L1 level = 46cm from carpet
+    constexpr double kPosCoralL2 = 27.0;//L2 level = 81cm from carpet 
+    constexpr double kPosCoralL3 = 55.56;//L3 level = 121cm from carpet
+    constexpr double kPosCoralL4 = 95.0;//L4 level = 183cm from carpet, but different angle
     constexpr double kPosCoralIntake = 20.0;
     constexpr double kElevatorPidP = {0.10};
     constexpr double kElevatorPidI = {0.00};

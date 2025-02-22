@@ -99,3 +99,10 @@ CoController Controls - button, xbox
     m_Climber.ChangeState( m_Climber.ClimberWinchCalibrate, m_Climber.GrabMaintain );
   }
 #endif
+
+
+
+
+height[71 85 114 169]
+setting value [20 30 50 90]
+value=0.714*height-30.834
