@@ -105,7 +105,7 @@ void Robot::TeleopPeriodic()
     m_Claw.ChangeState( m_Claw.AngleUp, m_Claw.intakeStop );
     m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
   }
-  if(m_buttons.GetRawButton(5))//Coral Intake
+  if(m_buttons.GetRawButton(5))//Coral Intake level
   {
     m_Claw.ChangeState( m_Claw.AngleDn, m_Claw.intakeStop );
     m_Elevator.ChangeState( m_Elevator.ElevatorCoralIntake );
@@ -145,7 +145,7 @@ void Robot::TeleopPeriodic()
     m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeStop );
     m_Elevator.ChangeState( m_Elevator.ElevatorMaintain);
   }
-  if(m_buttons.GetRawButton(5))//climber out
+  if(m_buttons.GetRawButton(9))//climber out
   {
     m_Claw.ChangeState( m_Claw.AngleUp, m_Claw.intakeStop );
     m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );

@@ -2,11 +2,25 @@ frc::XboxController m_driveController{0};
 frc::GenericHID m_buttons            {1};
 frc::XboxController m_coController   {2};
 
-Driver Controls
+Start the robot with "forward" facing of the coral Claw
+Start with the elevator all the way down
+Start with the climber pulled back into a valid starting config
+
+-Driver Controls-
 
 
-CoController Controls - button, xbox
 
+-CoDriver button Controls-
+10 = elevator down
+1 = L1
+2 = L2
+3 = L3
+4 = L4
+5 = coral intake level
+6 = climber in
+7 = intake wheels in
+8 = intake wheels reverse
+9 = climber out
 
 
 
