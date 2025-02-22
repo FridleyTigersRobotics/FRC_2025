@@ -118,5 +118,5 @@ void Robot::TestPeriodic()
   m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
   m_Climber.Update();
   m_Elevator.Update();
-  m_Claw.Update();
+  m_Claw.Update( m_Elevator.ismoving() );
 }

@@ -24,19 +24,22 @@ class Claw
     {
         AngleUp,
         AngleDn,
-        AngleStop
+        AnglePlaceCoral,
+        AngleStop,
+        AngleMaintain
     } CoralAngleState_t;
 
     typedef enum coralIntakeState_e
     {
         intakeStop,
         intakeIntake,
-        intakeReverse
+        intakeReverse,
+        intakeMaintain
     } CoralIntakeState_t;
 
     void Init();
     void TeleopInit();
-    void Update();
+    void Update( bool elevatormoving );
     void ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate );
     void ManualControl();
     void UpdateSmartDashboardData();

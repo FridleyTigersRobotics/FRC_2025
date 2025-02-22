@@ -24,26 +24,26 @@ class Elevator
         ElevatorCoralL1,
         ElevatorCoralL2,
         ElevatorCoralL3,
-        ElevatorCoralL4
+        ElevatorCoralL4,
+        ElevatorStop,
+        ElevatorMaintain
     } ElevatorState_t;
 
     void Init();
+    void TeleopInit();
     void Update();
     void ChangeState( ElevatorState_t ElevatorPosition );
-    void ManualControl( double speed );
+    void ManualControl();
     void UpdateSmartDashboardData();
+    bool ismoving();
 
  private:
-
-    bool   m_ManualElevatorControlEnabled = false;
-    double m_ManualElevatorSpeed = 0;
-    double m_ElevatorTargetPosition = 0.0;
-
     SparkMax m_Motor0{ Constants::kElevator0ID, SparkLowLevel::MotorType::kBrushless };
     SparkMax m_Motor1{ Constants::kElevator1ID, SparkLowLevel::MotorType::kBrushless };
-    SparkClosedLoopController m_closedLoopController = m_Motor0.GetClosedLoopController();
-    SparkRelativeEncoder m_Motor0Encoder = m_Motor0.GetEncoder();
-    SparkRelativeEncoder m_Motor1Encoder = m_Motor1.GetEncoder();
+    SparkRelativeEncoder m_Elevator0Encoder = m_Motor0.GetEncoder();
+    SparkRelativeEncoder m_Elevator1Encoder = m_Motor1.GetEncoder();
 
+    ElevatorState_t m_ElevatorState = ElevatorStop;
 
+    frc::PIDController m_ElevatorPid {Constants::kElevatorPidP, Constants::kElevatorPidI, Constants::kElevatorPidD};
 };

@@ -6,182 +6,124 @@
 #include <rev/config/SparkMaxConfig.h>
 using namespace rev::spark;
 
+bool elevatormoving = false;
+
+bool Elevator::ismoving()
+{
+    return elevatormoving;
+}
+
+
 // ****************************************************************************
 void Elevator::Init()
 {
-    SparkMaxConfig configMotor0{};
-    SparkMaxConfig configMotor1{};
+    m_ElevatorState = ElevatorStop;
+    m_Elevator0Encoder.SetPosition( 0.0 );
+    m_Elevator1Encoder.SetPosition( 0.0 );
+    m_ElevatorPid.SetTolerance(0.001);
+    m_ElevatorPid.Reset();
+    m_Motor1.SetInverted(true);
+}
 
-    configMotor0
-        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
-        .VoltageCompensation(12.0)
-        .SmartCurrentLimit(40,40);
-
-    configMotor0.closedLoop
-        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-        // Set PID values for position control. We don't need to pass a closed
-        // loop slot, as it will default to slot 0.
-        .P(0.1)
-        .I(0)
-        .D(0)
-        .OutputRange(-0.8, 0.8)
-        // Set PID values for velocity control in slot 1
-        .P(0.0001, ClosedLoopSlot::kSlot1)
-        .I(0, ClosedLoopSlot::kSlot1)
-        .D(0, ClosedLoopSlot::kSlot1)
-        .VelocityFF(1.0 / 5767, ClosedLoopSlot::kSlot1)
-        .OutputRange(-1, 1, ClosedLoopSlot::kSlot1);
-
-    configMotor0.closedLoop
-        .maxMotion
-        // Set MAXMotion parameters for position control. We don't need to pass
-        // a closed loop slot, as it will default to slot 0.
-        .MaxVelocity(3000)
-        .MaxAcceleration(8000)
-        .AllowedClosedLoopError(1)
-        // Set MAXMotion parameters for velocity control in slot 1
-        .MaxAcceleration(500, ClosedLoopSlot::kSlot1)
-        .MaxVelocity(6000, ClosedLoopSlot::kSlot1)
-        .AllowedClosedLoopError(1, ClosedLoopSlot::kSlot1);
-
-
-    configMotor1
-        .Follow( Constants::kElevator0ID, true ) // Inverted
-        .SetIdleMode(SparkMaxConfig::IdleMode::kCoast)
-        .VoltageCompensation(12.0)
-        .SmartCurrentLimit(40,40);
-
-
-    m_Motor0.Configure( configMotor0, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters );
-    m_Motor1.Configure( configMotor1, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters );
+// ****************************************************************************
+void Elevator::TeleopInit()
+{
+    m_ElevatorState = ElevatorStop;
 }
 
 
 // ****************************************************************************
 void Elevator::Update()
 {
-
-#if 0
-  if (frc::SmartDashboard::GetBoolean("Control Mode", false)) {
-    /*
-     * Get the target velocity from SmartDashboard and set it as the setpoint
-     * for the closed loop controller with MAXMotionVelocityControl as the
-     * control type.
-     */
-    double targetVelocity =
-        frc::SmartDashboard::GetNumber("Target Velocity", 0);
-    m_closedLoopController.SetReference(
-        targetVelocity, SparkMax::ControlType::kMAXMotionVelocityControl,
-        ClosedLoopSlot::kSlot1);
-  } else {
-    /*
-     * Get the target position from SmartDashboard and set it as the setpoint
-     * for the closed loop controller with MAXMotionPositionControl as the
-     * control type.
-     */
-    double targetPosition =
-        frc::SmartDashboard::GetNumber("Target Position", 0);
-    m_closedLoopController.SetReference(
-        targetPosition, SparkMax::ControlType::kMAXMotionPositionControl,
-        ClosedLoopSlot::kSlot0);
-  }
-#else
-
-  if ( m_ManualElevatorControlEnabled )
-  {
-    m_Motor0.Set( m_ManualElevatorSpeed );
-  }
-  else
-  {
-    m_closedLoopController.SetReference(
-      m_ElevatorTargetPosition, 
-      SparkMax::ControlType::kMAXMotionPositionControl,
-      ClosedLoopSlot::kSlot0
-    );
-
-  }
-#endif
+    if(m_ElevatorState == ElevatorStop)
+    {
+        m_Motor0.Set(0.00);
+        m_Motor1.Set(0.00);
+    }
+    if(m_ElevatorState == ElevatorStartingConfig)
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosStart);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
+    if(m_ElevatorState == ElevatorCoralL1)
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosCoralL1);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
+    if(m_ElevatorState == ElevatorCoralL2)
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosCoralL2);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
+    if(m_ElevatorState == ElevatorCoralL3)
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosCoralL3);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
+    if(m_ElevatorState == ElevatorCoralL4)
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosCoralL4);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
+    if(m_ElevatorState == ElevatorCoralIntake)
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosCoralIntake);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
+    if(fabs(m_Motor0.Get())>0.1 || fabs(m_Motor1.Get())>0.1)
+    {
+        elevatormoving = true;
+    }
+    else if(fabs(m_Motor0.Get())<=0.1 || fabs(m_Motor1.Get())<=0.1)
+    {
+       elevatormoving = false;
+    }
 }
 
 
 // ****************************************************************************
 void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
 {
-    #if 0
-    switch ( ElevatorPosition )
+    if(ElevatorPosition != ElevatorMaintain)
     {
-        case ElevatorAlgaeFloor:
-        {
-            m_ElevatorTargetPosition = 6.785;
-            break;
-        }
-        case ElevatorAlgaeProcessor:
-        {
-            m_ElevatorTargetPosition = 6.785;
-            break;
-        }
-        case ElevatorAlgaeReefLow:
-        {
-            m_ElevatorTargetPosition = 48.55;
-            break;
-        }
-        case ElevatorAlgaeReefHigh:
-        {
-            m_ElevatorTargetPosition = 78.2;
-            break;
-        }
-        case ElevatorCoralL1:
-        {
-            m_ElevatorTargetPosition = 30.0;
-            break;
-        }
-        case ElevatorCoralL2:
-        {
-            m_ElevatorTargetPosition = 5.0;
-            break;
-        }
-        case ElevatorCoralL3:
-        {
-            m_ElevatorTargetPosition = 70.0;
-            break;
-        }
-        case ElevatorCoralL4:
-        {
-            m_ElevatorTargetPosition = 90.0;
-            break;
-        }
-
-        default:
-        case ElevatorStartingConfig:
-        {
-            m_ElevatorTargetPosition = 0.0;
-            break;
-        }
+        m_ElevatorState = ElevatorPosition;
     }
-    #endif
+    
 }
 
 
 // ****************************************************************************
 void Elevator::UpdateSmartDashboardData( )
 {
-  frc::SmartDashboard::PutNumber("Elevator Position", m_Motor0Encoder.GetPosition());
-  frc::SmartDashboard::PutNumber("Motor 0 Actual Velocity", m_Motor0Encoder.GetVelocity());
-
-  frc::SmartDashboard::PutNumber("m_ElevatorTargetPosition", m_ElevatorTargetPosition);
-
-  if (frc::SmartDashboard::GetBoolean("Reset Encoder", false)) {
-    frc::SmartDashboard::PutBoolean("Reset Encoder", false);
-    // Reset the encoder position to 0
-    m_Motor0Encoder.SetPosition(0);
-  }
+    frc::SmartDashboard::PutNumber("Elevator Encoder Value", m_Elevator0Encoder.GetPosition());
+    frc::SmartDashboard::PutNumber("Elevator  Setpoint", m_ElevatorPid.GetSetpoint());
+    frc::SmartDashboard::PutNumber("Elevator Motor Value", m_Motor0.Get());
+    frc::SmartDashboard::PutBoolean("Elevator Moving", elevatormoving);
 
 }
 
 
 // ****************************************************************************
-void Elevator::ManualControl( double speed )
+void Elevator::ManualControl()
 {
-  m_ManualElevatorSpeed = speed;
+ 
 }
 

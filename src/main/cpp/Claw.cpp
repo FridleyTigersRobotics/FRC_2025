@@ -34,7 +34,7 @@ void Claw::ManualControl( )
 
 
 // ****************************************************************************
-void Claw::Update()
+void Claw::Update( bool elevatormoving )
 {
     if (m_coralIntakeState == intakeIntake)
     {
@@ -53,22 +53,44 @@ void Claw::Update()
 
     if(m_coralAngleState == AngleUp)
     {
-        m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleUp);
+        if(elevatormoving)
+        {
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
+        }
+        if(!elevatormoving)
+        {
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleUp);
+        }
         double angleMotorValue = m_CoralAnglePid.Calculate(m_CoralAngleEncoder.Get());
         angleMotorValue = std::clamp(angleMotorValue, -Constants::kCoralAngleSpeed, Constants::kCoralAngleSpeed );
         m_CoralAngleMotor.Set(angleMotorValue);// motor is reversed
     }
-    else if(m_coralAngleState == AngleDn)
+    if(m_coralAngleState == AngleDn)
     {
         m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);
         double angleMotorValue = m_CoralAnglePid.Calculate(m_CoralAngleEncoder.Get());
         angleMotorValue = std::clamp(angleMotorValue, -Constants::kCoralAngleSpeed, Constants::kCoralAngleSpeed );
         m_CoralAngleMotor.Set(angleMotorValue);
     }
-    else if(m_coralAngleState == AngleStop)
+    if(m_coralAngleState == AngleStop)
     {
         m_CoralAngleMotor.Set(0.00);
     }
+    if(m_coralAngleState == AnglePlaceCoral)
+    {
+        if(elevatormoving)
+        {
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
+        }
+        if(!elevatormoving)
+        {
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAnglePlace);
+        }
+        double angleMotorValue = m_CoralAnglePid.Calculate(m_CoralAngleEncoder.Get());
+        angleMotorValue = std::clamp(angleMotorValue, -Constants::kCoralAngleSpeed, Constants::kCoralAngleSpeed );
+        m_CoralAngleMotor.Set(angleMotorValue);
+    }
+    
     
 }
 
@@ -76,8 +98,15 @@ void Claw::Update()
 // ****************************************************************************
 void Claw::ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate )
 {
-    m_coralAngleState = Astate;
-    m_coralIntakeState = Istate;
+    if(Astate != AngleMaintain)
+    {
+      m_coralAngleState = Astate;  
+    }
+    if(Istate != intakeMaintain)
+    {
+      m_coralIntakeState = Istate; 
+    }
+    
 }
 
 // ****************************************************************************

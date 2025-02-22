@@ -13,11 +13,9 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <string>
 
-#include <Climber.h>
 #include <networktables/NetworkTable.h>
 #include <LimelightHelpers.h>
 #include <cameraserver/CameraServer.h>
-
 
 
 // ****************************************************************************
@@ -69,6 +67,7 @@ void Robot::TeleopInit()
   m_AutoXdirPid.Reset( 0.0_m );
   m_Climber.TeleopInit();
   m_Claw.TeleopInit();
+  m_Elevator.TeleopInit();
 
 }
 
@@ -100,72 +99,80 @@ void Robot::TeleopPeriodic()
   frc::SmartDashboard::PutNumber( "ySpeed", double{ySpeed} );
   m_Drivetrain.SetSpeeds( xSpeed, ySpeed, rotationSpeed );
 
- if(m_buttons.GetRawButton(1))//coral up
+// ****************************************************************************
+ if(m_buttons.GetRawButton(10))//all down
   {
     m_Claw.ChangeState( m_Claw.AngleUp, m_Claw.intakeStop );
+    m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
   }
-  else if(m_buttons.GetRawButton(2))//coral down
+  if(m_buttons.GetRawButton(5))//Coral Intake
   {
     m_Claw.ChangeState( m_Claw.AngleDn, m_Claw.intakeStop );
+    m_Elevator.ChangeState( m_Elevator.ElevatorCoralIntake );
   }
-  else
+  if(m_buttons.GetRawButton(1))//Coral L1
   {
-    m_Claw.ChangeState( m_Claw.AngleStop, m_Claw.intakeStop );
+    m_Claw.ChangeState( m_Claw.AnglePlaceCoral, m_Claw.intakeStop );
+    m_Elevator.ChangeState( m_Elevator.ElevatorCoralL1 );
   }
+  if(m_buttons.GetRawButton(2))//Coral L2
+  {
+    m_Claw.ChangeState( m_Claw.AnglePlaceCoral, m_Claw.intakeStop );
+    m_Elevator.ChangeState( m_Elevator.ElevatorCoralL2 );
+  }
+  if(m_buttons.GetRawButton(3))//Coral L3
+  {
+    m_Claw.ChangeState( m_Claw.AnglePlaceCoral, m_Claw.intakeStop );
+    m_Elevator.ChangeState( m_Elevator.ElevatorCoralL3 );
+  }
+  if(m_buttons.GetRawButton(4))//Coral L4
+  {
+    m_Claw.ChangeState( m_Claw.AnglePlaceCoral, m_Claw.intakeStop );
+    m_Elevator.ChangeState( m_Elevator.ElevatorCoralL4 );
+  }
+  if(m_buttons.GetRawButton(7))//Coral Intake
+  {
+    m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeIntake );
+    m_Elevator.ChangeState( m_Elevator.ElevatorMaintain);
+  }
+  if(m_buttons.GetRawButton(8))//Coral reverse
+  {
+    m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeReverse );
+    m_Elevator.ChangeState( m_Elevator.ElevatorMaintain );
+  }
+  if(!m_buttons.GetRawButton(8) && !m_buttons.GetRawButton(7))//Coral Intake stop
+  {
+    m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeStop );
+    m_Elevator.ChangeState( m_Elevator.ElevatorMaintain);
+  }
+  if(m_buttons.GetRawButton(5))//climber out
+  {
+    m_Claw.ChangeState( m_Claw.AngleUp, m_Claw.intakeStop );
+    m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
+    m_Climber.ChangeState( m_Climber.ClimberWinchOutManual, m_Climber.GrabVertical );
 
-#if 0
-  if(m_buttons.GetRawButton(1))//intake
-  {
-    m_Claw.ChangeState( m_Claw.AngleStop, m_Claw.intakeIntake );
   }
-  else if(m_buttons.GetRawButton(2))//intake reverse
+  if(m_buttons.GetRawButton(6))//climber in
   {
-    m_Claw.ChangeState( m_Claw.AngleStop, m_Claw.intakeReverse );
-  }
-  else
-  {
-    m_Claw.ChangeState( m_Claw.AngleStop, m_Claw.intakeStop );
-  }
-#endif
+    m_Claw.ChangeState( m_Claw.AngleUp, m_Claw.intakeStop );
+    m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
+    m_Climber.ChangeState( m_Climber.ClimberWinchInManual, m_Climber.GrabHorizontal );
 
-#if 0
-  if(m_buttons.GetRawButton(1))//winch in
-  {
-    m_Climber.ChangeState( m_Climber.ClimberWinchInManual, m_Climber.GrabMaintain );
   }
-  else if(m_buttons.GetRawButton(4))//winch out
+  if(!m_buttons.GetRawButton(5) && !m_buttons.GetRawButton(6))//climber stop
   {
-    m_Climber.ChangeState( m_Climber.ClimberWinchOutManual, m_Climber.GrabMaintain );
-  }
-  else
-  {
+    m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeMaintain );
+    m_Elevator.ChangeState( m_Elevator.ElevatorMaintain );
     m_Climber.ChangeState( m_Climber.ClimberWinchStop, m_Climber.GrabMaintain );
   }
 
-  if(m_buttons.GetRawButton(2))//grab
-  {
-    m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabHorizontal );
-  }
-  else if(m_buttons.GetRawButton(5))//release
-  {
-    m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabVertical );
-  }
-  else
-  {
-    m_Climber.ChangeState( m_Climber.ClimberWinchMaintain, m_Climber.GrabMaintain); // don't want to stop grabber state here
-  }
-
-  if(m_buttons.GetRawButton(7))//calibrate climber
-  {
-    m_Climber.ChangeState( m_Climber.ClimberWinchCalibrate, m_Climber.GrabMaintain );
-  }
-#endif
+// ****************************************************************************
 
   // Update all subsystems
   m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
   m_Climber.Update();
   m_Elevator.Update();
-  m_Claw.Update();
+  m_Claw.Update( m_Elevator.ismoving() );
 }
 
 
