@@ -62,7 +62,7 @@ namespace Constants
     constexpr double kCoralAngleDn = 0.610;
     constexpr double kCoralAngleSpeed = 0.75;
     constexpr double kCoralAnglePlace = 0.450;
-    constexpr double kCoralAngleTopPlace = 0.3650;
+    constexpr double kCoralAngleTopPlace = 0.420;//0.3650 is horizontal
 
     //Elevator Control Values
     constexpr double kPosStart = 0.00;
