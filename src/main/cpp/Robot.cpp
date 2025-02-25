@@ -20,7 +20,7 @@
 
 Robot::Robot() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  m_chooser.AddOption(kAutoDrive, kAutoDrive);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 }
 
@@ -179,24 +179,78 @@ void Robot::TeleopPeriodic()
 }
 
 void Robot::AutonomousInit() {
-  m_autoSelected = m_chooser.GetSelected();
-  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
-  //     kAutoNameDefault);
-  wpi::print("Auto selected: {}\n", m_autoSelected);
+m_autoSelected = m_chooser.GetSelected();
 
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
-    // Default Auto goes here
-  }
+    fmt::print("Auto selected: {}\n", m_autoSelected);
+
+    if (m_autoSelected == kAutoDrive) 
+    {
+      autoSequence = &auto_Drive;
+    }
+    /*else if (m_autoSelected == kShootCenter) 
+    {
+      autoSequence = &Auto_ShootCenter;
+    }
+    else if (m_autoSelected == kShootCenterPickupCenter) 
+    {
+      autoSequence = &Auto_ShootCenterPickupCenter;
+    }
+     else if (m_autoSelected == kShootLeftPickupLeft) 
+    {
+      autoSequence = &ShootLeftPickupLeft;
+    }
+     else if (m_autoSelected == kShootRightPickupRight) 
+    {
+      autoSequence = &ShootRightPickupRight;
+    }
+     else if (m_autoSelected == kCenterShootRun) 
+    {
+      autoSequence = &Auto_CenterShootRun;
+    }
+    else if (m_autoSelected == kShootRightPickupRightTest) 
+    {
+      autoSequence = &ShootRightPickupRightTest;
+    }
+    else if (m_autoSelected == kShootLeftPickupLeftTest) 
+    {
+      autoSequence = &ShootLeftPickupLeftTest;
+    }
+     else if (m_autoSelected == kShootRunLeft) 
+    {
+      autoSequence = &Auto_ShootRunLeft;
+    }*/
+
+
+
+    AutonomousStateInit();
+    m_autoStateDone = false; 
+    m_autoState     = 0;
+
+    Drivetrain_Stop();
+    m_Arm.SetArmPosition( m_Arm.HOLD_START_POSITION );
+    m_Intake.ChangeIntakeState( m_Intake.Intake_Stopped );
+    m_Shooter.changeShooterState( false );
+    m_Climber.ChangeClimberState( m_Climber.ClimberStop );
+    
+
+    TeleopInit(); 
+    m_fieldRelative = false;
+    m_autoTimer.Stop();
+    m_autoTimer.Reset();
+    m_autoTimer.Start();
+    m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
+    m_AutoYdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
+    m_AutoRotatePid.SetTolerance(  kRotPosTolerance, kRotVelTolerance );
+
+    m_AutoXdirPid.Reset( 0.0_m );
+    m_AutoYdirPid.Reset( 0.0_m );
+    m_AutoRotatePid.Reset( 0.0_rad );
+
+ }
 }
 
 void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
-    // Default Auto goes here
-  }
+
 }
 
 #ifndef RUNNING_FRC_TESTS
