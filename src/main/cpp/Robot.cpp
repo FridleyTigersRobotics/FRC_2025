@@ -65,9 +65,7 @@ void Robot::TeleopInit()
   m_Drivetrain.m_imu.ZeroYaw();
 
   m_fieldRelative = true;
-
-  m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
-  m_AutoXdirPid.Reset( 0.0_m );
+  
   m_Climber.TeleopInit();
   m_Claw.TeleopInit();
   m_Elevator.TeleopInit();
