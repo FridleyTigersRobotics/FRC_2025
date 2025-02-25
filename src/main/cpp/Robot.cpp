@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include <Robot.h>
+#include "Robot.h"
 #include <frc/MathUtil.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
@@ -11,12 +11,18 @@
 
 #include <Drivetrain.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <wpi/print.h>
 #include <string>
 
 #include <networktables/NetworkTable.h>
 #include <LimelightHelpers.h>
 #include <cameraserver/CameraServer.h>
 
+Robot::Robot() {
+  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
+  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+}
 
 // ****************************************************************************
 void Robot::RobotInit()
@@ -25,11 +31,6 @@ void Robot::RobotInit()
   m_Drivetrain.m_imu.Reset();
   //frc::CameraServer::StartAutomaticCapture();
   // Autonomous Chooser
-  m_autoChooser.SetDefaultOption( kAutoNameDefault,         kAutoNameDefault );
-  m_autoChooser.AddOption       ( kAutoDrive,               kAutoDrive );
-  frc::SmartDashboard::PutNumber("AutoModeInt", 0 );
-  frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
-
   // Initialize Subsystems
   m_Drivetrain.Init();
   m_Climber.Init();
@@ -50,11 +51,13 @@ void Robot::RobotPeriodic()
 
 
 // ****************************************************************************
-void Robot::DisabledInit()
-{
+void Robot::DisabledInit(){}
 
-}
+void Robot::DisabledPeriodic() {}
 
+void Robot::SimulationInit() {}
+
+void Robot::SimulationPeriodic() {}
 
 // ****************************************************************************
 void Robot::TeleopInit() 
@@ -175,7 +178,26 @@ void Robot::TeleopPeriodic()
   m_Claw.Update( m_Elevator.ismoving() );
 }
 
+void Robot::AutonomousInit() {
+  m_autoSelected = m_chooser.GetSelected();
+  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
+  //     kAutoNameDefault);
+  wpi::print("Auto selected: {}\n", m_autoSelected);
 
+  if (m_autoSelected == kAutoNameCustom) {
+    // Custom Auto goes here
+  } else {
+    // Default Auto goes here
+  }
+}
+
+void Robot::AutonomousPeriodic() {
+  if (m_autoSelected == kAutoNameCustom) {
+    // Custom Auto goes here
+  } else {
+    // Default Auto goes here
+  }
+}
 
 #ifndef RUNNING_FRC_TESTS
 int main()
