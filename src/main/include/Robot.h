@@ -33,7 +33,28 @@ class Robot : public frc::TimedRobot {
 
     void AutonomousInit() override;
     void AutonomousPeriodic() override;
+    //Autonomous goop, can I put this here safely??
 
+     void Robot::DriveForDistance( 
+  units::meter_t              xDistance, 
+  units::meter_t              yDistance, 
+  units::radian_t             rotRadians, 
+  units::meters_per_second_t  xSpeedMult, 
+  units::meters_per_second_t  ySpeedMult, 
+  units::radians_per_second_t rotSpeedMult,
+  units::time::second_t       maxTime);
+
+
+    std::vector<std::function<void(void)>> AutoSequence = {
+    [this] (void) -> void { m_Drivetrain.SetSpeeds(units::meters_per_second_t{0.0}, units::meters_per_second_t{0.0}, units::radians_per_second_t{0.0}); },
+    };
+  
+      std::vector<std::function<void(void)>> Auto_Drive = {
+    [this] (void) -> void { /*AutoAngle( 0 );*/ },
+    [this] (void) -> void { DriveForDistance( -2.0_m, 0.0_m, 0.0_rad, 0.5_mps, 0.0_mps, 0.0_rad_per_s, 5.0_s ); },
+    [this] (void) -> void { m_Drivetrain.SetSpeeds(units::meters_per_second_t{0.0}, units::meters_per_second_t{0.0}, units::radians_per_second_t{0.0}); },
+  };
+// Cutoff for auto stuff in this area \(:l)/
     void TeleopInit() override;
     void TeleopPeriodic() override;
 

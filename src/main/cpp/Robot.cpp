@@ -177,7 +177,7 @@ void Robot::TeleopPeriodic()
   m_Elevator.Update();
   m_Claw.Update( m_Elevator.ismoving() );
 }
-
+//******************************************************************************************************** Auto
 void Robot::AutonomousInit() {
 m_autoSelected = m_chooser.GetSelected();
 
@@ -185,7 +185,7 @@ m_autoSelected = m_chooser.GetSelected();
 
     if (m_autoSelected == kAutoDrive) 
     {
-      autoSequence = &auto_Drive;
+      AutoSequence = m_auto_Drive;
     }
     /*else if (m_autoSelected == kShootCenter) 
     {
@@ -234,7 +234,6 @@ m_autoSelected = m_chooser.GetSelected();
     
 
     TeleopInit(); 
-    m_fieldRelative = false;
     m_autoTimer.Stop();
     m_autoTimer.Reset();
     m_autoTimer.Start();
@@ -247,7 +246,6 @@ m_autoSelected = m_chooser.GetSelected();
     m_AutoRotatePid.Reset( 0.0_rad );
 
  }
-}
 
 void Robot::AutonomousPeriodic() {
 
