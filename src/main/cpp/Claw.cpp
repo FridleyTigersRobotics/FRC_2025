@@ -15,7 +15,22 @@ void Claw::Init()
     m_CoralAnglePid.SetIntegratorRange (-0.1, 0.1 ); //stops integrator wind-up
     m_CoralAnglePid.SetTolerance(0.001);
     m_CoralAnglePid.Reset();
-    m_CoralAngleMotor.SetInverted(true);
+
+    SparkMaxConfig CoralAngleMotorConfig;
+    CoralAngleMotorConfig.Inverted(true);
+    //m_CoralAngleMotor.SetInverted(true); this is depreciated
+    m_CoralAngleMotor.Configure(CoralAngleMotorConfig,SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
+    /*
+   * Apply the configuration to the SPARKs.
+   *
+   * kResetSafeParameters is used to get the SPARK MAX to a known state. This
+   * is useful in case the SPARK MAX is replaced.
+   *
+   * kPersistParameters is used to ensure the configuration is not lost when
+   * the SPARK MAX loses power. This is useful for power cycles that may occur
+   * mid-operation.
+   * https://github.com/REVrobotics/REVLib-Examples/blob/main/C%2B%2B/SPARK/Open%20Loop%20Arcade%20Drive/src/main/cpp/Robot.cpp
+   */
 
 }
 

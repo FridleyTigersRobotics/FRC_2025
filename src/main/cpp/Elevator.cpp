@@ -22,7 +22,23 @@ void Elevator::Init()
     m_Elevator1Encoder.SetPosition( 0.0 );
     m_ElevatorPid.SetTolerance(0.001);
     m_ElevatorPid.Reset();
-    m_Motor1.SetInverted(true);
+
+    
+    SparkMaxConfig Motor1Config;
+    Motor1Config.Inverted(true);
+    //m_Motor1.SetInverted(true); this is depreciated
+    m_Motor1.Configure(Motor1Config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
+    /*
+   * Apply the configuration to the SPARKs.
+   *
+   * kResetSafeParameters is used to get the SPARK MAX to a known state. This
+   * is useful in case the SPARK MAX is replaced.
+   *
+   * kPersistParameters is used to ensure the configuration is not lost when
+   * the SPARK MAX loses power. This is useful for power cycles that may occur
+   * mid-operation.
+   * https://github.com/REVrobotics/REVLib-Examples/blob/main/C%2B%2B/SPARK/Open%20Loop%20Arcade%20Drive/src/main/cpp/Robot.cpp
+   */
 }
 
 // ****************************************************************************
@@ -88,7 +104,7 @@ void Elevator::Update()
         m_Motor0.Set(elevatorMotorValue);
         m_Motor1.Set(elevatorMotorValue);
     }
-    if(fabs(m_Motor0.Get())>0.1 || fabs(m_Motor1.Get())>0.1)
+    if(fabs(m_Motor0.Get())>0.1 || fabs(m_Motor1.Get())>0.1) //0.1 is the PID I max value (anti-windup)
     {
         elevatormoving = true;
     }
