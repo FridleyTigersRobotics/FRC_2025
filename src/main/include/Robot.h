@@ -24,6 +24,8 @@
 
 class Robot : public frc::TimedRobot {
   public:
+    frc::Timer autoTimer;
+    int AutoNumber=0;
     Robot();
     void RobotInit() override;
     void RobotPeriodic() override;
@@ -35,14 +37,68 @@ class Robot : public frc::TimedRobot {
     void AutonomousPeriodic() override;
     //Autonomous goop, can I put this here safely??
 
-     void Robot::DriveForDistance( 
+     void DriveForDistance( 
   units::meter_t              xDistance, 
   units::meter_t              yDistance, 
   units::radian_t             rotRadians, 
   units::meters_per_second_t  xSpeedMult, 
   units::meters_per_second_t  ySpeedMult, 
   units::radians_per_second_t rotSpeedMult,
-  units::time::second_t       maxTime);
+  units::time::second_t       maxTime)
+  {
+  frc::Pose2d pose = m_Drivetrain.m_odometry.GetEstimatedPosition();
+
+  m_AutoXdirPid.SetConstraints({xSpeedMult,   m_xyMaxAccel});
+  m_AutoYdirPid.SetConstraints({ySpeedMult,   m_xyMaxAccel});
+  m_AutoRotatePid.SetConstraints( {rotSpeedMult, m_rotMaxAccel});
+
+  m_AutoXdirPid.SetGoal( xDistance );
+  m_AutoYdirPid.SetGoal( yDistance );
+  m_AutoRotatePid.SetGoal( rotRadians );
+  m_LimeRotatePid.SetSetpoint( m_limeAngleOffset );
+
+  units::meters_per_second_t  xSpeed  { m_AutoXdirPid.Calculate( pose.X() ) };
+  units::meters_per_second_t  ySpeed  { m_AutoYdirPid.Calculate( pose.Y() ) };
+
+
+  units::radians_per_second_t rotSpeed{ -m_AutoRotatePid.Calculate( pose.Rotation().Radians() - m_initialPose.Rotation().Radians() ) };
+ 
+
+  frc::SmartDashboard::PutNumber("Auto_angle", double{pose.Rotation().Radians()});
+  // fmt::printf( "dbg: %1d, %5.3f, %5.3f, %5.3f, %5.3f, %5.3f, %5.3f\n", 
+  //   m_autoState, 
+  //   float{pose.X() },
+  //   float{pose.Y()},
+  //   float{pose.Rotation().Radians()},
+  //   float{xSpeed},
+  //   float{ySpeed},
+  //   float{rotSpeed}
+  // );
+
+
+  /*frc::SmartDashboard::PutNumber( "Auto_xSpeed",   xSpeed );
+  frc::SmartDashboard::PutNumber( "Auto_ySpeed",   ySpeed );
+  frc::SmartDashboard::PutNumber( "Auto_rotSpeed", rotSpeed );*/
+
+
+  m_Drivetrain.SetSpeeds( xSpeed, ySpeed, rotSpeed );
+  //Drivetrain_Stop();
+
+
+  if ( ( m_AutoXdirPid.AtGoal() &&  m_AutoYdirPid.AtGoal() &&  m_AutoRotatePid.AtGoal() ) || ( autoTimer.Get() > maxTime ) )
+  {
+    m_Drivetrain.SetSpeeds(units::meters_per_second_t{0.0}, units::meters_per_second_t{0.0}, units::radians_per_second_t{0.0});
+
+  }
+};
+
+
+
+  double DriveTargetAngle=0;
+  /*void Robot::AutoAngle(double AngleCrap) {
+  Drivetrain.YawOffset    = -AngleCrap;
+  DriveTargetAngle          = -AngleCrap;
+  m_autoStateDone = true;}*/
 
 
     std::vector<std::function<void(void)>> AutoSequence = {
@@ -50,7 +106,7 @@ class Robot : public frc::TimedRobot {
     };
   
       std::vector<std::function<void(void)>> Auto_Drive = {
-    [this] (void) -> void { /*AutoAngle( 0 );*/ },
+    /*[this] (void) -> void { 0AutoAngle( 0 );;},*/
     [this] (void) -> void { DriveForDistance( -2.0_m, 0.0_m, 0.0_rad, 0.5_mps, 0.0_mps, 0.0_rad_per_s, 5.0_s ); },
     [this] (void) -> void { m_Drivetrain.SetSpeeds(units::meters_per_second_t{0.0}, units::meters_per_second_t{0.0}, units::radians_per_second_t{0.0}); },
   };
@@ -65,9 +121,10 @@ class Robot : public frc::TimedRobot {
     void SimulationPeriodic() override;
 
     private:
+
       frc::SendableChooser<std::string> m_chooser;
       const std::string kAutoNameDefault = "Default";
-      const std::string kAutoDrive = "MyAuto";
+      const std::string kAutoDrive = "AutoDrive";
       std::string m_autoSelected;
 
       frc::XboxController m_driveController{0};

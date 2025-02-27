@@ -138,7 +138,7 @@ void Drivetrain::ResetYaw()
 
 
 double Drivetrain::GetYaw(){
-  return m_imu.GetYaw()*.9695;
+  return m_imu.GetYaw()/*.9695*/;
 }
 
 

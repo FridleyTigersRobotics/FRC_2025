@@ -179,14 +179,19 @@ void Robot::TeleopPeriodic()
 }
 //******************************************************************************************************** Auto
 void Robot::AutonomousInit() {
+
 m_autoSelected = m_chooser.GetSelected();
+if(m_autoSelected==kAutoDrive)
+{
+  AutoNumber=1;
+}
+else
+{
+  AutoNumber=0;
+}
 
     fmt::print("Auto selected: {}\n", m_autoSelected);
 
-    if (m_autoSelected == kAutoDrive) 
-    {
-      AutoSequence = m_auto_Drive;
-    }
     /*else if (m_autoSelected == kShootCenter) 
     {
       autoSequence = &Auto_ShootCenter;
@@ -222,7 +227,7 @@ m_autoSelected = m_chooser.GetSelected();
 
 
 
-    AutonomousStateInit();
+    /*AutonomousStateInit();
     m_autoStateDone = false; 
     m_autoState     = 0;
 
@@ -230,13 +235,13 @@ m_autoSelected = m_chooser.GetSelected();
     m_Arm.SetArmPosition( m_Arm.HOLD_START_POSITION );
     m_Intake.ChangeIntakeState( m_Intake.Intake_Stopped );
     m_Shooter.changeShooterState( false );
-    m_Climber.ChangeClimberState( m_Climber.ClimberStop );
+    m_Climber.ChangeClimberState( m_Climber.ClimberStop );*/
     
 
     TeleopInit(); 
-    m_autoTimer.Stop();
-    m_autoTimer.Reset();
-    m_autoTimer.Start();
+    //m_autoTimer.Stop();
+    //m_autoTimer.Reset();
+   // m_autoTimer.Start();
     m_AutoXdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
     m_AutoYdirPid.SetTolerance( kXyPosTolerance,  kXyVelTolerance );
     m_AutoRotatePid.SetTolerance(  kRotPosTolerance, kRotVelTolerance );
@@ -247,8 +252,17 @@ m_autoSelected = m_chooser.GetSelected();
 
  }
 
-void Robot::AutonomousPeriodic() {
+void Robot::AutonomousPeriodic() 
+{
+switch (AutoNumber)
+{
+case (1):
+  Auto_Drive;
+  break;
 
+default:
+  break;
+}
 }
 
 #ifndef RUNNING_FRC_TESTS
