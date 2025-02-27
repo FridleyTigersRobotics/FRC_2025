@@ -12,6 +12,7 @@
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <studica/AHRS.h>
+#include <frc/ADXRS450_Gyro.h>
 #include "SwerveModule.h"
 #include "Constants.h"
 #include "frc/geometry/Rotation2d.h"
@@ -87,6 +88,7 @@ public:
   SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   -5.6/*+(std::numbers::pi*.9)*/, kMaxSpeed, "FL" };
                                                                 //0.79    1.58
   studica::AHRS m_imu { studica::AHRS::NavXComType::kMXP_SPI };
+  frc::ADXRS450_Gyro spigyro;// does not work at high speeds of rotation
 
  public:
    frc::SwerveDriveKinematics<4> m_kinematics{

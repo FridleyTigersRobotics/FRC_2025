@@ -11,6 +11,7 @@
 void Drivetrain::Update( units::second_t period, bool fieldRelative ) 
 {
   frc::ChassisSpeeds ChassisSpeedsToUse;
+  frc::SmartDashboard::PutNumber("spigyro angle", spigyro.GetAngle());
   m_frontLeft.UpdateEncoders();
   m_frontRight.UpdateEncoders();
   m_backLeft.UpdateEncoders();
@@ -128,6 +129,8 @@ void Drivetrain::UpdateOdometry() {
 }
 
 void Drivetrain::Init(){
+  spigyro.Calibrate();
+  spigyro.Reset();
 }
 
 void Drivetrain::ResetYaw()
@@ -138,10 +141,37 @@ void Drivetrain::ResetYaw()
 
 
 double Drivetrain::GetYaw(){
-  return m_imu.GetYaw()*.9695;
+  return m_imu.GetYaw();//.9695;
+  /*
+  double yaw = 0;
+  double allthedegs = spigyro.GetAngle();
+  // Ensure the angle is within the range [0, 360]
+  while (allthedegs < 0) {
+        allthedegs += 360;
+  }
+  while (allthedegs >= 360) {
+      allthedegs -= 360;
+  }
+
+  // Convert the angle from degrees to radians
+  double radian_angle = allthedegs * M_PI / 180.0;
+
+  // Ensure the angle is within the range [-π, π]
+  if (radian_angle > M_PI) {
+      radian_angle -= 2 * M_PI;
+  } else if (radian_angle < -M_PI) {
+      radian_angle += 2 * M_PI;
+  }
+
+  // Convert the angle from radians back to degrees
+  yaw = radian_angle * 180.0 / M_PI;
+
+  return yaw;
+  */
 }
 
 
 double Drivetrain::GetAngle(){
   return m_imu.GetAngle();
+  //return spigyro.GetAngle();
 }
