@@ -1,12 +1,16 @@
-#include <Debug.h>
-#include <Claw.h>
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+#include "subsystems/Intake.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
 
 
-// ****************************************************************************
-void Claw::Init()
+
+Intake::Intake(  Elevator const &Elevator ) :
+    m_Elevator{ Elevator }
 {
     m_coralAngleState = AngleStop;
     m_coralIntakeState = intakeStop;
@@ -31,26 +35,14 @@ void Claw::Init()
    * mid-operation.
    * https://github.com/REVrobotics/REVLib-Examples/blob/main/C%2B%2B/SPARK/Open%20Loop%20Arcade%20Drive/src/main/cpp/Robot.cpp
    */
-
-}
-
-// ****************************************************************************
-void Claw::TeleopInit()
-{
-    m_coralAngleState = AngleStop;
-    m_coralIntakeState = intakeStop;
-}
-
-// ****************************************************************************
-void Claw::ManualControl( )
-{
-
 }
 
 
-// ****************************************************************************
-void Claw::Update( bool elevatormoving )
-{
+
+
+// This method will be called once per scheduler run
+void Intake::Periodic() {
+
     if (m_coralIntakeState == intakeIntake)
     {
         m_CoralIntakeMotor.Set(Constants::kIntakeSpeed);
@@ -68,11 +60,11 @@ void Claw::Update( bool elevatormoving )
 
     if(m_coralAngleState == AngleUp)
     {
-        if(elevatormoving)
+        if(m_Elevator.ismoving())
         {
             m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
         }
-        if(!elevatormoving)
+        if(!m_Elevator.ismoving())
         {
             m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleUp);
         }
@@ -93,11 +85,11 @@ void Claw::Update( bool elevatormoving )
     }
     if(m_coralAngleState == AnglePlaceCoral)
     {
-        if(elevatormoving)
+        if(m_Elevator.ismoving())
         {
             m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
         }
-        if(!elevatormoving)
+        if(!m_Elevator.ismoving())
         {
             m_CoralAnglePid.SetSetpoint(Constants::kCoralAnglePlace);
         }
@@ -107,11 +99,11 @@ void Claw::Update( bool elevatormoving )
     }
     if(m_coralAngleState == AnglePlaceTopCoral)
     {
-        if(elevatormoving)
+        if(m_Elevator.ismoving())
         {
             m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
         }
-        if(!elevatormoving)
+        if(!m_Elevator.ismoving())
         {
             m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleTopPlace);
         }
@@ -119,12 +111,30 @@ void Claw::Update( bool elevatormoving )
         angleMotorValue = std::clamp(angleMotorValue, -Constants::kCoralAngleSpeed, Constants::kCoralAngleSpeed );
         m_CoralAngleMotor.Set(angleMotorValue);
     }
-    
+}
+
+
+
+
+// ****************************************************************************
+void Intake::TeleopInit()
+{
+    m_coralAngleState = AngleStop;
+    m_coralIntakeState = intakeStop;
 }
 
 
 // ****************************************************************************
-void Claw::ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate )
+frc2::CommandPtr Intake::ChangeStateCommand( CoralAngleState_t Astate, CoralIntakeState_t Istate )
+{
+    return RunOnce([ this, Astate, Istate ] { ChangeState( Astate, Istate ); });
+}
+
+
+
+
+// ****************************************************************************
+void Intake::ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate )
 {
     if(Astate != AngleMaintain)
     {
@@ -138,10 +148,12 @@ void Claw::ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate )
 }
 
 // ****************************************************************************
-void Claw::UpdateSmartDashboardData( )
+void Intake::UpdateSmartDashboardData( )
 {
     frc::SmartDashboard::PutNumber("Coral Angle Encoder Value", m_CoralAngleEncoder.Get());
     frc::SmartDashboard::PutNumber("Coral Angle Setpoint", m_CoralAnglePid.GetSetpoint());
     frc::SmartDashboard::PutNumber("Coral Intake Motor Encoder Value", m_CoralIntakeEncoder.GetPosition());
     frc::SmartDashboard::PutNumber("Coral Angle motor value", m_CoralAngleMotor.Get());
 }
+
+

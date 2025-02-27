@@ -1,5 +1,10 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 #pragma once
 
+#include <frc2/command/SubsystemBase.h>
 #include <Phoenix5.h>
 #include <Constants.h>
 #include <frc/DigitalInput.h>
@@ -14,9 +19,19 @@
 #include <rev/SparkMax.h>
 using namespace rev::spark;
 
-class Elevator
-{
+
+
+class Elevator : public frc2::SubsystemBase {
  public:
+  Elevator();
+
+  /**
+   * Will be called periodically whenever the CommandScheduler runs.
+   */
+  void Periodic() override;
+
+
+
     typedef enum ElevatorState_e
     {
         ElevatorStartingConfig,
@@ -29,13 +44,15 @@ class Elevator
         ElevatorMaintain
     } ElevatorState_t;
 
+    frc2::CommandPtr ChangeStateCommand( ElevatorState_t ElevatorPosition );
+
     void Init();
     void TeleopInit();
     void Update();
     void ChangeState( ElevatorState_t ElevatorPosition );
     void ManualControl();
     void UpdateSmartDashboardData();
-    bool ismoving();
+    bool ismoving() const;
 
  private:
     SparkMax m_Motor0{ Constants::kElevator0ID, SparkLowLevel::MotorType::kBrushless };
@@ -46,4 +63,5 @@ class Elevator
     ElevatorState_t m_ElevatorState = ElevatorStop;
 
     frc::PIDController m_ElevatorPid {Constants::kElevatorPidP, Constants::kElevatorPidI, Constants::kElevatorPidD};
+
 };

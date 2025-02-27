@@ -2,21 +2,37 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "Drivetrain.h"
+#include "subsystems/Drivetrain.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <fmt/printf.h>
 #include <math.h>
+#include <frc/TimedRobot.h>
 
 
-void Drivetrain::Update( units::second_t period, bool fieldRelative ) 
+
+Drivetrain::Drivetrain() 
 {
+    m_imu.ResetDisplacement(); 
+    m_imu.Reset();
+}
+
+void Drivetrain::SetFieldRelative( bool fieldRelative )
+{
+  m_fieldRelative = fieldRelative;
+}
+
+
+
+void Drivetrain::Periodic() 
+{
+  units::second_t period{ frc::TimedRobot::kDefaultPeriod };
   frc::ChassisSpeeds ChassisSpeedsToUse;
   m_frontLeft.UpdateEncoders();
   m_frontRight.UpdateEncoders();
   m_backLeft.UpdateEncoders();
   m_backRight.UpdateEncoders();
 
-  if ( fieldRelative )
+  if ( m_fieldRelative )
   {
     ChassisSpeedsToUse = \
       frc::ChassisSpeeds::FromFieldRelativeSpeeds(
@@ -98,18 +114,6 @@ void Drivetrain::SetSpeeds(
 }
 
 
-void Drivetrain::AddToSpeeds(
-  units::meters_per_second_t  xSpeed,
-  units::meters_per_second_t  ySpeed, 
-  units::radians_per_second_t rot
-)
-{
-  m_xSpeed += xSpeed;
-  m_ySpeed += ySpeed;
-  m_rot    += rot;
-}
-
-
 void Drivetrain::UpdateSmartDashboardData()
 {
   #if 1
@@ -118,6 +122,11 @@ void Drivetrain::UpdateSmartDashboardData()
   frc::SmartDashboard::PutNumber( "Drive_Rot", double{m_odometry.GetEstimatedPosition().Rotation().Degrees()});
   frc::SmartDashboard::PutNumber( "Yawby bobby", m_imu.GetYaw());
   #endif
+}
+
+void Drivetrain::TeleopInit()
+{
+
 }
 
 
@@ -145,3 +154,6 @@ double Drivetrain::GetYaw(){
 double Drivetrain::GetAngle(){
   return m_imu.GetAngle();
 }
+
+
+

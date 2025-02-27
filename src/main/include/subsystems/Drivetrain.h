@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <frc2/command/SubsystemBase.h>
 #include <numbers>
 
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
@@ -12,27 +13,26 @@
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <studica/AHRS.h>
-#include "SwerveModule.h"
+#include "subsystems/SwerveModule.h"
 #include "Constants.h"
 #include "frc/geometry/Rotation2d.h"
 #include <frc/SPI.h>
 
 using namespace Constants;
 
-/**
- * Represents a swerve drive style drivetrain.
- */
+class Drivetrain : public frc2::SubsystemBase {
+ public:
 
-//32^2=a^2+b^s    512
-
-class Drivetrain {
-public:
-
+  bool m_fieldRelative = false;
   double m_YawOffset = 0;
   //double m_DriveTargetAngle = 0;
-  Drivetrain() {m_imu.ResetDisplacement(); }
+  Drivetrain();
 
-  void Update( units::second_t period, bool fieldRelative );
+  void SetFieldRelative( bool fieldRelative );
+
+
+  //void Periodic( units::second_t period, bool fieldRelative ) override;
+  void Periodic( ) override;
   void drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative, units::second_t period);
@@ -42,12 +42,7 @@ public:
     units::radians_per_second_t rot
     );
 
-  void AddToSpeeds(
-    units::meters_per_second_t  xSpeed,
-    units::meters_per_second_t  ySpeed, 
-    units::radians_per_second_t rot
-    );
-
+  void TeleopInit();
   void UpdateOdometry();
   void Init();
   void ResetYaw();
