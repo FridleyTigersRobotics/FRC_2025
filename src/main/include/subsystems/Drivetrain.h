@@ -49,6 +49,8 @@ class Drivetrain : public frc2::SubsystemBase {
   void UpdateSmartDashboardData();
   double GetYaw();
   double GetAngle();
+
+
   static constexpr units::meters_per_second_t kMaxSpeed =
       0.2_mps;  // 3 meters per second
 

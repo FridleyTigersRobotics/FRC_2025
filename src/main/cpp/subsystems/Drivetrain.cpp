@@ -141,13 +141,20 @@ void Drivetrain::Init(){
 
 void Drivetrain::ResetYaw()
 {
-
+  m_imu.ZeroYaw();
+  /*
+  feature allowing the driver to "reset"
+  the "yaw" angle.  When the reset occurs, the new gyro angle will be
+  0 degrees.  This can be useful in cases when the gyro drifts, which
+  doesn't typically happen during a FRC match, but can occur during
+  long practice sessions.
+  */
 }
 
 
 
 double Drivetrain::GetYaw(){
-  return m_imu.GetYaw()*.9695;
+  return m_imu.GetYaw();
 }
 
 
