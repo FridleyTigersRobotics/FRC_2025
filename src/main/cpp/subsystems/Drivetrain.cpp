@@ -9,6 +9,8 @@
 #include <frc/TimedRobot.h>
 
 
+frc::ChassisSpeeds CurrentChassisSpeeds = frc::ChassisSpeeds{ units::meters_per_second_t {0.0}, units::meters_per_second_t {0.0}, units::radians_per_second_t {0.0} };
+
 
 Drivetrain::Drivetrain() 
 {
@@ -50,6 +52,8 @@ void Drivetrain::Periodic()
   frc::ChassisSpeeds ChassisSpeeds = frc::ChassisSpeeds::Discretize( ChassisSpeedsToUse, period );
 
   auto states = m_kinematics.ToSwerveModuleStates( ChassisSpeeds );
+
+  CurrentChassisSpeeds = ChassisSpeeds;
 
   m_kinematics.DesaturateWheelSpeeds( &states, kMaxSpeed );
 
@@ -115,10 +119,21 @@ void Drivetrain::SetSpeeds(
 
 frc::ChassisSpeeds Drivetrain::getRobotRelativeSpeeds()  //This can be calculated using one of WPILib's drive kinematics classes or read from IMU
 {
- units::meters_per_second_t vx = units::meters_per_second_t{1.0_mps} * m_imu.GetVelocityX();
- units::meters_per_second_t vy = units::meters_per_second_t{1.0_mps} * m_imu.GetVelocityY();
- units::radians_per_second_t omega = units::radians_per_second_t {0.017453293_rad_per_s} * m_imu.GetRate();// 1 deg/sec = pi/180 rad/sec
- return (frc::ChassisSpeeds {vx, vy, omega});
+bool useKinematics = true;
+
+if(!useKinematics)
+{
+  units::meters_per_second_t vx = units::meters_per_second_t{1.0_mps} * m_imu.GetVelocityX();
+  units::meters_per_second_t vy = units::meters_per_second_t{1.0_mps} * m_imu.GetVelocityY();
+  units::radians_per_second_t omega = units::radians_per_second_t {0.017453293_rad_per_s} * m_imu.GetRate();// 1 deg/sec = pi/180 rad/sec
+  return (frc::ChassisSpeeds {vx, vy, omega});
+}
+else
+{
+  return CurrentChassisSpeeds;
+}
+
+
 }
 
 frc::Pose2d Drivetrain::getPose()
