@@ -47,9 +47,9 @@ void RobotContainer::ConfigureBindings() {
             // Multiply by max speed to map the joystick unitless inputs to
             // actual units. This will map the [-1, 1] to [max speed backwards,
             // max speed forwards], converting them to actual units.
-            m_driveController.GetLeftY()  * Drivetrain::kMaxSpeed,
-            m_driveController.GetLeftX()  * Drivetrain::kMaxSpeed,
-            m_driveController.GetRightX() * Drivetrain::kMaxAngularSpeed);
+            m_yspeedLimiter.Calculate(m_driveController.GetLeftY())  * Drivetrain::kMaxSpeed,
+            m_xspeedLimiter.Calculate(m_driveController.GetLeftX())  * Drivetrain::kMaxSpeed,
+            m_rotLimiter.Calculate(m_driveController.GetRightX()) * Drivetrain::kMaxAngularSpeed);
       },
       {&m_Drivetrain}));
 

@@ -49,6 +49,9 @@ class Drivetrain : public frc2::SubsystemBase {
   void UpdateSmartDashboardData();
   double GetYaw();
   double GetAngle();
+  frc::ChassisSpeeds getRobotRelativeSpeeds();
+  frc::Pose2d getPose();
+  void resetPose(frc::Pose2d poseinput);
 
 
   static constexpr units::meters_per_second_t kMaxSpeed =

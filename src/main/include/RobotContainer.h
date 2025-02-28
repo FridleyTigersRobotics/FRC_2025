@@ -7,7 +7,7 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
 #include <frc2/command/button/CommandGenericHID.h>
-
+#include <frc/filter/SlewRateLimiter.h>
 
 #include "Constants.h"
 #include "subsystems/Climber.h"
@@ -38,6 +38,11 @@ class RobotContainer {
 
   frc2::CommandXboxController m_driveController{0};
   frc2::CommandGenericHID     m_buttons        {1};
+
+  // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
+  frc::SlewRateLimiter<units::scalar> m_xspeedLimiter{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_yspeedLimiter{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_rotLimiter{3 / 1_s};
 
   // The robot's subsystems are defined here...
 

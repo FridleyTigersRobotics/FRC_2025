@@ -46,7 +46,7 @@ void Drivetrain::Periodic()
   {
     ChassisSpeedsToUse = frc::ChassisSpeeds{ m_xSpeed, m_ySpeed, m_rot };
   }
-        frc::SmartDashboard::PutNumber("THE ROT", float{m_rot});
+        frc::SmartDashboard::PutNumber("THE ROT aka input rotation command to chassis", float{m_rot});
   frc::ChassisSpeeds ChassisSpeeds = frc::ChassisSpeeds::Discretize( ChassisSpeedsToUse, period );
 
   auto states = m_kinematics.ToSwerveModuleStates( ChassisSpeeds );
@@ -113,6 +113,23 @@ void Drivetrain::SetSpeeds(
   m_rot    = rot;
 }
 
+frc::ChassisSpeeds Drivetrain::getRobotRelativeSpeeds()  //This can be calculated using one of WPILib's drive kinematics classes or read from IMU
+{
+ units::meters_per_second_t vx = units::meters_per_second_t{1.0_mps} * m_imu.GetVelocityX();
+ units::meters_per_second_t vy = units::meters_per_second_t{1.0_mps} * m_imu.GetVelocityY();
+ units::radians_per_second_t omega = units::radians_per_second_t {0.017453293_rad_per_s} * m_imu.GetRate();// 1 deg/sec = pi/180 rad/sec
+ return (frc::ChassisSpeeds {vx, vy, omega});
+}
+
+frc::Pose2d Drivetrain::getPose()
+{
+  return m_odometry.GetEstimatedPosition();
+}
+
+void Drivetrain::resetPose(frc::Pose2d poseinput)
+{
+  m_odometry.ResetPose(poseinput);
+}
 
 void Drivetrain::UpdateSmartDashboardData()
 {
