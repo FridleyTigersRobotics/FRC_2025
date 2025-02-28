@@ -90,7 +90,7 @@ void Drivetrain::drive(units::meters_per_second_t xSpeed,
                        units::radians_per_second_t rot, bool fieldRelative,
                        units::second_t period) 
                        {
-  auto states =
+  //auto states = can add this back in if need to use states within this function, removed to get rid of compiler warning of it being set but not used
       m_kinematics.ToSwerveModuleStates(frc::ChassisSpeeds::Discretize(
           fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
                               xSpeed, ySpeed, rot,
