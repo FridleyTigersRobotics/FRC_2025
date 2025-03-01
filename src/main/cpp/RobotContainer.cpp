@@ -95,7 +95,7 @@ void RobotContainer::ConfigureBindings() {
 
   //Coral Intake level
   m_buttons.Button(5).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AnglePlaceCoral, Intake::intakeStop ),
+      m_Intake.ChangeStateCommand( Intake::AngleDn, Intake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralIntake )
     )
   );
