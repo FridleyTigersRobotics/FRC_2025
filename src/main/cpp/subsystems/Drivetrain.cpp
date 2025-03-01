@@ -6,8 +6,73 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <fmt/printf.h>
 #include <math.h>
-#include <frc/TimedRobot.h>
 
+frc::ChassisSpeeds CurrentChassisSpeeds = frc::ChassisSpeeds{ units::meters_per_second_t {0.0}, units::meters_per_second_t {0.0}, units::radians_per_second_t {0.0} };
+
+void Drivetrain::Drive(units::meters_per_second_t xSpeed,
+                       units::meters_per_second_t ySpeed,
+                       units::radians_per_second_t rot, bool fieldRelative,
+                       units::second_t period) {
+  auto states =
+      m_kinematics.ToSwerveModuleStates(frc::ChassisSpeeds::Discretize(
+          fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+                              xSpeed, ySpeed, rot, m_imu.GetRotation2d())
+                        : frc::ChassisSpeeds{xSpeed, ySpeed, rot},
+          period));
+
+  m_kinematics.DesaturateWheelSpeeds(&states, kMaxSpeed);
+
+  auto [fl, fr, bl, br] = states;
+
+  m_frontLeft.SetDesiredState(fl);
+  m_frontRight.SetDesiredState(fr);
+  m_backLeft.SetDesiredState(bl);
+  m_backRight.SetDesiredState(br); 
+
+  CurrentChassisSpeeds = frc::ChassisSpeeds{xSpeed, ySpeed, rot};
+}
+
+void Drivetrain::UpdateOdometry() {
+  m_odometry.Update(m_imu.GetRotation2d(),
+                    {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
+                     m_backLeft.GetPosition(), m_backRight.GetPosition()});
+}
+
+frc::Pose2d Drivetrain::getPose()
+{
+  return m_odometry.GetPose();
+}
+
+void Drivetrain::resetPose(frc::Pose2d poseinput)
+{
+  m_odometry.ResetPose(poseinput);
+}
+
+frc::ChassisSpeeds Drivetrain::getRobotRelativeSpeeds()
+{
+  return CurrentChassisSpeeds;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 
 frc::ChassisSpeeds CurrentChassisSpeeds = frc::ChassisSpeeds{ units::meters_per_second_t {0.0}, units::meters_per_second_t {0.0}, units::radians_per_second_t {0.0} };
 
@@ -67,7 +132,7 @@ void Drivetrain::Periodic()
     fabs( double{fl.speed} ) <= minimumSpeed || 
     fabs( double{fr.speed} ) <= minimumSpeed || 
     fabs( double{bl.speed} ) <= minimumSpeed || 
-    fabs( double{br.speed} ) <= minimumSpeed;*/
+    fabs( double{br.speed} ) <= minimumSpeed;
 
   frc::SmartDashboard::PutNumber( "fl.speed", double{fl.speed} );
   frc::SmartDashboard::PutNumber( "fr.speed", double{fr.speed} );
@@ -180,7 +245,7 @@ void Drivetrain::ResetYaw()
   0 degrees.  This can be useful in cases when the gyro drifts, which
   doesn't typically happen during a FRC match, but can occur during
   long practice sessions.
-  */
+  
 }
 
 
@@ -195,4 +260,5 @@ double Drivetrain::GetAngle(){
 }
 
 
+*/
 

@@ -8,26 +8,97 @@
 #include <numbers>
 
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
-#include <frc/AnalogGyro.h>
 #include <frc/geometry/Translation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <studica/AHRS.h>
 #include "subsystems/SwerveModule.h"
 #include "Constants.h"
-#include "frc/geometry/Rotation2d.h"
 #include <frc/SPI.h>
 
 using namespace Constants;
 
 class Drivetrain : public frc2::SubsystemBase {
  public:
+  Drivetrain() {m_imu.Reset();};
+  
+   void Drive(units::meters_per_second_t xSpeed,
+             units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
+             bool fieldRelative, units::second_t period);
+  void UpdateOdometry();
 
-  bool m_fieldRelative = false;
-  double m_YawOffset = 0;
-  //double m_DriveTargetAngle = 0;
-  Drivetrain();
+  static constexpr units::meters_per_second_t kMaxSpeed =
+      3.0_mps;  // 3 meters per second
+  static constexpr units::radians_per_second_t kMaxAngularSpeed{
+      std::numbers::pi};  // 1/2 rotation per second
 
+ private:
+  frc::Translation2d m_frontLeftLocation {+0.28575_m, +0.28575_m};
+  frc::Translation2d m_frontRightLocation{+0.28575_m, -0.28575_m};
+  frc::Translation2d m_backLeftLocation  {-0.28575_m, +0.28575_m};
+  frc::Translation2d m_backRightLocation {-0.28575_m, -0.28575_m};
+
+  SwerveModule m_backRight { kBackRightDriveID,  kBackRightSpinID,  kDriveEncoderBackRight,  -4.97, kMaxSpeed, "BR" };
+  SwerveModule m_frontRight{ kFrontRightDriveID, kFrontRightSpinID, kDriveEncoderFrontRight, -2.75, kMaxSpeed, "FR" };
+  SwerveModule m_backLeft  { kBackLeftDriveID,   kBackLeftSpinID,   kDriveEncoderBackLeft,   -3.35, kMaxSpeed, "BL" };
+  SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   -5.6, kMaxSpeed, "FL" };
+
+  studica::AHRS m_imu { studica::AHRS::NavXComType::kMXP_SPI };
+
+  frc::SwerveDriveKinematics<4> m_kinematics{
+      m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation,
+      m_backRightLocation};
+
+  frc::SwerveDriveOdometry<4> m_odometry{
+      m_kinematics,
+      m_imu.GetRotation2d(),
+      {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
+       m_backLeft.GetPosition(), m_backRight.GetPosition()}};
+
+  frc::ChassisSpeeds getRobotRelativeSpeeds();
+  frc::Pose2d getPose();
+  void resetPose(frc::Pose2d poseinput);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
   void SetFieldRelative( bool fieldRelative );
 
 
@@ -81,10 +152,10 @@ class Drivetrain : public frc2::SubsystemBase {
 //0.255626 Drive motor #14     0.255626 / (2*std::numbers::pi),      
 //4.980153 Drive motor #16     4.980153 / (2*std::numbers::pi),      
 
-  SwerveModule m_backRight { kBackRightDriveID,  kBackRightSpinID,  kDriveEncoderBackRight,  -4.97/*+(std::numbers::pi*.9)*/, kMaxSpeed, "BR" };
-  SwerveModule m_frontRight{ kFrontRightDriveID, kFrontRightSpinID, kDriveEncoderFrontRight, -2.75/*+(std::numbers::pi*.9)*/, kMaxSpeed, "FR" };
-  SwerveModule m_backLeft  { kBackLeftDriveID,   kBackLeftSpinID,   kDriveEncoderBackLeft,   -3.35/*+(std::numbers::pi*.9)*/, kMaxSpeed, "BL" };
-  SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   -5.6/*+(std::numbers::pi*.9)*/, kMaxSpeed, "FL" };
+  SwerveModule m_backRight { kBackRightDriveID,  kBackRightSpinID,  kDriveEncoderBackRight,  -4.97, kMaxSpeed, "BR" };
+  SwerveModule m_frontRight{ kFrontRightDriveID, kFrontRightSpinID, kDriveEncoderFrontRight, -2.75, kMaxSpeed, "FR" };
+  SwerveModule m_backLeft  { kBackLeftDriveID,   kBackLeftSpinID,   kDriveEncoderBackLeft,   -3.35, kMaxSpeed, "BL" };
+  SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   -5.6, kMaxSpeed, "FL" };
                                                                 //0.79    1.58
   studica::AHRS m_imu { studica::AHRS::NavXComType::kMXP_SPI };
 
@@ -108,6 +179,6 @@ class Drivetrain : public frc2::SubsystemBase {
       frc::Pose2d{},
       {0.1, 0.1, 0.1},
       {0.1, 0.1, 0.1}};
-
+*/
 
 };
