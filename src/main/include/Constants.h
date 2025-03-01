@@ -73,7 +73,7 @@ namespace Constants
     constexpr double kCoralAnglePidD ={0.00};
     constexpr double kIntakeSpeed = 0.5;
     constexpr double kCoralAngleUp = 0.300;
-    constexpr double kCoralAngleDn = 0.610;
+    constexpr double kCoralAngleDn = 0.710;
     constexpr double kCoralAngleSpeed = 0.75;
     constexpr double kCoralAnglePlace = 0.450;
     constexpr double kCoralAngleTopPlace = 0.420;//0.3650 is horizontal
