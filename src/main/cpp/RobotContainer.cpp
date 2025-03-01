@@ -9,17 +9,22 @@
 #include "commands/Autos.h"
 #include "commands/ExampleCommand.h"
 #include <frc2/command/Command.h>
+#include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/SwerveControllerCommand.h>
 #include <frc2/command/RunCommand.h>
 #include <frc/TimedRobot.h>
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <memory>
 
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
 
-
+  autoChooser = pathplanner::AutoBuilder::buildAutoChooser();
+  frc::SmartDashboard::PutData("Auto Mode", &autoChooser);
 
 
 
@@ -44,13 +49,15 @@ void RobotContainer::ConfigureBindings() {
 
   m_Drivetrain.SetDefaultCommand(frc2::RunCommand(
       [this] {
+        auto xspeed = m_yspeedLimiter.Calculate(m_driveController.GetLeftY())  * Drivetrain::kMaxSpeed;
+        auto yspeed = m_xspeedLimiter.Calculate(m_driveController.GetLeftX())  * Drivetrain::kMaxSpeed;
+        auto rotspeed = m_rotLimiter.Calculate(m_driveController.GetRightX()) * Drivetrain::kMaxAngularSpeed;
+        frc::ChassisSpeeds sendChassisSpeed = frc::ChassisSpeeds {xspeed, yspeed, rotspeed};
         m_Drivetrain.drive(
             // Multiply by max speed to map the joystick unitless inputs to
             // actual units. This will map the [-1, 1] to [max speed backwards,
             // max speed forwards], converting them to actual units.
-            m_yspeedLimiter.Calculate(m_driveController.GetLeftY())  * Drivetrain::kMaxSpeed,
-            m_xspeedLimiter.Calculate(m_driveController.GetLeftX())  * Drivetrain::kMaxSpeed,
-            m_rotLimiter.Calculate(m_driveController.GetRightX()) * Drivetrain::kMaxAngularSpeed,
+            sendChassisSpeed,
             Constants::kJoystickFieldRelative, frc::TimedRobot::kDefaultPeriod);
       },
       {&m_Drivetrain}));
@@ -154,9 +161,11 @@ void RobotContainer::ConfigureBindings() {
 
 }
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
+frc2::Command *RobotContainer::GetAutonomousCommand()
+{
+  return autoChooser.GetSelected();
   // An example command will be run in autonomous
-  return autos::ExampleAuto(&m_Drivetrain);
+  //return autos::ExampleAuto(&m_Drivetrain);
 }
 
 

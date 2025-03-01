@@ -15,15 +15,15 @@
 #include "subsystems/SwerveModule.h"
 #include "Constants.h"
 #include <frc/SPI.h>
+#include <frc2/command/sysid/SysIdRoutine.h>
 
 using namespace Constants;
 
 class Drivetrain : public frc2::SubsystemBase {
  public:
-  Drivetrain() {m_imu.Reset();};
+  Drivetrain();
   
-   void drive(units::meters_per_second_t xSpeed,
-             units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
+   void drive(frc::ChassisSpeeds chassisSpeedinput,
              bool fieldRelative, units::second_t period);
   void UpdateOdometry();
   void Periodic( ) override;
@@ -66,12 +66,7 @@ class Drivetrain : public frc2::SubsystemBase {
       {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
        m_backLeft.GetPosition(), m_backRight.GetPosition()}};
 
-  
- 
-
-
-
-
+  void ConfigureAutoBuilder();
 
 
 

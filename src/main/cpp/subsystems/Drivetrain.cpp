@@ -6,13 +6,35 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <fmt/printf.h>
 #include <math.h>
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/controllers/PPHolonomicDriveController.h>
+
+//pathplanner includes
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/config/RobotConfig.h>
+#include <pathplanner/lib/controllers/PPHolonomicDriveController.h>
+#include <frc/geometry/Pose2d.h>
+#include <frc/kinematics/ChassisSpeeds.h>
+#include <frc/DriverStation.h>
+#include <frc/TimedRobot.h>
+
+using namespace pathplanner;
 
 frc::ChassisSpeeds CurrentChassisSpeeds = frc::ChassisSpeeds{ units::meters_per_second_t {0.0}, units::meters_per_second_t {0.0}, units::radians_per_second_t {0.0} };
 
-void Drivetrain::drive(units::meters_per_second_t xSpeed,
-                       units::meters_per_second_t ySpeed,
-                       units::radians_per_second_t rot, bool fieldRelative,
+Drivetrain::Drivetrain() 
+{
+    ConfigureAutoBuilder();
+    m_imu.Reset();
+}
+
+
+void Drivetrain::drive(frc::ChassisSpeeds chassisSpeedinput, bool fieldRelative,
                        units::second_t period) {
+  frc::ChassisSpeeds CurrentChassisSpeeds = chassisSpeedinput;
+  units::meters_per_second_t xSpeed = CurrentChassisSpeeds.vx;
+  units::meters_per_second_t ySpeed = CurrentChassisSpeeds.vy;
+  units::radians_per_second_t rot = CurrentChassisSpeeds.omega;
   auto states =
       m_kinematics.ToSwerveModuleStates(frc::ChassisSpeeds::Discretize(
           fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
@@ -69,7 +91,34 @@ void Drivetrain::TeleopInit()
 }
 
 
+//PathPlanner
+void Drivetrain::ConfigureAutoBuilder()
+{
+    RobotConfig config = RobotConfig::fromGUISettings();
+    AutoBuilder::configure(
+        [this](){ return getPose(); }, // Robot pose supplier
+        [this](frc::Pose2d pose){ resetPose(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
+        [this](){ return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        [this](auto speeds, auto feedforwards){ drive(speeds, false, frc::TimedRobot::kDefaultPeriod); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+        std::make_shared<PPHolonomicDriveController>( // PPHolonomicController is the built in path following controller for holonomic drive trains
+            PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+        ),
+        config, // The robot configuration
+        []() {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
+            auto alliance = frc::DriverStation::GetAlliance();
+            if (alliance) {
+                return alliance.value() == frc::DriverStation::Alliance::kRed;
+            }
+            return false;
+        },
+        this
+        ); // Reference to this subsystem to set requirements
+}
 
 
 

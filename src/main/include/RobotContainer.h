@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
 #include <frc2/command/button/CommandGenericHID.h>
@@ -25,9 +26,6 @@
 class RobotContainer {
  public:
   RobotContainer();
-
-  frc2::CommandPtr GetAutonomousCommand();
-
   void UpdateSmartDashboardData();
   void TeleopInit();
 
@@ -53,4 +51,10 @@ class RobotContainer {
   Intake     m_Intake{ m_Elevator };
 
   void ConfigureBindings();
+
+  /* Path follower */
+  frc::SendableChooser<frc2::Command *> autoChooser;
+  public:
+  frc2::Command *GetAutonomousCommand();
+
 };
