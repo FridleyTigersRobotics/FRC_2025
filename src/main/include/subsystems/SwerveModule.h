@@ -97,7 +97,7 @@ class SwerveModule {
   static constexpr double m_positonConversionFactor = m_wheelDiameter * m_metersPerInch * std::numbers::pi / m_driveGearRatio;
 
   frc::ProfiledPIDController<units::radians> m_turningPIDController{
-      1.0,
+      0.5,//1.0,
       0.0,
       0.0,
       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
