@@ -7,6 +7,18 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Start Path"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "P2"
           }
         },
@@ -17,9 +29,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "PlaceCoralOnL4"
+            "pathName": "P3"
           }
         }
       ]
