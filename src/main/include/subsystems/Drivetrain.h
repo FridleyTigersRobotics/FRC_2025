@@ -22,7 +22,7 @@ class Drivetrain : public frc2::SubsystemBase {
  public:
   Drivetrain() {m_imu.Reset();};
   
-   void Drive(units::meters_per_second_t xSpeed,
+   void drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative, units::second_t period);
   void UpdateOdometry();

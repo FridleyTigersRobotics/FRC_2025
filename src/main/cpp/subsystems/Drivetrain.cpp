@@ -9,7 +9,7 @@
 
 frc::ChassisSpeeds CurrentChassisSpeeds = frc::ChassisSpeeds{ units::meters_per_second_t {0.0}, units::meters_per_second_t {0.0}, units::radians_per_second_t {0.0} };
 
-void Drivetrain::Drive(units::meters_per_second_t xSpeed,
+void Drivetrain::drive(units::meters_per_second_t xSpeed,
                        units::meters_per_second_t ySpeed,
                        units::radians_per_second_t rot, bool fieldRelative,
                        units::second_t period) {
@@ -139,7 +139,7 @@ void Drivetrain::Periodic()
   //double minimumSpeed = 0.01;
 
   // Check if the wheels don't have a drive velocity to maintain the current wheel orientation.
-  bool hasVelocity = true;/*
+  bool hasVelocity = true;
     fabs( double{fl.speed} ) <= minimumSpeed || 
     fabs( double{fr.speed} ) <= minimumSpeed || 
     fabs( double{bl.speed} ) <= minimumSpeed || 
@@ -250,7 +250,7 @@ void Drivetrain::Init(){
 void Drivetrain::ResetYaw()
 {
   m_imu.ZeroYaw();
-  /*
+  
   feature allowing the driver to "reset"
   the "yaw" angle.  When the reset occurs, the new gyro angle will be
   0 degrees.  This can be useful in cases when the gyro drifts, which

@@ -44,7 +44,7 @@ void RobotContainer::ConfigureBindings() {
 
   m_Drivetrain.SetDefaultCommand(frc2::RunCommand(
       [this] {
-        m_Drivetrain.Drive(
+        m_Drivetrain.drive(
             // Multiply by max speed to map the joystick unitless inputs to
             // actual units. This will map the [-1, 1] to [max speed backwards,
             // max speed forwards], converting them to actual units.
