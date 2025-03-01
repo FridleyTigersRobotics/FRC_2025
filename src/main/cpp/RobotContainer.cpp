@@ -20,6 +20,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <memory>
 #include <frc2/command/SubsystemBase.h>
+#include <pathplanner/lib/auto/NamedCommands.h>
 
 
 RobotContainer::RobotContainer() {
@@ -27,8 +28,6 @@ RobotContainer::RobotContainer() {
 
   autoChooser = pathplanner::AutoBuilder::buildAutoChooser();
   frc::SmartDashboard::PutData("Auto Mode", &autoChooser);
-
-
 
   // Configure the button bindings
   ConfigureBindings();
@@ -66,19 +65,19 @@ void RobotContainer::ConfigureBindings() {
 
   m_Intake.SetDefaultCommand(frc2::RunCommand(
       [this] {
-        m_Intake.ChangeStateCommand( Intake::AngleMaintain, Intake::intakeStop );
+        m_Intake.ChangeState( Intake::AngleMaintain, Intake::intakeMaintain );
       },
       {&m_Intake}));
 
   m_Elevator.SetDefaultCommand(frc2::RunCommand(
       [this] {
-        m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain );
+        m_Elevator.ChangeState( Elevator::ElevatorMaintain );
       },
       {&m_Elevator}));
 
   m_Climber.SetDefaultCommand(frc2::RunCommand(
       [this] {
-        m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabMaintain );
+        m_Climber.ChangeState( Climber::ClimberWinchStop, Climber::GrabMaintain );
       },
       {&m_Climber}));
 
@@ -137,9 +136,21 @@ void RobotContainer::ConfigureBindings() {
     )
   );
 
+  m_buttons.Button(7).OnFalse( frc2::cmd::Parallel(
+      m_Intake.ChangeStateCommand( Intake::AngleMaintain, Intake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
+    )
+  );
+
   //Coral reverse
   m_buttons.Button(8).WhileTrue( frc2::cmd::Parallel(
       m_Intake.ChangeStateCommand( Intake::AngleMaintain, Intake::intakeReverse ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
+    )
+  );
+
+  m_buttons.Button(8).OnFalse( frc2::cmd::Parallel(
+      m_Intake.ChangeStateCommand( Intake::AngleMaintain, Intake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
     )
   );
