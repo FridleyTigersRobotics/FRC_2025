@@ -24,8 +24,9 @@ frc::ChassisSpeeds CurrentChassisSpeeds = frc::ChassisSpeeds{ units::meters_per_
 
 Drivetrain::Drivetrain() 
 {
+    ResetIMU();
     ConfigureAutoBuilder();
-    m_imu.Reset();
+    
 }
 
 
@@ -88,6 +89,11 @@ void Drivetrain::UpdateSmartDashboardData()
 void Drivetrain::TeleopInit()
 {
 
+}
+
+void Drivetrain::ResetIMU()
+{
+  m_imu.Reset();
 }
 
 

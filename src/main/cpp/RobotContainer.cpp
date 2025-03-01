@@ -19,6 +19,8 @@
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <memory>
+#include <frc2/command/SubsystemBase.h>
+
 
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
@@ -49,9 +51,9 @@ void RobotContainer::ConfigureBindings() {
 
   m_Drivetrain.SetDefaultCommand(frc2::RunCommand(
       [this] {
-        auto yspeed = m_yspeedLimiter.Calculate(m_driveController.GetLeftY())  * Drivetrain::kMaxSpeed;
-        auto xspeed = m_xspeedLimiter.Calculate(m_driveController.GetLeftX())  * Drivetrain::kMaxSpeed;
-        auto rotspeed = m_rotLimiter.Calculate(m_driveController.GetRightX()) * Drivetrain::kMaxAngularSpeed;
+        auto xspeed = - m_yspeedLimiter.Calculate(m_driveController.GetLeftY())  * Drivetrain::kMaxSpeed;
+        auto yspeed = - m_xspeedLimiter.Calculate(m_driveController.GetLeftX())  * Drivetrain::kMaxSpeed;
+        auto rotspeed = - m_rotLimiter.Calculate(m_driveController.GetRightX()) * Drivetrain::kMaxAngularSpeed;
         frc::ChassisSpeeds sendChassisSpeed = frc::ChassisSpeeds {xspeed, yspeed, rotspeed};
         m_Drivetrain.drive(
             // Multiply by max speed to map the joystick unitless inputs to
@@ -80,7 +82,10 @@ void RobotContainer::ConfigureBindings() {
       },
       {&m_Climber}));
 
-
+  //resetIMU
+  m_driveController.POVUp().WhileTrue(
+    frc2::cmd::RunOnce([ this ] { m_Drivetrain.ResetIMU(); })
+  );
 
   //all down
   m_buttons.Button(10).WhileTrue( frc2::cmd::Parallel(

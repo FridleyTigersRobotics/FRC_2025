@@ -43,16 +43,18 @@ class Drivetrain : public frc2::SubsystemBase {
 
   void TeleopInit();
 
+  void ResetIMU();
+
  private:
   frc::Translation2d m_frontLeftLocation {+0.28575_m, +0.28575_m};
   frc::Translation2d m_frontRightLocation{+0.28575_m, -0.28575_m};
   frc::Translation2d m_backLeftLocation  {-0.28575_m, +0.28575_m};
   frc::Translation2d m_backRightLocation {-0.28575_m, -0.28575_m};
 
-  SwerveModule m_backRight { kBackRightDriveID,  kBackRightSpinID,  kDriveEncoderBackRight,  -4.97, kMaxSpeed, "BR" };
-  SwerveModule m_frontRight{ kFrontRightDriveID, kFrontRightSpinID, kDriveEncoderFrontRight, -2.75, kMaxSpeed, "FR" };
-  SwerveModule m_backLeft  { kBackLeftDriveID,   kBackLeftSpinID,   kDriveEncoderBackLeft,   -3.35, kMaxSpeed, "BL" };
-  SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   -5.6, kMaxSpeed, "FL" };
+  SwerveModule m_backRight { kBackRightDriveID,  kBackRightSpinID,  kDriveEncoderBackRight,  (std::numbers::pi + -4.97), kMaxSpeed, "BR" };
+  SwerveModule m_frontRight{ kFrontRightDriveID, kFrontRightSpinID, kDriveEncoderFrontRight, (std::numbers::pi + -2.75), kMaxSpeed, "FR" };
+  SwerveModule m_backLeft  { kBackLeftDriveID,   kBackLeftSpinID,   kDriveEncoderBackLeft,   (std::numbers::pi + -3.35), kMaxSpeed, "BL" };
+  SwerveModule m_frontLeft { kFrontLeftDriveID,  kFrontLeftSpinID,  kDriveEncoderFrontLeft,   (std::numbers::pi + -5.6), kMaxSpeed, "FL" };
 
   studica::AHRS m_imu { studica::AHRS::NavXComType::kMXP_SPI };
 
