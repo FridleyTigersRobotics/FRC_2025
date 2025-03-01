@@ -14,6 +14,7 @@
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/SwerveControllerCommand.h>
 #include <frc2/command/RunCommand.h>
+#include <frc/TimedRobot.h>
 
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
@@ -49,7 +50,8 @@ void RobotContainer::ConfigureBindings() {
             // max speed forwards], converting them to actual units.
             m_yspeedLimiter.Calculate(m_driveController.GetLeftY())  * Drivetrain::kMaxSpeed,
             m_xspeedLimiter.Calculate(m_driveController.GetLeftX())  * Drivetrain::kMaxSpeed,
-            m_rotLimiter.Calculate(m_driveController.GetRightX()) * Drivetrain::kMaxAngularSpeed);
+            m_rotLimiter.Calculate(m_driveController.GetRightX()) * Drivetrain::kMaxAngularSpeed,
+            Constants::kJoystickFieldRelative, frc::TimedRobot::kDefaultPeriod);
       },
       {&m_Drivetrain}));
 

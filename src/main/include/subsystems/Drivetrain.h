@@ -26,11 +26,22 @@ class Drivetrain : public frc2::SubsystemBase {
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative, units::second_t period);
   void UpdateOdometry();
+  void Periodic( ) override;
 
   static constexpr units::meters_per_second_t kMaxSpeed =
       3.0_mps;  // 3 meters per second
   static constexpr units::radians_per_second_t kMaxAngularSpeed{
       std::numbers::pi};  // 1/2 rotation per second
+
+  frc::ChassisSpeeds getRobotRelativeSpeeds();
+
+  frc::Pose2d getPose();
+
+  void resetPose(frc::Pose2d poseinput);
+ 
+  void UpdateSmartDashboardData();
+
+  void TeleopInit();
 
  private:
   frc::Translation2d m_frontLeftLocation {+0.28575_m, +0.28575_m};
@@ -55,10 +66,8 @@ class Drivetrain : public frc2::SubsystemBase {
       {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
        m_backLeft.GetPosition(), m_backRight.GetPosition()}};
 
-  frc::ChassisSpeeds getRobotRelativeSpeeds();
-  frc::Pose2d getPose();
-  void resetPose(frc::Pose2d poseinput);
-
+  
+ 
 
 
 

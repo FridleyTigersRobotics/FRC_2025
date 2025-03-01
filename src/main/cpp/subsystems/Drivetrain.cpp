@@ -53,9 +53,20 @@ frc::ChassisSpeeds Drivetrain::getRobotRelativeSpeeds()
   return CurrentChassisSpeeds;
 }
 
+void Drivetrain::Periodic()
+{
+  UpdateOdometry();
+}
 
+void Drivetrain::UpdateSmartDashboardData()
+{
 
+}
 
+void Drivetrain::TeleopInit()
+{
+
+}
 
 
 

@@ -93,6 +93,7 @@ void SwerveModule::SetDesiredState(
   frc::SwerveModuleState& referenceState
 ) 
 {
+  UpdateEncoders();
   frc::Rotation2d encoderRotation{units::radian_t{m_turningEncoder.GetDistance()}};
 
   // Optimize the reference state to avoid spinning further than 90 degrees
