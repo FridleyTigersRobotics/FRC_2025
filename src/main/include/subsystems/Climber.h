@@ -1,5 +1,8 @@
-#pragma once
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
+#pragma once
 #include <Phoenix5.h>
 #include <Constants.h>
 #include <frc/DigitalInput.h>
@@ -15,48 +18,44 @@
 #include <frc/DutyCycleEncoder.h>
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
+#include <frc2/command/SubsystemBase.h>
+#include <frc2/command/CommandPtr.h>
 
-
-class Climber
-{
+class Climber : public frc2::SubsystemBase {
  public:
- /*
-    typedef enum ClimberState_e
-    {
-        ClimberDown,
-        ClimberUp,
-        ClimberStop,
-        ClimberReset,
-        GrabSpin
-    } ClimberState_t;
-*/
 
-    typedef enum ClimberWinchState_e
-    {
-        ClimberWinchOut,
-        ClimberWinchIn,
-        ClimberWinchStop,
-        ClimberWinchCalibrate,
-        ClimberWinchInManual,
-        ClimberWinchOutManual,
-        ClimberWinchMaintain
-    } ClimberWinchState_t;
+  typedef enum ClimberWinchState_e
+  {
+      ClimberWinchOut,
+      ClimberWinchIn,
+      ClimberWinchStop,
+      ClimberWinchCalibrate,
+      ClimberWinchInManual,
+      ClimberWinchOutManual,
+      ClimberWinchMaintain
+  } ClimberWinchState_t;
 
-        typedef enum ClimberGrabberState_e
-    {
-        GrabVertical,
-        GrabHorizontal,
-        GrabStop,
-        GrabMaintain
-    } ClimberGrabberState_t;
-    
+      typedef enum ClimberGrabberState_e
+  {
+      GrabVertical,
+      GrabHorizontal,
+      GrabStop,
+      GrabMaintain
+  } ClimberGrabberState_t;
+  
+  frc2::CommandPtr ChangeStateCommand( ClimberWinchState_t Cstate, ClimberGrabberState_t Gstate );
 
-    void Init();
-    void TeleopInit();
-    void Update();
-    void ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gstate );
-    void ManualControl();
-    void UpdateSmartDashboardData();
+  Climber();
+  void TeleopInit();
+  void ManualControl();
+  void ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gstate );
+  void UpdateSmartDashboardData( );
+
+
+  /**
+   * Will be called periodically whenever the CommandScheduler runs.
+   */
+  void Periodic() override;
 
  private:
     frc::DigitalInput winch_limit {Constants::kClimbSwitchDIO};

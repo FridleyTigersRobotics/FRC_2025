@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "SwerveModule.h"
+#include "subsystems/SwerveModule.h"
 
 #include <numbers>
 #include <frc/geometry/Rotation2d.h>
@@ -93,6 +93,7 @@ void SwerveModule::SetDesiredState(
   frc::SwerveModuleState& referenceState
 ) 
 {
+  UpdateEncoders();
   frc::Rotation2d encoderRotation{units::radian_t{m_turningEncoder.GetDistance()}};
 
   // Optimize the reference state to avoid spinning further than 90 degrees

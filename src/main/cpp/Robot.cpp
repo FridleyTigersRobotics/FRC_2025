@@ -3,204 +3,80 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-#include <frc/MathUtil.h>
-#include <frc/TimedRobot.h>
-#include <frc/XboxController.h>
-#include <fmt/printf.h>
-#include <frc/filter/SlewRateLimiter.h>
 
-#include <Drivetrain.h>
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <wpi/print.h>
-#include <string>
+#include <frc2/command/CommandScheduler.h>
 
-#include <networktables/NetworkTable.h>
-#include <LimelightHelpers.h>
-#include <cameraserver/CameraServer.h>
+Robot::Robot() {}
 
-Robot::Robot() {
-  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
-  m_chooser.AddOption(kAutoNameCustom2, kAutoNameCustom2);
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+/**
+ * This function is called every 20 ms, no matter the mode. Use
+ * this for items like diagnostics that you want to run during disabled,
+ * autonomous, teleoperated and test.
+ *
+ * <p> This runs after the mode specific periodic functions, but before
+ * LiveWindow and SmartDashboard integrated updating.
+ */
+void Robot::RobotPeriodic() {
+  m_container.UpdateSmartDashboardData();
+  frc2::CommandScheduler::GetInstance().Run();
 }
 
-// ****************************************************************************
-void Robot::RobotInit()
-{
-
-  m_Drivetrain.m_imu.Reset();
-  //frc::CameraServer::StartAutomaticCapture();
-  // Autonomous Chooser
-  // Initialize Subsystems
-  m_Drivetrain.Init();
-  m_Climber.Init();
-  m_Elevator.Init();
-  m_Claw.Init();
-
-}
-
-
-// ****************************************************************************
-void Robot::RobotPeriodic()
-{
-  m_Drivetrain.UpdateSmartDashboardData();
-  m_Climber.UpdateSmartDashboardData();
-  m_Elevator.UpdateSmartDashboardData();
-  m_Claw.UpdateSmartDashboardData();
-}
-
-
-// ****************************************************************************
-void Robot::DisabledInit(){}
+/**
+ * This function is called once each time the robot enters Disabled mode. You
+ * can use it to reset any subsystem information you want to clear when the
+ * robot is disabled.
+ */
+void Robot::DisabledInit() {}
 
 void Robot::DisabledPeriodic() {}
 
+/**
+ * This autonomous runs the autonomous command selected by your {@link
+ * RobotContainer} class.
+ */
+void Robot::AutonomousInit() {
+  m_autonomousCommand = m_container.GetAutonomousCommand();
+
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Schedule();
+  }
+}
+
+void Robot::AutonomousPeriodic() {}
+
+void Robot::TeleopInit() {
+  // This makes sure that the autonomous stops running when
+  // teleop starts running. If you want the autonomous to
+  // continue until interrupted by another command, remove
+  // this line or comment it out.
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Cancel();
+  }
+  m_container.TeleopInit();
+}
+
+/**
+ * This function is called periodically during operator control.
+ */
+void Robot::TeleopPeriodic() {}
+
+/**
+ * This function is called periodically during test mode.
+ */
+void Robot::TestPeriodic() {}
+
+/**
+ * This function is called once when the robot is first started up.
+ */
 void Robot::SimulationInit() {}
 
+/**
+ * This function is called periodically whilst in simulation.
+ */
 void Robot::SimulationPeriodic() {}
 
-// ****************************************************************************
-void Robot::TeleopInit() 
-{
-  m_Drivetrain.m_imu.ZeroYaw();
-
-  m_fieldRelative = true;
-  
-  m_Climber.TeleopInit();
-  m_Claw.TeleopInit();
-  m_Elevator.TeleopInit();
-
-}
-
-
-// ****************************************************************************
-void Robot::TeleopPeriodic() 
-{ 
-  m_Drivetrain.UpdateOdometry();
-
-  double DriveDeadband = 0.1;
-  double DriveX = frc::ApplyDeadband( m_driveController.GetLeftY(), DriveDeadband );
-  double DriveY = frc::ApplyDeadband( m_driveController.GetLeftX(), DriveDeadband );
-  double driveRotSpeed = frc::ApplyDeadband( m_driveController.GetRightX(), DriveDeadband );
-  const auto rotationSpeed = driveRotSpeed * Drivetrain::kMaxAngularSpeed;
-
-
-
-  // Get the x speed. We are inverting this because Xbox controllers return
-  // negative values when we push forward.
-  const auto xSpeed = DriveX * Drivetrain::kMaxSpeed;
-
-  // Get the y speed or sideways/strafe speed. We are inverting this because
-  // we want a positive value when we pull to the left. Xbox controllers
-  // return positive values when you pull to the right by default.
-  const auto ySpeed = DriveY * Drivetrain::kMaxSpeed;
-
-
-  frc::SmartDashboard::PutNumber( "xSpeed", double{xSpeed} );
-  frc::SmartDashboard::PutNumber( "ySpeed", double{ySpeed} );
-  m_Drivetrain.SetSpeeds( xSpeed, ySpeed, rotationSpeed );
-
-// ****************************************************************************
- if(m_buttons.GetRawButton(10))//all down
-  {
-    m_Claw.ChangeState( m_Claw.AngleUp, m_Claw.intakeStop );
-    m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
-  }
-  if(m_buttons.GetRawButton(5))//Coral Intake level
-  {
-    m_Claw.ChangeState( m_Claw.AngleDn, m_Claw.intakeStop );
-    m_Elevator.ChangeState( m_Elevator.ElevatorCoralIntake );
-  }
-  if(m_buttons.GetRawButton(1))//Coral L1
-  {
-    m_Claw.ChangeState( m_Claw.AnglePlaceCoral, m_Claw.intakeStop );
-    m_Elevator.ChangeState( m_Elevator.ElevatorCoralL1 );
-  }
-  if(m_buttons.GetRawButton(2))//Coral L2
-  {
-    m_Claw.ChangeState( m_Claw.AnglePlaceCoral, m_Claw.intakeStop );
-    m_Elevator.ChangeState( m_Elevator.ElevatorCoralL2 );
-  }
-  if(m_buttons.GetRawButton(3))//Coral L3
-  {
-    m_Claw.ChangeState( m_Claw.AnglePlaceCoral, m_Claw.intakeStop );
-    m_Elevator.ChangeState( m_Elevator.ElevatorCoralL3 );
-  }
-  if(m_buttons.GetRawButton(4))//Coral L4
-  {
-    m_Claw.ChangeState( m_Claw.AnglePlaceTopCoral, m_Claw.intakeStop );
-    m_Elevator.ChangeState( m_Elevator.ElevatorCoralL4 );
-  }
-  if(m_buttons.GetRawButton(7))//Coral Intake
-  {
-    m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeIntake );
-    m_Elevator.ChangeState( m_Elevator.ElevatorMaintain);
-  }
-  if(m_buttons.GetRawButton(8))//Coral reverse
-  {
-    m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeReverse );
-    m_Elevator.ChangeState( m_Elevator.ElevatorMaintain );
-  }
-  if(!m_buttons.GetRawButton(8) && !m_buttons.GetRawButton(7))//Coral Intake stop
-  {
-    m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeStop );
-    m_Elevator.ChangeState( m_Elevator.ElevatorMaintain);
-  }
-  if(m_buttons.GetRawButton(9))//climber out
-  {
-    m_Claw.ChangeState( m_Claw.AngleUp, m_Claw.intakeStop );
-    m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
-    m_Climber.ChangeState( m_Climber.ClimberWinchOutManual, m_Climber.GrabVertical );
-
-  }
-  if(m_buttons.GetRawButton(6))//climber in
-  {
-    m_Claw.ChangeState( m_Claw.AngleUp, m_Claw.intakeStop );
-    m_Elevator.ChangeState( m_Elevator.ElevatorStartingConfig );
-    m_Climber.ChangeState( m_Climber.ClimberWinchInManual, m_Climber.GrabHorizontal );
-
-  }
-  if(!m_buttons.GetRawButton(6) && !m_buttons.GetRawButton(9))//climber stop
-  {
-    m_Claw.ChangeState( m_Claw.AngleMaintain, m_Claw.intakeMaintain );
-    m_Elevator.ChangeState( m_Elevator.ElevatorMaintain );
-    m_Climber.ChangeState( m_Climber.ClimberWinchStop, m_Climber.GrabMaintain );
-  }
-
-// ****************************************************************************
-
-  // Update all subsystems
-  m_Drivetrain.Update( GetPeriod(), m_fieldRelative );
-  m_Climber.Update();
-  m_Elevator.Update();
-  m_Claw.Update( m_Elevator.ismoving() );
-}
-
-void Robot::AutonomousInit() {
-  m_autoSelected = m_chooser.GetSelected();
-  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
-  //     kAutoNameDefault);
-  wpi::print("Auto selected: {}\n", m_autoSelected);
-
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
-    // Default Auto goes here
-  }
-}
-
-void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
-    // Default Auto goes here
-  }
-}
-
 #ifndef RUNNING_FRC_TESTS
-int main()
-{
+int main() {
   return frc::StartRobot<Robot>();
 }
 #endif

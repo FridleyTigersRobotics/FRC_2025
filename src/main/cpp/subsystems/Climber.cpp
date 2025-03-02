@@ -1,11 +1,14 @@
-#include <Debug.h>
-#include <Climber.h>
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+#include "subsystems/Climber.h"
 #include <frc/smartdashboard/SmartDashboard.h>
-
-
+#include <rev/SparkMax.h>
+#include <rev/config/SparkMaxConfig.h>
 
 // ****************************************************************************
-void Climber::Init()
+Climber::Climber()
 {
    winch_calibrated=false;
    m_ClimberWinchState = ClimberWinchStop;
@@ -34,7 +37,7 @@ void Climber::ManualControl()
 
 
 // ****************************************************************************
-void Climber::Update()
+void Climber::Periodic()
 {
     if ( winch_limit.Get() )
     {
@@ -137,19 +140,33 @@ void Climber::Update()
 
 
 // ****************************************************************************
+frc2::CommandPtr Climber::ChangeStateCommand( ClimberWinchState_t Cstate, ClimberGrabberState_t Gstate )
+{
+    return RunOnce([ this, Cstate, Gstate ] { ChangeState( Cstate, Gstate ); });
+}
+
+
+// ****************************************************************************
 void Climber::ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gstate )
 {
    if(Cstate != ClimberWinchMaintain)
    {
-    m_ClimberWinchState = Cstate;
+        m_ClimberWinchState = Cstate;
    }
 
    if(Gstate != GrabMaintain)
    {
-    m_ClimberGrabberState = Gstate;
+        m_ClimberGrabberState = Gstate;
    }
 
 }
+
+
+
+
+
+
+
 
 
 // ****************************************************************************
@@ -161,3 +178,5 @@ void Climber::UpdateSmartDashboardData( )
     frc::SmartDashboard::PutNumber("Climber: Cage Grabber", m_CageEncoder.GetPosition());
     frc::SmartDashboard::PutNumber("grabber staus", m_ClimberGrabberState);
 }
+
+

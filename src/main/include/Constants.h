@@ -1,4 +1,18 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 #pragma once
+
+/**
+ * The Constants header provides a convenient place for teams to hold robot-wide
+ * numerical or boolean constants.  This should not be used for any other
+ * purpose.
+ *
+ * It is generally a good idea to place constants into subsystem- or
+ * command-specific namespaces within this header, which can then be used where
+ * they are needed.
+ */
 
 namespace Constants
 {
@@ -59,7 +73,7 @@ namespace Constants
     constexpr double kCoralAnglePidD ={0.00};
     constexpr double kIntakeSpeed = 0.5;
     constexpr double kCoralAngleUp = 0.300;
-    constexpr double kCoralAngleDn = 0.610;
+    constexpr double kCoralAngleDn = 0.710;
     constexpr double kCoralAngleSpeed = 0.75;
     constexpr double kCoralAnglePlace = 0.450;
     constexpr double kCoralAngleTopPlace = 0.420;//0.3650 is horizontal
@@ -76,4 +90,14 @@ namespace Constants
     constexpr double kElevatorPidD ={0.00};
     constexpr double kElevatorSpeed = 0.5;
 
+    //other control values
+    constexpr bool kJoystickFieldRelative = true; //operate joystick controls as field relative if true
+
 }
+
+
+namespace OperatorConstants {
+
+inline constexpr int kDriverControllerPort = 0;
+
+}  // namespace OperatorConstants

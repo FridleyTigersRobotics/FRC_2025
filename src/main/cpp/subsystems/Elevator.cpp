@@ -1,21 +1,25 @@
-#include <Debug.h>
-#include <Elevator.h>
-#include <frc/smartdashboard/SmartDashboard.h>
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
+#include "subsystems/Elevator.h"
+
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc2/command/CommandPtr.h>
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
 using namespace rev::spark;
 
 bool elevatormoving = false;
 
-bool Elevator::ismoving()
+bool Elevator::ismoving() const
 {
     return elevatormoving;
 }
 
 
 // ****************************************************************************
-void Elevator::Init()
+Elevator::Elevator()
 {
     m_ElevatorState = ElevatorStop;
     m_Elevator0Encoder.SetPosition( 0.0 );
@@ -49,7 +53,7 @@ void Elevator::TeleopInit()
 
 
 // ****************************************************************************
-void Elevator::Update()
+void Elevator::Periodic()
 {
     if(m_ElevatorState == ElevatorStop)
     {
@@ -115,6 +119,15 @@ void Elevator::Update()
 }
 
 
+
+// ****************************************************************************
+frc2::CommandPtr Elevator::ChangeStateCommand( ElevatorState_t ElevatorPosition )
+{
+    return RunOnce([ this, ElevatorPosition ] { ChangeState( ElevatorPosition ); });
+}
+
+
+
 // ****************************************************************************
 void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
 {
@@ -122,7 +135,6 @@ void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
     {
         m_ElevatorState = ElevatorPosition;
     }
-    
 }
 
 

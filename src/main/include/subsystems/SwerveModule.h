@@ -1,8 +1,9 @@
-#pragma once
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+
+#pragma once
+
 #include <rev/SparkMax.h>
 using namespace rev::spark;
 #include <numbers>
@@ -96,7 +97,7 @@ class SwerveModule {
   static constexpr double m_positonConversionFactor = m_wheelDiameter * m_metersPerInch * std::numbers::pi / m_driveGearRatio;
 
   frc::ProfiledPIDController<units::radians> m_turningPIDController{
-      1.0,
+      0.5,//1.0,
       0.0,
       0.0,
       {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
