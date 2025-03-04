@@ -14,7 +14,7 @@
 #include "subsystems/Climber.h"
 #include "subsystems/Drivetrain.h"
 #include "subsystems/Elevator.h"
-#include "subsystems/Intake.h"
+#include "subsystems/CoralIntake.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -45,10 +45,10 @@ class RobotContainer {
   // The robot's subsystems are defined here...
 
 
-  Climber    m_Climber;
-  Drivetrain m_Drivetrain;
-  Elevator   m_Elevator;
-  Intake     m_Intake{ m_Elevator };
+  Climber     m_Climber;
+  Drivetrain  m_Drivetrain;
+  Elevator    m_Elevator;
+  CoralIntake m_CoralIntake{ m_Elevator };
 
   void ConfigureBindings();
 

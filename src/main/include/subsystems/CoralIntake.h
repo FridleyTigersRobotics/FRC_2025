@@ -22,7 +22,7 @@ using namespace rev::spark;
 #include <frc2/command/CommandPtr.h>
 #include "subsystems/Elevator.h"
 
-class Intake : public frc2::SubsystemBase {
+class CoralIntake : public frc2::SubsystemBase {
  public:
     typedef enum CoralAngleState_e
     {
@@ -52,7 +52,7 @@ class Intake : public frc2::SubsystemBase {
     void ManualControl();
     void UpdateSmartDashboardData();
 
-    Intake( Elevator const &Elevator );
+    CoralIntake( Elevator const &Elevator );
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.

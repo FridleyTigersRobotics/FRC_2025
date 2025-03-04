@@ -23,12 +23,12 @@
 #include <pathplanner/lib/auto/NamedCommands.h>
 
 
-RobotContainer::RobotContainer() : m_Elevator(), m_Intake(m_Elevator) {
+RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator) {
   // Initialize all of your commands and subsystems here
 
   // Register Named Commands. You must pass either a CommandPtr rvalue or a shared_ptr to the command, not the command directly.
   pathplanner::NamedCommands::registerCommand("ElevatorL2", std::move(frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AnglePlaceCoral, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 )
     ))); // <- This example method returns CommandPtr
 
@@ -69,11 +69,11 @@ void RobotContainer::ConfigureBindings() {
       },
       {&m_Drivetrain}));
 
-  m_Intake.SetDefaultCommand(frc2::RunCommand(
+  m_CoralIntake.SetDefaultCommand(frc2::RunCommand(
       [this] {
-        m_Intake.ChangeState( Intake::AngleMaintain, Intake::intakeMaintain );
+        m_CoralIntake.ChangeState( CoralIntake::AngleMaintain, CoralIntake::intakeMaintain );
       },
-      {&m_Intake}));
+      {&m_CoralIntake}));
 
   m_Elevator.SetDefaultCommand(frc2::RunCommand(
       [this] {
@@ -94,42 +94,42 @@ void RobotContainer::ConfigureBindings() {
 
   //all down
   m_buttons.Button(10).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AngleUp, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig )
     )
   );
 
   //Coral Intake level
   m_buttons.Button(5).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AngleDn, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleDn, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralIntake )
     )
   );
 
   //Coral L1
   m_buttons.Button(1).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AnglePlaceCoral, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL1 )
     )
   );
 
   //Coral L2
   m_buttons.Button(2).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AnglePlaceCoral, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 )
     )
   );
 
   //Coral L3
   m_buttons.Button(3).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AnglePlaceCoral, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 )
     )
   );
 
   //Coral L4
   m_buttons.Button(4).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AnglePlaceTopCoral, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceTopCoral, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 )
     )
   );
@@ -137,26 +137,26 @@ void RobotContainer::ConfigureBindings() {
 
   //Coral Intake
   m_buttons.Button(7).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AngleMaintain, Intake::intakeIntake ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeIntake ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
     )
   );
 
   m_buttons.Button(7).OnFalse( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AngleMaintain, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
     )
   );
 
   //Coral reverse
   m_buttons.Button(8).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AngleMaintain, Intake::intakeReverse ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeReverse ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
     )
   );
 
   m_buttons.Button(8).OnFalse( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AngleMaintain, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
     )
   );
@@ -165,7 +165,7 @@ void RobotContainer::ConfigureBindings() {
 
   //climber out
   m_buttons.Button(9).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AngleUp, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
       m_Climber.ChangeStateCommand( Climber::ClimberWinchOutManual, Climber::GrabVertical )
     )
@@ -173,7 +173,7 @@ void RobotContainer::ConfigureBindings() {
 
   //climber in
   m_buttons.Button(6).WhileTrue( frc2::cmd::Parallel(
-      m_Intake.ChangeStateCommand( Intake::AngleUp, Intake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
       m_Climber.ChangeStateCommand( Climber::ClimberWinchInManual, Climber::GrabHorizontal )
     )
@@ -197,7 +197,7 @@ void RobotContainer::UpdateSmartDashboardData() {
   m_Climber.UpdateSmartDashboardData();
   m_Drivetrain.UpdateSmartDashboardData();
   m_Elevator.UpdateSmartDashboardData();
-  m_Intake.UpdateSmartDashboardData();
+  m_CoralIntake.UpdateSmartDashboardData();
 }
 
 
@@ -205,7 +205,7 @@ void RobotContainer::TeleopInit() {
   m_Climber.TeleopInit();
   m_Drivetrain.TeleopInit();
   m_Elevator.TeleopInit();
-  m_Intake.TeleopInit();
+  m_CoralIntake.TeleopInit();
 }
 
 

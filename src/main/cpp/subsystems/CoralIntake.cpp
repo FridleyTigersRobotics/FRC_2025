@@ -2,14 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "subsystems/Intake.h"
+#include "subsystems/CoralIntake.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
 
 
 
-Intake::Intake(  Elevator const &Elevator ) :
+CoralIntake::CoralIntake(  Elevator const &Elevator ) :
     m_Elevator{ Elevator }
 {
     m_coralAngleState = AngleStop;
@@ -41,7 +41,7 @@ Intake::Intake(  Elevator const &Elevator ) :
 
 
 // This method will be called once per scheduler run
-void Intake::Periodic() {
+void CoralIntake::Periodic() {
 
     if (m_coralIntakeState == intakeIntake)
     {
@@ -117,7 +117,7 @@ void Intake::Periodic() {
 
 
 // ****************************************************************************
-void Intake::TeleopInit()
+void CoralIntake::TeleopInit()
 {
     m_coralAngleState = AngleStop;
     m_coralIntakeState = intakeStop;
@@ -125,7 +125,7 @@ void Intake::TeleopInit()
 
 
 // ****************************************************************************
-frc2::CommandPtr Intake::ChangeStateCommand( CoralAngleState_t Astate, CoralIntakeState_t Istate )
+frc2::CommandPtr CoralIntake::ChangeStateCommand( CoralAngleState_t Astate, CoralIntakeState_t Istate )
 {
     return RunOnce([ this, Astate, Istate ] { ChangeState( Astate, Istate ); });
 }
@@ -134,7 +134,7 @@ frc2::CommandPtr Intake::ChangeStateCommand( CoralAngleState_t Astate, CoralInta
 
 
 // ****************************************************************************
-void Intake::ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate )
+void CoralIntake::ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate )
 {
     if(Astate != AngleMaintain)
     {
@@ -148,7 +148,7 @@ void Intake::ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate )
 }
 
 // ****************************************************************************
-void Intake::UpdateSmartDashboardData( )
+void CoralIntake::UpdateSmartDashboardData( )
 {
     frc::SmartDashboard::PutNumber("Coral Angle Encoder Value", m_CoralAngleEncoder.Get());
     frc::SmartDashboard::PutNumber("Coral Angle Setpoint", m_CoralAnglePid.GetSetpoint());
