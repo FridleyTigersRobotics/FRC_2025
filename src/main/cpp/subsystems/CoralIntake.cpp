@@ -62,7 +62,7 @@ void CoralIntake::Periodic() {
     {
         if(m_Elevator.ismoving())
         {
-            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleVertical);//put the angle down to move, dont allow it when up
         }
         if(!m_Elevator.ismoving())
         {
@@ -87,7 +87,7 @@ void CoralIntake::Periodic() {
     {
         if(m_Elevator.ismoving())
         {
-            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleVertical);//put the angle down to move, dont allow it when up
         }
         if(!m_Elevator.ismoving())
         {
@@ -101,7 +101,7 @@ void CoralIntake::Periodic() {
     {
         if(m_Elevator.ismoving())
         {
-            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleVertical);//put the angle down to move, dont allow it when up
         }
         if(!m_Elevator.ismoving())
         {
@@ -115,7 +115,7 @@ void CoralIntake::Periodic() {
     {
         if(m_Elevator.ismoving())
         {
-            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleDn);//put the angle down to move, dont allow it when up
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleVertical);//put the angle down to move, dont allow it when up
         }
         if(!m_Elevator.ismoving())
         {
