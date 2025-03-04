@@ -74,7 +74,8 @@ namespace Constants
     constexpr double kCoralAngleDn       = 0.710;
     constexpr double kCoralAngleSpeed    = 0.75;
     constexpr double kCoralAnglePlace    = 0.450;
-    constexpr double kCoralAngleTopPlace = 0.420;//0.3650 is horizontal
+    constexpr double kCoralAngleTopPlace = 0.420;
+    constexpr double kCoralAngleHorizontal = 0.365;
 
 
     // Algae Intake Control Values

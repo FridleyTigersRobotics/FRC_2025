@@ -23,24 +23,58 @@
 #include <pathplanner/lib/auto/NamedCommands.h>
 
 
-RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_AlgaeIntake(m_Elevator), m_Climber() {
+RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_AlgaeIntake(m_Elevator) {
   // Initialize all of your commands and subsystems here
 
   //Autonomous Commands ****************************************************************************
   // Register Named Commands. You must pass either a CommandPtr rvalue or a shared_ptr to the command, not the command directly.
-  pathplanner::NamedCommands::registerCommand("ElevatorL2", std::move(frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 )
+  pathplanner::NamedCommands::registerCommand("ElevatorL1", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleHorizontal, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL1 ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeStop )
     ))); // <- This example method returns CommandPtr
 
+  pathplanner::NamedCommands::registerCommand("ElevatorL2", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeStop )
+    ))); // <- This example method returns CommandPtr
 
+  pathplanner::NamedCommands::registerCommand("ElevatorL3", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeStop )
+    ))); // <- This example method returns CommandPtr
 
+  pathplanner::NamedCommands::registerCommand("ElevatorL4", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceTopCoral, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeStop )
+    ))); // <- This example method returns CommandPtr
 
+  pathplanner::NamedCommands::registerCommand("ElevatorIntakeCoral", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleDn, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralIntake ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop )
+    ))); // <- This example method returns CommandPtr
 
+  pathplanner::NamedCommands::registerCommand("AllDown", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop )
+    ))); // <- This example method returns CommandPtr
 
+  pathplanner::NamedCommands::registerCommand("CoralIntakeFwd", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeIntake ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeMaintain )
+    ))); // <- This example method returns CommandPtr
 
-
-
+  pathplanner::NamedCommands::registerCommand("CoralIntakeStop", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeMaintain )
+    ))); // <- This example method returns CommandPtr
 
   //****************************************************************************
   autoChooser = pathplanner::AutoBuilder::buildAutoChooser();
@@ -125,7 +159,7 @@ void RobotContainer::ConfigureBindings() {
 
   //Coral L1
   m_buttons.Button(1).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleHorizontal, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL1 )
     )
   );

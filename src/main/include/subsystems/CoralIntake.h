@@ -31,6 +31,7 @@ class CoralIntake : public frc2::SubsystemBase {
         AnglePlaceCoral,
         AnglePlaceTopCoral,
         AngleStop,
+        AngleHorizontal,
         AngleMaintain
     } CoralAngleState_t;
 
