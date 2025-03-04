@@ -29,6 +29,11 @@ Drivetrain::Drivetrain()
     
 }
 
+void Drivetrain::AutonomousInit()
+{
+  ResetIMU(); //reset imu here in case robot is moved after powerup
+}
+
 
 void Drivetrain::drive(frc::ChassisSpeeds chassisSpeedinput, bool fieldRelative,
                        units::second_t period) {

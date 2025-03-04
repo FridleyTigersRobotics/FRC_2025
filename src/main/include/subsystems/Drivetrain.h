@@ -22,8 +22,10 @@ using namespace Constants;
 class Drivetrain : public frc2::SubsystemBase {
  public:
   Drivetrain();
+
+  void AutonomousInit();
   
-   void drive(frc::ChassisSpeeds chassisSpeedinput,
+  void drive(frc::ChassisSpeeds chassisSpeedinput,
              bool fieldRelative, units::second_t period);
   void UpdateOdometry();
   void Periodic( ) override;
