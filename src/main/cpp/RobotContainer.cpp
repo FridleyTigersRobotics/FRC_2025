@@ -100,69 +100,56 @@ void RobotContainer::ConfigureBindings() {
 
   //all down
   m_buttons.Button(10).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeMaintain ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig )
     )
   );
 
-  //Coral Intake level
+  //Algae Intake level
   m_buttons.Button(5).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleDn, CoralIntake::intakeStop ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn, AlgaeIntake::intakeMaintain ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralIntake )
     )
   );
 
-  //Coral L1
+  //Algae L1
   m_buttons.Button(1).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn, AlgaeIntake::intakeMaintain ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL1 )
     )
   );
 
-  //Coral L2
+  //Algae L2
   m_buttons.Button(2).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn, AlgaeIntake::intakeMaintain ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 )
     )
   );
 
-  //Coral L3
-  m_buttons.Button(3).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 )
-    )
-  );
-
-  //Coral L4
-  m_buttons.Button(4).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceTopCoral, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 )
-    )
-  );
 
 
-  //Coral Intake
+  //Algae Intake
   m_buttons.Button(7).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeIntake ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeIntake ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
     )
   );
 
   m_buttons.Button(7).OnFalse( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
     )
   );
 
-  //Coral reverse
+  //Algae reverse
   m_buttons.Button(8).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeReverse ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeReverse ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
     )
   );
 
   m_buttons.Button(8).OnFalse( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
     )
   );
@@ -171,7 +158,6 @@ void RobotContainer::ConfigureBindings() {
 
   //climber out
   m_buttons.Button(9).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
       m_Climber.ChangeStateCommand( Climber::ClimberWinchOutManual, Climber::GrabVertical )
     )
@@ -179,7 +165,6 @@ void RobotContainer::ConfigureBindings() {
 
   //climber in
   m_buttons.Button(6).WhileTrue( frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
       m_Climber.ChangeStateCommand( Climber::ClimberWinchInManual, Climber::GrabHorizontal )
     )

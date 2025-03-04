@@ -28,8 +28,6 @@ class AlgaeIntake : public frc2::SubsystemBase {
     {
         AngleUp,
         AngleDn,
-        AnglePlaceAlgae,
-        AnglePlaceTopAlgae,
         AngleStop,
         AngleMaintain
     } AlgaeAngleState_t;
