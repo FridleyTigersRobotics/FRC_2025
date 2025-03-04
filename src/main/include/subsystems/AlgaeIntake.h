@@ -22,37 +22,37 @@ using namespace rev::spark;
 #include <frc2/command/CommandPtr.h>
 #include "subsystems/Elevator.h"
 
-class CoralIntake : public frc2::SubsystemBase {
+class AlgaeIntake : public frc2::SubsystemBase {
  public:
-    typedef enum CoralAngleState_e
+    typedef enum AlgaeAngleState_e
     {
         AngleUp,
         AngleDn,
-        AnglePlaceCoral,
-        AnglePlaceTopCoral,
+        AnglePlaceAlgae,
+        AnglePlaceTopAlgae,
         AngleStop,
         AngleMaintain
-    } CoralAngleState_t;
+    } AlgaeAngleState_t;
 
-    typedef enum coralIntakeState_e
+    typedef enum algaeIntakeState_e
     {
         intakeStop,
         intakeIntake,
         intakeReverse,
         intakeMaintain
-    } CoralIntakeState_t;
+    } AlgaeIntakeState_t;
 
-    frc2::CommandPtr ChangeStateCommand( CoralAngleState_t Astate, CoralIntakeState_t Istate );
+    frc2::CommandPtr ChangeStateCommand( AlgaeAngleState_t Astate, AlgaeIntakeState_t Istate );
 
     void Init();
     void TeleopInit();
     void Update( bool elevatormoving );
-    void ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Istate );
+    void ChangeState( AlgaeAngleState_t Astate, AlgaeIntakeState_t Istate );
   
     void ManualControl();
     void UpdateSmartDashboardData();
 
-    CoralIntake( Elevator const &Elevator );
+    AlgaeIntake( Elevator const &Elevator );
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -63,15 +63,15 @@ class CoralIntake : public frc2::SubsystemBase {
     Elevator const & m_Elevator;
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-    SparkMax m_CoralAngleMotor { Constants::kCoralAngleID, SparkLowLevel::MotorType::kBrushless };
-    SparkMax m_CoralIntakeMotor { Constants::kCoralIntakeID, SparkLowLevel::MotorType::kBrushless };
-    SparkRelativeEncoder m_CoralIntakeEncoder = m_CoralIntakeMotor.GetEncoder();
+    SparkMax m_AlgaeAngleMotor { Constants::kAlgaeAngleID, SparkLowLevel::MotorType::kBrushless };
+    SparkMax m_AlgaeIntakeMotor { Constants::kAlgaeIntakeID, SparkLowLevel::MotorType::kBrushless };
+    SparkRelativeEncoder m_AlgaeIntakeEncoder = m_AlgaeIntakeMotor.GetEncoder();
 
-    CoralAngleState_t m_coralAngleState = AngleStop;
-    CoralIntakeState_t m_coralIntakeState = intakeStop;
+    AlgaeAngleState_t m_algaeAngleState = AngleStop;
+    AlgaeIntakeState_t m_algaeIntakeState = intakeStop;
 
-    bool m_ManualCoralControl = false;
+    bool m_ManualAlgaeControl = false;
     
-    frc::DutyCycleEncoder m_CoralAngleEncoder { Constants::kCoralEncoderDIO };
-    frc::PIDController m_CoralAnglePid {Constants::kCoralAnglePidP, Constants::kCoralAnglePidI, Constants::kCoralAnglePidD};
+    frc::DutyCycleEncoder m_AlgaeAngleEncoder { Constants::kAlgaeEncoderDIO };
+    frc::PIDController m_AlgaeAnglePid {Constants::kAlgaeAnglePidP, Constants::kAlgaeAnglePidI, Constants::kAlgaeAnglePidD};
 };

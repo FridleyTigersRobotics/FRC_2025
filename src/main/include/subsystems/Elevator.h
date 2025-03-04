@@ -53,6 +53,7 @@ class Elevator : public frc2::SubsystemBase {
     void ManualControl();
     void UpdateSmartDashboardData();
     bool ismoving() const;
+    bool IsNearBottom() const;
 
  private:
     SparkMax m_Motor0{ Constants::kElevator0ID, SparkLowLevel::MotorType::kBrushless };

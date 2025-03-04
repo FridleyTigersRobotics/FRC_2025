@@ -15,6 +15,7 @@
 #include "subsystems/Drivetrain.h"
 #include "subsystems/Elevator.h"
 #include "subsystems/CoralIntake.h"
+#include "subsystems/AlgaeIntake.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -49,6 +50,7 @@ class RobotContainer {
   Drivetrain  m_Drivetrain;
   Elevator    m_Elevator;
   CoralIntake m_CoralIntake{ m_Elevator };
+  AlgaeIntake m_AlgaeIntake{ m_Elevator };
 
   void ConfigureBindings();
 

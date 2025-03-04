@@ -65,18 +65,27 @@ namespace Constants
     constexpr double kGrabberPidD{0.00};
     constexpr double kGrab90{11.00};
 
-    //Claw Control Values
-    constexpr double kCoralEncoderTop = { 0.288 + 0.05 };
-    constexpr double kCoralEncoderBottom = { 0.627 - 0.05 };
-    constexpr double kCoralAnglePidP = {3.00};
-    constexpr double kCoralAnglePidI = {0.50};
-    constexpr double kCoralAnglePidD ={0.00};
-    constexpr double kIntakeSpeed = 0.5;
-    constexpr double kCoralAngleUp = 0.300;
-    constexpr double kCoralAngleDn = 0.710;
-    constexpr double kCoralAngleSpeed = 0.75;
-    constexpr double kCoralAnglePlace = 0.450;
+    // Coral Intake Control Values
+    constexpr double kCoralAnglePidP     = 3.00;
+    constexpr double kCoralAnglePidI     = 0.50;
+    constexpr double kCoralAnglePidD     = 0.00;
+    constexpr double kCoralIntakeSpeed   = 0.5;
+    constexpr double kCoralAngleUp       = 0.300;
+    constexpr double kCoralAngleDn       = 0.710;
+    constexpr double kCoralAngleSpeed    = 0.75;
+    constexpr double kCoralAnglePlace    = 0.450;
     constexpr double kCoralAngleTopPlace = 0.420;//0.3650 is horizontal
+
+
+    // Algae Intake Control Values
+    constexpr double kAlgaeAnglePidP     = 3.00;
+    constexpr double kAlgaeAnglePidI     = 0.50;
+    constexpr double kAlgaeAnglePidD     = 0.00;
+    constexpr double kAlgaeIntakeSpeed   = 0.5;
+    constexpr double kAlgaeAngleUp       = 0.300;
+    constexpr double kAlgaeAngleDn       = 0.710;
+    constexpr double kAlgaeAngleSpeed    = 0.75;
+
 
     //Elevator Control Values
     constexpr double kPosStart = 0.00;
@@ -85,6 +94,9 @@ namespace Constants
     constexpr double kPosCoralL3 = 55.56;//L3 level = 121cm from carpet
     constexpr double kPosCoralL4 = 98.5;//L4 level = 183cm from carpet, but different angle
     constexpr double kPosCoralIntake = 34.14;//station = 95cm bottom of opening first set to value 37, testing showed needed to drop 3cm for value 34.14
+
+    constexpr double kElevatorLowestAlgae = 25.0;
+
     constexpr double kElevatorPidP = {0.10};
     constexpr double kElevatorPidI = {0.00};
     constexpr double kElevatorPidD ={0.00};

@@ -17,6 +17,12 @@ bool Elevator::ismoving() const
     return elevatormoving;
 }
 
+bool Elevator::IsNearBottom() const
+{
+    return m_Elevator0Encoder.GetPosition() < Constants::kElevatorLowestAlgae;
+}
+
+
 
 // ****************************************************************************
 Elevator::Elevator()

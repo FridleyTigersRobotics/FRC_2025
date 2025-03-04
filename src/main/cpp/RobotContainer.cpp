@@ -66,7 +66,7 @@ void RobotContainer::ConfigureBindings() {
             // max speed forwards], converting them to actual units.
             sendChassisSpeed,
             Constants::kJoystickFieldRelative, frc::TimedRobot::kDefaultPeriod);
-      },
+      }, 
       {&m_Drivetrain}));
 
   m_CoralIntake.SetDefaultCommand(frc2::RunCommand(
@@ -74,6 +74,12 @@ void RobotContainer::ConfigureBindings() {
         m_CoralIntake.ChangeState( CoralIntake::AngleMaintain, CoralIntake::intakeMaintain );
       },
       {&m_CoralIntake}));
+
+  m_AlgaeIntake.SetDefaultCommand(frc2::RunCommand(
+      [this] {
+        m_AlgaeIntake.ChangeState( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeMaintain );
+      },
+      {&m_AlgaeIntake}));
 
   m_Elevator.SetDefaultCommand(frc2::RunCommand(
       [this] {

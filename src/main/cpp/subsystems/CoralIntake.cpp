@@ -45,12 +45,12 @@ void CoralIntake::Periodic() {
 
     if (m_coralIntakeState == intakeIntake)
     {
-        m_CoralIntakeMotor.Set(Constants::kIntakeSpeed);
+        m_CoralIntakeMotor.Set(Constants::kCoralIntakeSpeed);
     }
 
     else if (m_coralIntakeState == intakeReverse)
     {
-        m_CoralIntakeMotor.Set(-Constants::kIntakeSpeed);
+        m_CoralIntakeMotor.Set(-Constants::kCoralIntakeSpeed);
     }
 
     else if (m_coralIntakeState == intakeStop)
