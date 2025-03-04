@@ -83,8 +83,8 @@ namespace Constants
     constexpr double kAlgaeAnglePidI     = 0.50;
     constexpr double kAlgaeAnglePidD     = 0.00;
     constexpr double kAlgaeIntakeSpeed   = 1.0;
-    constexpr double kAlgaeAngleUp       = 0.300;
-    constexpr double kAlgaeAngleDn       = 0.710;
+    constexpr double kAlgaeAngleUp       = 0.750;
+    constexpr double kAlgaeAngleDn       = 0.50;
     constexpr double kAlgaeAngleSpeed    = 0.75;
 
 

@@ -21,7 +21,12 @@ AlgaeIntake::AlgaeIntake(  Elevator const &Elevator ) :
     m_AlgaeAnglePid.Reset();
 
     SparkMaxConfig AlgaeAngleMotorConfig;
-    AlgaeAngleMotorConfig.Inverted(true);
+    AlgaeAngleMotorConfig
+        .Inverted(true)
+        .SetIdleMode(SparkMaxConfig::IdleMode::kBrake)
+        .VoltageCompensation(12.0)
+        .SmartCurrentLimit(15);
+
     //m_AlgaeAngleMotor.SetInverted(true); this is depreciated
     m_AlgaeAngleMotor.Configure(AlgaeAngleMotorConfig,SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
     /*

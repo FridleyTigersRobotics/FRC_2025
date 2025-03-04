@@ -128,7 +128,7 @@ void RobotContainer::ConfigureBindings() {
 
   m_AlgaeIntake.SetDefaultCommand(frc2::RunCommand(
       [this] {
-        m_AlgaeIntake.ChangeState( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeMaintain );
+        m_AlgaeIntake.ChangeState( AlgaeIntake::AngleUp, AlgaeIntake::intakeMaintain );
       },
       {&m_AlgaeIntake}));
 
@@ -255,6 +255,7 @@ void RobotContainer::UpdateSmartDashboardData() {
   m_Drivetrain.UpdateSmartDashboardData();
   m_Elevator.UpdateSmartDashboardData();
   m_CoralIntake.UpdateSmartDashboardData();
+  m_AlgaeIntake.UpdateSmartDashboardData();
 }
 
 
