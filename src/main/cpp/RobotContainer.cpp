@@ -76,6 +76,12 @@ RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_Al
       m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain, AlgaeIntake::intakeMaintain )
     ))); // <- This example method returns CommandPtr
 
+  pathplanner::NamedCommands::registerCommand("SetStartConfig", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop )
+    ))); // <- This example method returns CommandPtr
+
   //****************************************************************************
   autoChooser = pathplanner::AutoBuilder::buildAutoChooser();
   frc::SmartDashboard::PutData("Auto Mode", &autoChooser);
