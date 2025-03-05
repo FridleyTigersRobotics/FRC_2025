@@ -22,7 +22,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 #include <frc/shuffleboard/Shuffleboard.h>
-#include <string>
+
 
 
 RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_AlgaeIntake(m_Elevator) {
@@ -266,15 +266,9 @@ void RobotContainer::TeleopInit() {
   m_Drivetrain.TeleopInit();
   m_Elevator.TeleopInit();
   m_CoralIntake.TeleopInit();
-
-  //auto camstream = std::string{"mjpeg:http://10.22.27.11:1182/?action=stream"};
-  //frc::Shuffleboard::GetTab("TeleOp")
-  //  .AddCamera("Cam1", "Arducam OV9281 USB Camera 001", camstream );
-
 }
 
 void RobotContainer::AutonomousInit()
 {
   m_Drivetrain.AutonomousInit();
 }
-
