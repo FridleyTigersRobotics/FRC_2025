@@ -6,6 +6,7 @@
 #include <Phoenix5.h>
 #include <Constants.h>
 #include <frc/DigitalInput.h>
+#include <frc/AnalogInput.h>
 #include <frc/Encoder.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/controller/PIDController.h>
@@ -21,6 +22,7 @@ using namespace rev::spark;
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
 #include "subsystems/Elevator.h"
+#include <NavX_Utilities.h>
 
 class CoralIntake : public frc2::SubsystemBase {
  public:
@@ -75,4 +77,5 @@ class CoralIntake : public frc2::SubsystemBase {
     
     frc::DutyCycleEncoder m_CoralAngleEncoder { Constants::kCoralEncoderDIO };
     frc::PIDController m_CoralAnglePid {Constants::kCoralAnglePidP, Constants::kCoralAnglePidI, Constants::kCoralAnglePidD};
+    frc::AnalogInput m_CoralDetector{GetChannelFromPin(AnalogIn, 0)};
 };

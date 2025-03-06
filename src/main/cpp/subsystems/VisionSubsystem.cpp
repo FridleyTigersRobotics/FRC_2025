@@ -8,12 +8,12 @@ VisionSubsystem::VisionSubsystem() : camera1("Arducam OV9281 USB Camera 001"), c
     frc::CameraServer::StartAutomaticCapture(1);
 
     frc::Shuffleboard::GetTab("Vision")
-        .AddCamera("Camera 1", "Arducam OV9281 USB Camera 001", std::vector<std::string>{"http://photonvision.local:1181/stream.mjpg"})//could be 1182
+        .AddCamera("Camera 1", "Arducam OV9281 USB Camera 001", std::vector<std::string>{"http://photonvision.local:1182/stream.mjpg"})
         .WithSize(3, 3)
         .WithPosition(0, 0);
 
     frc::Shuffleboard::GetTab("Vision")
-        .AddCamera("Camera 2", "Arducam OV9281 USB Camera 002", std::vector<std::string>{"http://photonvision.local:1183/stream.mjpg"})//could be 1184
+        .AddCamera("Camera 2", "Arducam OV9281 USB Camera 002", std::vector<std::string>{"http://photonvision.local:1184/stream.mjpg"})
         .WithSize(3, 3)
         .WithPosition(3, 0);
   }
