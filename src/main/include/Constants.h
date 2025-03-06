@@ -91,11 +91,11 @@ namespace Constants
 
     //Elevator Control Values
     constexpr double kPosStart = 0.00;
-    constexpr double kPosCoralL1 = 9.15;//L1 level = 46cm from carpet
-    constexpr double kPosCoralL2 = 30.57;//L2 level = 81cm from carpet 
-    constexpr double kPosCoralL3 = 62.70;//L3 level = 121cm from carpet
+    constexpr double kPosCoralL1 = 0.00;//L1 level = 46cm from carpet 9.15
+    constexpr double kPosCoralL2 = 19.69;//L2 level = 81cm from carpet -10.88 for new coral level
+    constexpr double kPosCoralL3 = 51.82;//L3 level = 121cm from carpet
     constexpr double kPosCoralL4 = 98.5;//L4 level = 183cm from carpet, but different angle
-    constexpr double kPosCoralIntake = 34.14;//station = 95cm bottom of opening first set to value 37, testing showed needed to drop 3cm for value 34.14
+    constexpr double kPosCoralIntake = 23.26;//station = 95cm bottom of opening 
 
     constexpr double kElevatorLowestAlgae = 25.0;
 
