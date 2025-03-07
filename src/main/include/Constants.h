@@ -77,6 +77,8 @@ namespace Constants
     constexpr double kCoralAnglePlace    = 0.507;
     constexpr double kCoralAngleTopPlace = 0.445;
     constexpr double kCoralAngleHorizontal = 0.410;
+    constexpr int kCoralDetectorMXPpin = 0;
+    constexpr int kTOFtrigger = 1600;
 
 
     // Algae Intake Control Values

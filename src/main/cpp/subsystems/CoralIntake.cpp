@@ -53,6 +53,19 @@ void CoralIntake::Periodic() {
         m_CoralIntakeMotor.Set(-Constants::kCoralIntakeSpeed);
     }
 
+    else if (m_coralIntakeState == autoIntakeFwd)
+    {
+        int tofSensVal = m_CoralDetector.GetValue();
+        if(tofSensVal>Constants::kTOFtrigger)
+        {
+            m_CoralIntakeMotor.Set(0.00); 
+        }
+        else
+        {
+            m_CoralIntakeMotor.Set(Constants::kCoralIntakeSpeed); 
+        }
+    }
+
     else if (m_coralIntakeState == intakeStop)
     {
         m_CoralIntakeMotor.Set(0.00);
@@ -168,6 +181,7 @@ void CoralIntake::UpdateSmartDashboardData( )
     frc::SmartDashboard::PutNumber("Coral Angle Setpoint", m_CoralAnglePid.GetSetpoint());
     frc::SmartDashboard::PutNumber("Coral Intake Motor Encoder Value", m_CoralIntakeEncoder.GetPosition());
     frc::SmartDashboard::PutNumber("Coral Angle motor value", m_CoralAngleMotor.Get());
+    frc::SmartDashboard::PutNumber("Coral TOF Sensor Value", m_CoralDetector.GetValue());
 }
 
 

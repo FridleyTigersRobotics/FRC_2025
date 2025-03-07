@@ -41,6 +41,7 @@ class CoralIntake : public frc2::SubsystemBase {
     {
         intakeStop,
         intakeIntake,
+        autoIntakeFwd,
         intakeReverse,
         intakeMaintain
     } CoralIntakeState_t;
@@ -77,5 +78,5 @@ class CoralIntake : public frc2::SubsystemBase {
     
     frc::DutyCycleEncoder m_CoralAngleEncoder { Constants::kCoralEncoderDIO };
     frc::PIDController m_CoralAnglePid {Constants::kCoralAnglePidP, Constants::kCoralAnglePidI, Constants::kCoralAnglePidD};
-    frc::AnalogInput m_CoralDetector{GetChannelFromPin(AnalogIn, 0)};
+    frc::AnalogInput m_CoralDetector{GetChannelFromPin(AnalogIn, Constants::kCoralDetectorMXPpin)};
 };
