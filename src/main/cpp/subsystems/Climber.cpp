@@ -23,7 +23,7 @@ Climber::Climber()
         .Inverted(false)
         .SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake)
         .VoltageCompensation(12.0)
-        .SmartCurrentLimit(30);
+        .SmartCurrentLimit(15);
 
     //m_AlgaeAngleMotor.SetInverted(true); this is depreciated
     m_CageGrabberMotor.Configure(GrabMotorConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);

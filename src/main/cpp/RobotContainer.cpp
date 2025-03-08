@@ -157,7 +157,7 @@ void RobotContainer::ConfigureBindings() {
       m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
-  //all down
+  //all down drive controller backup
   m_driveController.A().WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
@@ -330,9 +330,11 @@ void RobotContainer::TeleopInit() {
 void RobotContainer::AutonomousInit()
 {
   m_Drivetrain.AutonomousInit();
+  /*
   frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
       m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     );
+  */
 } 

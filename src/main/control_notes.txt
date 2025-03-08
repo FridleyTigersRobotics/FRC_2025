@@ -12,7 +12,7 @@ right stick = robot rotate
 POV up = IMU (gyro) reset
 Left Bumper = Algae Bump L2
 Right Bumper = Algae Bump L3
-
+A button = elevator down
 
 -CoDriver button Controls-
 10 = elevator down
