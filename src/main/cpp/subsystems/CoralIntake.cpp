@@ -110,6 +110,20 @@ void CoralIntake::Periodic() {
         angleMotorValue = std::clamp(angleMotorValue, -Constants::kCoralAngleSpeed, Constants::kCoralAngleSpeed );
         m_CoralAngleMotor.Set(angleMotorValue);
     }
+    if(m_coralAngleState == AngleVertical)
+    {
+        if(m_Elevator.ismoving())
+        {
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleVertical);//put the angle down to move, dont allow it when up
+        }
+        if(!m_Elevator.ismoving())
+        {
+            m_CoralAnglePid.SetSetpoint(Constants::kCoralAngleVertical);
+        }
+        double angleMotorValue = m_CoralAnglePid.Calculate(m_CoralAngleEncoder.Get());
+        angleMotorValue = std::clamp(angleMotorValue, -Constants::kCoralAngleSpeed, Constants::kCoralAngleSpeed );
+        m_CoralAngleMotor.Set(angleMotorValue);
+    }
     if(m_coralAngleState == AnglePlaceTopCoral)
     {
         if(m_Elevator.ismoving())

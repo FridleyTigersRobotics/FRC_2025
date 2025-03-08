@@ -10,6 +10,8 @@ Start with the climber pulled back into a valid starting config
 left stick = robot movement, field relative
 right stick = robot rotate
 POV up = IMU (gyro) reset
+Left Bumper = Algae Bump L2
+Right Bumper = Algae Bump L3
 
 
 -CoDriver button Controls-

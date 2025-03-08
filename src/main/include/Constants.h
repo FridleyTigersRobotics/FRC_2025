@@ -99,6 +99,11 @@ namespace Constants
     constexpr double kPosCoralL4 = 98.5;//L4 level = 183cm from carpet, but different angle
     constexpr double kPosCoralIntake = 23.26;//station = 95cm bottom of opening 
 
+    constexpr double kPosAlgaeL2PrepBump = 10.00;
+    constexpr double kPosAlgaeL2EndBump = 50.00;
+    constexpr double kPosAlgaeL3PrepBump = 50.00;
+    constexpr double kPosAlgaeL3EndBump = 90.00;
+
     constexpr double kElevatorLowestAlgae = 25.0;
 
     constexpr double kElevatorPidP = {0.10};

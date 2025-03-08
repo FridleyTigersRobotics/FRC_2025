@@ -41,7 +41,11 @@ class Elevator : public frc2::SubsystemBase {
         ElevatorCoralL3,
         ElevatorCoralL4,
         ElevatorStop,
-        ElevatorMaintain
+        ElevatorMaintain,
+        ElevatorL2PrepBump,
+        ElevatorL2EndBump,
+        ElevatorL3PrepBump,
+        ElevatorL3EndBump
     } ElevatorState_t;
 
     frc2::CommandPtr ChangeStateCommand( ElevatorState_t ElevatorPosition );

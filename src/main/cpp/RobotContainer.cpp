@@ -24,7 +24,6 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 
 
-
 RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_AlgaeIntake(m_Elevator) {
   // Initialize all of your commands and subsystems here
 
@@ -147,49 +146,55 @@ void RobotContainer::ConfigureBindings() {
       {&m_Climber}));
 
   //resetIMU
-  m_driveController.POVUp().WhileTrue(
+  m_driveController.POVUp().WhileTrue( 
     frc2::cmd::RunOnce([ this ] { m_Drivetrain.ResetIMU(); })
   );
 
   //all down
   m_buttons.Button(10).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
   //Coral Intake level
   m_buttons.Button(5).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleDn, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralIntake )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralIntake ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
   //Coral L1
   m_buttons.Button(1).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleHorizontal, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL1 )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL1 ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
   //Coral L2
   m_buttons.Button(2).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
   //Coral L3
   m_buttons.Button(3).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
   //Coral L4
   m_buttons.Button(4).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceTopCoral, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
@@ -197,26 +202,30 @@ void RobotContainer::ConfigureBindings() {
   //Coral Intake
   m_buttons.Button(7).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeIntake ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
   m_buttons.Button(7).OnFalse( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
   //Coral reverse
   m_buttons.Button(8).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeReverse ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
   m_buttons.Button(8).OnFalse( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain )
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
@@ -226,7 +235,8 @@ void RobotContainer::ConfigureBindings() {
   m_buttons.Button(9).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
-      m_Climber.ChangeStateCommand( Climber::ClimberWinchOutManual, Climber::GrabVertical )
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchOutManual, Climber::GrabVertical ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
 
@@ -234,9 +244,38 @@ void RobotContainer::ConfigureBindings() {
   m_buttons.Button(6).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
-      m_Climber.ChangeStateCommand( Climber::ClimberWinchInManual, Climber::GrabHorizontal )
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchInManual, Climber::GrabHorizontal ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
     )
   );
+
+
+
+
+  //****************** Algae Bumping ***********************
+  m_driveController.LeftBumper().WhileTrue( frc2::cmd::Parallel( //L2 Bump prep
+    m_Elevator.ChangeStateCommand(Elevator::ElevatorL2PrepBump),
+    m_CoralIntake.ChangeStateCommand( CoralIntake::AngleVertical, CoralIntake::intakeStop ),
+    m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn, AlgaeIntake::intakeStop)
+  ));
+
+ m_driveController.LeftBumper().OnFalse( frc2::cmd::Parallel( //L2 Bump top
+    m_Elevator.ChangeStateCommand(Elevator::ElevatorL2EndBump),
+    m_CoralIntake.ChangeStateCommand( CoralIntake::AngleVertical, CoralIntake::intakeStop ),
+    m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn, AlgaeIntake::intakeStop)
+  ));
+
+ m_driveController.RightBumper().WhileTrue( frc2::cmd::Parallel( //L3 Bump prep
+    m_Elevator.ChangeStateCommand(Elevator::ElevatorL3PrepBump),
+    m_CoralIntake.ChangeStateCommand( CoralIntake::AngleVertical, CoralIntake::intakeStop ),
+    m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn, AlgaeIntake::intakeStop)
+  ));
+
+ m_driveController.RightBumper().OnFalse( frc2::cmd::Parallel( //L3 Bump top
+    m_Elevator.ChangeStateCommand(Elevator::ElevatorL3EndBump),
+    m_CoralIntake.ChangeStateCommand( CoralIntake::AngleVertical, CoralIntake::intakeStop ),
+    m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn, AlgaeIntake::intakeStop)
+  ));
 
 
 

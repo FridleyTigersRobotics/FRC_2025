@@ -114,6 +114,38 @@ void Elevator::Periodic()
         m_Motor0.Set(elevatorMotorValue);
         m_Motor1.Set(elevatorMotorValue);
     }
+    if(m_ElevatorState == ElevatorL2PrepBump)//prepare to bump coral off of L2
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosAlgaeL2PrepBump);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
+    if(m_ElevatorState == ElevatorL2EndBump)//reached top of L2 bump
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosAlgaeL2EndBump);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
+    if(m_ElevatorState == ElevatorL3PrepBump)//prepare to bump coral off of L3
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosAlgaeL3PrepBump);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
+    if(m_ElevatorState == ElevatorL3EndBump)//reached top of L3 bump
+    {
+        m_ElevatorPid.SetSetpoint(Constants::kPosAlgaeL3EndBump);
+        double elevatorMotorValue = m_ElevatorPid.Calculate(m_Elevator0Encoder.GetPosition());
+        elevatorMotorValue = std::clamp( elevatorMotorValue, -Constants::kElevatorSpeed, Constants::kElevatorSpeed );
+        m_Motor0.Set(elevatorMotorValue);
+        m_Motor1.Set(elevatorMotorValue);
+    }
     if(fabs(m_Motor0.Get())>0.1 || fabs(m_Motor1.Get())>0.1) //0.1 is the PID I max value (anti-windup)
     {
         elevatormoving = true;
