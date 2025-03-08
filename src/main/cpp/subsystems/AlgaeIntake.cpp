@@ -68,6 +68,8 @@ void AlgaeIntake::Periodic() {
     }
     if(m_algaeAngleState == AngleDn)
     {
+        m_AlgaeAnglePid.SetSetpoint(Constants::kAlgaeAngleDn);
+        /*
         if ( m_Elevator.IsNearBottom() )
         {
             // Need to lift up if to close to bottom.
@@ -77,6 +79,7 @@ void AlgaeIntake::Periodic() {
         {
             m_AlgaeAnglePid.SetSetpoint(Constants::kAlgaeAngleDn);
         }
+        */
     }
 
     if(m_algaeAngleState == AngleStop)

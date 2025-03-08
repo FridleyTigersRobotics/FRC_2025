@@ -60,13 +60,13 @@ namespace Constants
     constexpr double kClimbCalibrateSpeed = 0.3;
     constexpr double kClimbSpeed = 0.75;
     constexpr double kGrabSpeed = 0.75;
-    constexpr double kGrabberPidP{16.0e-2};
+    constexpr double kGrabberPidP{8.0e-2};
     constexpr double kGrabberPidI{8.0e-1};
     constexpr double kGrabberPidD{0.00};
     constexpr double kGrab90{11.00};
 
     // Coral Intake Control Values
-    constexpr double kCoralAnglePidP     = 3.00;
+    constexpr double kCoralAnglePidP     = 2.00;
     constexpr double kCoralAnglePidI     = 0.50;
     constexpr double kCoralAnglePidD     = 0.00;
     constexpr double kCoralIntakeSpeed   = 1.0;
@@ -75,36 +75,36 @@ namespace Constants
     constexpr double kCoralAngleVertical = 0.652;
     constexpr double kCoralAngleSpeed    = 0.75;
     constexpr double kCoralAnglePlace    = 0.507;
-    constexpr double kCoralAngleTopPlace = 0.445;
+    constexpr double kCoralAngleTopPlace = 0.500;
     constexpr double kCoralAngleHorizontal = 0.410;
     constexpr int kCoralDetectorMXPpin = 0;
     constexpr int kTOFtrigger = 1600;
 
 
     // Algae Intake Control Values
-    constexpr double kAlgaeAnglePidP     = 3.00;
-    constexpr double kAlgaeAnglePidI     = 0.50;
+    constexpr double kAlgaeAnglePidP     = 1.50;
+    constexpr double kAlgaeAnglePidI     = 16.00;
     constexpr double kAlgaeAnglePidD     = 0.00;
     constexpr double kAlgaeIntakeSpeed   = 0.5;
-    constexpr double kAlgaeAngleUp       = 0.750;
-    constexpr double kAlgaeAngleDn       = 0.50;
+    constexpr double kAlgaeAngleUp       = 0.920;
+    constexpr double kAlgaeAngleDn       = 0.642;
     constexpr double kAlgaeAngleSpeed    = 0.75;
 
 
     //Elevator Control Values
     constexpr double kPosStart = 0.00;
     constexpr double kPosCoralL1 = 0.00;//L1 level = 46cm from carpet 9.15
-    constexpr double kPosCoralL2 = 19.69;//L2 level = 81cm from carpet -10.88 for new coral level
+    constexpr double kPosCoralL2 = 21.118;//L2 level = 81cm from carpet -10.88 for new coral level
     constexpr double kPosCoralL3 = 51.82;//L3 level = 121cm from carpet
     constexpr double kPosCoralL4 = 98.5;//L4 level = 183cm from carpet, but different angle
     constexpr double kPosCoralIntake = 23.26;//station = 95cm bottom of opening 
 
-    constexpr double kPosAlgaeL2PrepBump = 10.00;
+    constexpr double kPosAlgaeL2PrepBump = 29.950;
     constexpr double kPosAlgaeL2EndBump = 50.00;
-    constexpr double kPosAlgaeL3PrepBump = 50.00;
-    constexpr double kPosAlgaeL3EndBump = 90.00;
+    constexpr double kPosAlgaeL3PrepBump = 55.44;
+    constexpr double kPosAlgaeL3EndBump = 72.906;
 
-    constexpr double kElevatorLowestAlgae = 25.0;
+    constexpr double kElevatorLowestAlgae = 0.00;
 
     constexpr double kElevatorPidP = {0.10};
     constexpr double kElevatorPidI = {0.00};

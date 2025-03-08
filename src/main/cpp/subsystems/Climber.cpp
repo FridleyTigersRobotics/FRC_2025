@@ -15,8 +15,21 @@ Climber::Climber()
    m_ClimberGrabberState = GrabStop;
    m_CageEncoder.SetPosition(0.0);
    m_GrabberPid.SetIntegratorRange( -0.1, 0.1 ); //stops integrator wind-up
-   m_GrabberPid.SetTolerance(1.0);
+   m_GrabberPid.SetTolerance(2.0);
    m_GrabberPid.Reset();
+
+    rev::spark::SparkMaxConfig GrabMotorConfig;
+    GrabMotorConfig
+        .Inverted(false)
+        .SetIdleMode(rev::spark::SparkMaxConfig::IdleMode::kBrake)
+        .VoltageCompensation(12.0)
+        .SmartCurrentLimit(30);
+
+    //m_AlgaeAngleMotor.SetInverted(true); this is depreciated
+    m_CageGrabberMotor.Configure(GrabMotorConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
+
+
+
 }
 
 
