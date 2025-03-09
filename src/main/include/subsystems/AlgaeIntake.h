@@ -42,12 +42,12 @@ class AlgaeIntake : public frc2::SubsystemBase {
         intakeMaintain
     } AlgaeIntakeState_t;
 
-    frc2::CommandPtr ChangeStateCommand( AlgaeAngleState_t Astate, AlgaeIntakeState_t Istate );
+    frc2::CommandPtr ChangeStateCommand( AlgaeAngleState_t Astate );
 
     void Init();
     void TeleopInit();
     void Update( bool elevatormoving );
-    void ChangeState( AlgaeAngleState_t Astate, AlgaeIntakeState_t Istate );
+    void ChangeState( AlgaeAngleState_t Astate );
   
     void ManualControl();
     void UpdateSmartDashboardData();
@@ -64,11 +64,11 @@ class AlgaeIntake : public frc2::SubsystemBase {
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
     SparkMax m_AlgaeAngleMotor { Constants::kAlgaeAngleID, SparkLowLevel::MotorType::kBrushless };
-    SparkMax m_AlgaeIntakeMotor { Constants::kAlgaeIntakeID, SparkLowLevel::MotorType::kBrushless };
-    SparkRelativeEncoder m_AlgaeIntakeEncoder = m_AlgaeIntakeMotor.GetEncoder();
+    //SparkMax m_AlgaeIntakeMotor { Constants::kAlgaeIntakeID, SparkLowLevel::MotorType::kBrushless };
+    //SparkRelativeEncoder m_AlgaeIntakeEncoder = m_AlgaeIntakeMotor.GetEncoder();
 
     AlgaeAngleState_t m_algaeAngleState = AngleStop;
-    AlgaeIntakeState_t m_algaeIntakeState = intakeStop;
+    //AlgaeIntakeState_t m_algaeIntakeState = intakeStop;
 
     bool m_ManualAlgaeControl = false;
     

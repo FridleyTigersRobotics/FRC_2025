@@ -13,9 +13,7 @@ AlgaeIntake::AlgaeIntake(  Elevator const &Elevator ) :
     m_Elevator{ Elevator }
 {
     m_algaeAngleState = AngleStop;
-    m_algaeIntakeState = intakeStop;
     //m_AlgaeEncoder.SetPosition( 0.0 ); absolute encoder does not have a set function as it is absolute
-    m_AlgaeIntakeEncoder.SetPosition( 0.0 );
     m_AlgaeAnglePid.SetIntegratorRange (-0.1, 0.1 ); //stops integrator wind-up
     m_AlgaeAnglePid.SetTolerance(0.001);
     m_AlgaeAnglePid.Reset();
@@ -47,20 +45,6 @@ AlgaeIntake::AlgaeIntake(  Elevator const &Elevator ) :
 
 // This method will be called once per scheduler run
 void AlgaeIntake::Periodic() {
-
-    if (m_algaeIntakeState == intakeIntake)
-    {
-        m_AlgaeIntakeMotor.Set(Constants::kAlgaeIntakeSpeed);
-    }
-    else if (m_algaeIntakeState == intakeReverse)
-    {
-        m_AlgaeIntakeMotor.Set(-Constants::kAlgaeIntakeSpeed);
-    }
-    else if (m_algaeIntakeState == intakeStop)
-    {
-        m_AlgaeIntakeMotor.Set(0.00);
-    }
-
 
     if(m_algaeAngleState == AngleUp)
     {
@@ -101,29 +85,24 @@ void AlgaeIntake::Periodic() {
 void AlgaeIntake::TeleopInit()
 {
     m_algaeAngleState = AngleStop;
-    m_algaeIntakeState = intakeStop;
 }
 
 
 // ****************************************************************************
-frc2::CommandPtr AlgaeIntake::ChangeStateCommand( AlgaeAngleState_t Astate, AlgaeIntakeState_t Istate )
+frc2::CommandPtr AlgaeIntake::ChangeStateCommand( AlgaeAngleState_t Astate )
 {
-    return RunOnce([ this, Astate, Istate ] { ChangeState( Astate, Istate ); });
+    return RunOnce([ this, Astate ] { ChangeState( Astate ); });
 }
 
 
 
 
 // ****************************************************************************
-void AlgaeIntake::ChangeState( AlgaeAngleState_t Astate, AlgaeIntakeState_t Istate )
+void AlgaeIntake::ChangeState( AlgaeAngleState_t Astate )
 {
     if(Astate != AngleMaintain)
     {
       m_algaeAngleState = Astate;  
-    }
-    if(Istate != intakeMaintain)
-    {
-      m_algaeIntakeState = Istate; 
     }
     
 }
@@ -133,7 +112,6 @@ void AlgaeIntake::UpdateSmartDashboardData( )
 {
     frc::SmartDashboard::PutNumber("Algae Angle Encoder Value", m_AlgaeAngleEncoder.Get());
     frc::SmartDashboard::PutNumber("Algae Angle Setpoint", m_AlgaeAnglePid.GetSetpoint());
-    frc::SmartDashboard::PutNumber("Algae Intake Motor Encoder Value", m_AlgaeIntakeEncoder.GetPosition());
     frc::SmartDashboard::PutNumber("Algae Angle motor value", m_AlgaeAngleMotor.Get());
 }
 

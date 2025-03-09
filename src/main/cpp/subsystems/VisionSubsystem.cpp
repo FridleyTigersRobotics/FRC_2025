@@ -1,13 +1,12 @@
 #include "subsystems/VisionSubsystem.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <cameraserver/CameraServer.h>
+#include <photon/PhotonCamera.h>
 
 
 VisionSubsystem::VisionSubsystem() : camera1("Arducam OV9281 USB Camera 001"), camera2("Arducam OV9281 USB Camera 002") {
-    frc::CameraServer::StartAutomaticCapture(0);
-    frc::CameraServer::StartAutomaticCapture(1);
-    camera1.SetDriverMode(true);// Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
-    camera2.SetDriverMode(true);// Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
+    camera1.SetDriverMode(false);// Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
+    camera2.SetDriverMode(false);// Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
 
     frc::Shuffleboard::GetTab("Vision")
         .AddCamera("Camera 1", "Arducam OV9281 USB Camera 001", std::vector<std::string>{"http://photonvision.local:1182/stream.mjpg"}) //http://photonvision.local:1182/stream.mjpg
