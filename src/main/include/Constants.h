@@ -59,8 +59,8 @@ namespace Constants
     constexpr long kEncClimbUp = 636791;
     constexpr double kClimbCalibrateSpeed = 0.3;
     constexpr double kClimbSpeed = 0.75;
-    constexpr double kGrabSpeed = 0.75;
-    constexpr double kGrabberPidP{8.0e-2};
+    constexpr double kGrabSpeed = 1.00;
+    constexpr double kGrabberPidP{16.0e-2};
     constexpr double kGrabberPidI{8.0e-1};
     constexpr double kGrabberPidD{0.00};
     constexpr double kGrab90{11.00};
