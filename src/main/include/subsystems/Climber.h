@@ -20,6 +20,7 @@
 #include <rev/config/SparkMaxConfig.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
+#include <frc/Timer.h>
 
 class Climber : public frc2::SubsystemBase {
  public:
@@ -73,4 +74,6 @@ class Climber : public frc2::SubsystemBase {
 
     rev::spark::SparkRelativeEncoder m_CageEncoder = m_CageGrabberMotor.GetEncoder();
     frc::PIDController m_GrabberPid {Constants::kGrabberPidP, Constants::kGrabberPidI, Constants::kGrabberPidD};
+
+    frc::Timer grabtimer;
 };

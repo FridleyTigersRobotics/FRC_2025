@@ -28,6 +28,9 @@ Climber::Climber()
     //m_AlgaeAngleMotor.SetInverted(true); this is depreciated
     m_CageGrabberMotor.Configure(GrabMotorConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 
+    grabtimer.Reset();
+    grabtimer.Start();
+
 
 
 }
@@ -63,8 +66,31 @@ void Climber::Periodic()
     {
         if(!winch_limit.Get())
         {
-            m_ClimbMotorEast.Set( Constants::kClimbSpeed ); //winch in (climber down, robot climb up)
-            m_ClimbMotorWest.Set( -Constants::kClimbSpeed );
+            #if 0 // if using timer to determine when to start climb
+                auto elapsed_ask_to_grab = grabtimer.Get();
+                if(elapsed_ask_to_grab > Constants::kGrabDelay)
+                {
+                    m_ClimbMotorEast.Set( Constants::kClimbSpeed ); //winch in (climber down, robot climb up)
+                    m_ClimbMotorWest.Set( -Constants::kClimbSpeed );
+                }
+                else
+                {
+                    m_ClimbMotorEast.Set( 0.00 ); //waiting for grabtimer time
+                    m_ClimbMotorWest.Set( 0.00 );
+                }
+            #endif
+            #if 1  //if using position to determine when to start climb
+                if(fabs(m_GrabberPid.GetError())<Constants::kWinchTolerance)
+                {
+                    m_ClimbMotorEast.Set( Constants::kClimbSpeed ); //winch in (climber down, robot climb up)
+                    m_ClimbMotorWest.Set( -Constants::kClimbSpeed );
+                }
+                else
+                {
+                    m_ClimbMotorEast.Set( 0.00 ); //waiting for grabtimer time
+                    m_ClimbMotorWest.Set( 0.00 );
+                }
+            #endif
         }
         else
         {
@@ -142,6 +168,7 @@ void Climber::Periodic()
         double grabMotorValue = m_GrabberPid.Calculate(m_CageEncoder.GetPosition());
         grabMotorValue = std::clamp(grabMotorValue, -Constants::kGrabSpeed, Constants::kGrabSpeed );
         m_CageGrabberMotor.Set(grabMotorValue);
+        grabtimer.Restart();
     }
 
     if(m_ClimberGrabberState == GrabStop)

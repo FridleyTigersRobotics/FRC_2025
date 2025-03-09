@@ -60,10 +60,12 @@ namespace Constants
     constexpr double kClimbCalibrateSpeed = 0.3;
     constexpr double kClimbSpeed = 0.75;
     constexpr double kGrabSpeed = 1.00;
-    constexpr double kGrabberPidP{16.0e-2};
+    constexpr double kGrabberPidP{8.0e-2};
     constexpr double kGrabberPidI{8.0e-1};
     constexpr double kGrabberPidD{0.00};
     constexpr double kGrab90{11.00};
+    constexpr units::second_t kGrabDelay = units::second_t{1.50};
+    constexpr double kWinchTolerance = 1.00;
 
     // Coral Intake Control Values
     constexpr double kCoralAnglePidP     = 2.00;
