@@ -251,8 +251,8 @@ void Climber::UpdateSmartDashboardData( )
     frc::SmartDashboard::PutNumber("Climber: Cage Grabber", m_CageEncoder.GetPosition());
     frc::SmartDashboard::PutNumber("grabber status", m_ClimberGrabberState);
     frc::SmartDashboard::PutNumber("climber PID setpoint", m_ClimbPid.GetSetpoint());
-    frc::SmartDashboard::PutBoolean("Grabber Horizontal", grabberhoriz);
-    
+    m_grabhoriz->SetBoolean(grabberhoriz);
+
 }
 
 
