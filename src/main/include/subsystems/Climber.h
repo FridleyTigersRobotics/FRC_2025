@@ -21,6 +21,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc/Timer.h>
+#include <frc/shuffleboard/Shuffleboard.h>
 
 class Climber : public frc2::SubsystemBase {
  public:
@@ -75,8 +76,9 @@ class Climber : public frc2::SubsystemBase {
 
     rev::spark::SparkRelativeEncoder m_CageEncoder = m_CageGrabberMotor.GetEncoder();
     frc::PIDController m_GrabberPid {Constants::kGrabberPidP, Constants::kGrabberPidI, Constants::kGrabberPidD};
-    
+
     frc::PIDController m_ClimbPid {Constants::kClimbPidP, Constants::kClimbPidI, Constants::kClimbPidD};
 
     frc::Timer grabtimer;
+
 };

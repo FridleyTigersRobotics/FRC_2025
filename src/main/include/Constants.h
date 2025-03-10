@@ -122,6 +122,8 @@ namespace Constants
     //other control values
     constexpr bool kJoystickFieldRelative = true; //operate joystick controls as field relative if true
 
+    constexpr std::string_view kDriverTabName = "DriverView";
+
 }
 
 

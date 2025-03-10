@@ -31,6 +31,7 @@ class RobotContainer {
   void UpdateSmartDashboardData();
   void TeleopInit();
   void AutonomousInit();
+  void PlaceSmartdashboard();
 
  private:
   // Replace with CommandPS4Controller or CommandJoystick if needed

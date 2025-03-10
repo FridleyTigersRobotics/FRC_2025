@@ -6,8 +6,10 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
+#include <frc/shuffleboard/Shuffleboard.h>
 
 int climberholdpos = 0;
+bool grabberhoriz = false;
 
 // ****************************************************************************
 Climber::Climber()
@@ -43,10 +45,7 @@ Climber::Climber()
     m_ClimbPid.Reset();
     climberholdpos = 0.00;
 
-
-
-
-}
+};
 
 
 // ****************************************************************************
@@ -95,6 +94,7 @@ void Climber::Periodic()
             #if 1  //if using position to determine when to start climb
                 if(fabs(m_GrabberPid.GetError())<Constants::kWinchTolerance)
                 {
+                    grabberhoriz = true;
                     m_ClimbMotorEast.Set( Constants::kClimbSpeed ); //winch in (climber down, robot climb up)
                     m_ClimbMotorWest.Set( -Constants::kClimbSpeed );
                 }
@@ -200,6 +200,7 @@ void Climber::Periodic()
         grabMotorValue = std::clamp(grabMotorValue, -Constants::kGrabSpeed, Constants::kGrabSpeed );
         m_CageGrabberMotor.Set(grabMotorValue);
         grabtimer.Restart();
+        grabberhoriz = false;
     }
 
     if(m_ClimberGrabberState == GrabStop)
@@ -248,8 +249,10 @@ void Climber::UpdateSmartDashboardData( )
     frc::SmartDashboard::PutNumber("Climb Winch Encoder West", m_climberEncoderWest.Get());
     frc::SmartDashboard::PutNumber("Climb Winch Encoder East", m_climberEncoderEast.Get());
     frc::SmartDashboard::PutNumber("Climber: Cage Grabber", m_CageEncoder.GetPosition());
-    frc::SmartDashboard::PutNumber("grabber staus", m_ClimberGrabberState);
+    frc::SmartDashboard::PutNumber("grabber status", m_ClimberGrabberState);
     frc::SmartDashboard::PutNumber("climber PID setpoint", m_ClimbPid.GetSetpoint());
+    frc::SmartDashboard::PutBoolean("Grabber Horizontal", grabberhoriz);
+    
 }
 
 

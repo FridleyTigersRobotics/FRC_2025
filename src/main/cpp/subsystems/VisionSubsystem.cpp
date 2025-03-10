@@ -2,23 +2,23 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <cameraserver/CameraServer.h>
 #include <photon/PhotonCamera.h>
+#include <Constants.h>
 
 
 VisionSubsystem::VisionSubsystem() : camera1("Arducam OV9281 USB Camera 001"), camera2("Arducam OV9281 USB Camera 002") {
-    camera1.SetDriverMode(false);// Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
-    camera2.SetDriverMode(false);// Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
+    camera1.SetDriverMode(false); // Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
+    camera2.SetDriverMode(false); // Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
 
-    frc::Shuffleboard::GetTab("Vision")
+    frc::Shuffleboard::GetTab(Constants::kDriverTabName)
         .AddCamera("Camera 1", "Arducam OV9281 USB Camera 001", std::vector<std::string>{"http://photonvision.local:1182/stream.mjpg"}) //http://photonvision.local:1182/stream.mjpg
-        .WithSize(3, 3)
+        .WithSize(4, 4)
         .WithPosition(0, 0);
 
-    frc::Shuffleboard::GetTab("Vision")
+    frc::Shuffleboard::GetTab(Constants::kDriverTabName)
         .AddCamera("Camera 2", "Arducam OV9281 USB Camera 002", std::vector<std::string>{"http://photonvision.local:1184/stream.mjpg"})
-        .WithSize(3, 3)
-        .WithPosition(3, 0);
+        .WithSize(4, 4)
+        .WithPosition(4, 0);
 
-    
   }
 
 
