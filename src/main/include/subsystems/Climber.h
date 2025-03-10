@@ -84,8 +84,8 @@ class Climber : public frc2::SubsystemBase {
     nt::GenericEntry *m_grabhoriz = frc::Shuffleboard::GetTab(Constants::kDriverTabName)
     .Add("Grabber_Horizonal", false)
     .WithWidget("Boolean Box")
-    .WithSize(2, 1)
-    .WithPosition(8, 2)
+    .WithSize(1, 1)
+    .WithPosition(0, 2)
     .GetEntry();
 
 };

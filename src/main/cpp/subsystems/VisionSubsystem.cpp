@@ -10,14 +10,14 @@ VisionSubsystem::VisionSubsystem() : camera1("Arducam OV9281 USB Camera 001"), c
     camera2.SetDriverMode(false); // Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
 
     frc::Shuffleboard::GetTab(Constants::kDriverTabName)
-        .AddCamera("Camera 1", "Arducam OV9281 USB Camera 001", std::vector<std::string>{"http://photonvision.local:1182/stream.mjpg"}) //http://photonvision.local:1182/stream.mjpg
+        .AddCamera("Climber Camera", "Arducam OV9281 USB Camera 001", std::vector<std::string>{"http://photonvision.local:1182/stream.mjpg"}) //http://photonvision.local:1182/stream.mjpg
         .WithSize(4, 4)
-        .WithPosition(0, 0);
+        .WithPosition(6, 0);
 
     frc::Shuffleboard::GetTab(Constants::kDriverTabName)
-        .AddCamera("Camera 2", "Arducam OV9281 USB Camera 002", std::vector<std::string>{"http://photonvision.local:1184/stream.mjpg"})
+        .AddCamera("Claw Camera", "Arducam OV9281 USB Camera 002", std::vector<std::string>{"http://photonvision.local:1184/stream.mjpg"})
         .WithSize(4, 4)
-        .WithPosition(4, 0);
+        .WithPosition(2, 0);
 
   }
 

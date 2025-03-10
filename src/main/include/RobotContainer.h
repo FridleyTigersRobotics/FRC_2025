@@ -69,7 +69,14 @@ class RobotContainer {
     .Add("Alliance", "Unknown")
     .WithWidget("Text View")
     .WithSize(2, 1)
-    .WithPosition(8, 1)
+    .WithPosition(0, 1)
+    .GetEntry();
+
+  nt::GenericEntry *m_matchTime = frc::Shuffleboard::GetTab(Constants::kDriverTabName)
+    .Add("Match Timer","00.00")
+    .WithWidget("Text View")
+    .WithSize(1, 1)
+    .WithPosition(1, 2)
     .GetEntry();
 
 };

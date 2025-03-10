@@ -320,6 +320,18 @@ void RobotContainer::UpdateSmartDashboardData() {
   m_CoralIntake.UpdateSmartDashboardData();
   m_AlgaeIntake.UpdateSmartDashboardData();
   m_AllianceDisp->SetString(DetermineAlliance());
+
+  double matchTimeSeconds = frc::DriverStation::GetMatchTime().value(); // Convert to double
+  // Convert match time to mm:ss format
+  int minutes = static_cast<int>(matchTimeSeconds) / 60;
+  int seconds = static_cast<int>(matchTimeSeconds) % 60;
+  std::ostringstream timeStream;
+  timeStream << std::setw(2) << std::setfill('0') << minutes << ":"
+              << std::setw(2) << std::setfill('0') << seconds;
+  
+  // Update the Shuffleboard entry
+  m_matchTime->SetString(timeStream.str());
+
 }
 
 
@@ -343,7 +355,7 @@ void RobotContainer::PlaceSmartdashboard() {
     frc::Shuffleboard::GetTab(Constants::kDriverTabName)
     .Add("Autonomous Mode", autoChooser)
     .WithSize(2, 1)
-    .WithPosition(8, 0);
+    .WithPosition(0, 0);
 }
 
 std::string RobotContainer::DetermineAlliance()
