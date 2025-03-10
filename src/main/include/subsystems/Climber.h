@@ -33,6 +33,7 @@ class Climber : public frc2::SubsystemBase {
       ClimberWinchCalibrate,
       ClimberWinchInManual,
       ClimberWinchOutManual,
+      ClimberWinchHold,
       ClimberWinchMaintain
   } ClimberWinchState_t;
 
@@ -74,6 +75,8 @@ class Climber : public frc2::SubsystemBase {
 
     rev::spark::SparkRelativeEncoder m_CageEncoder = m_CageGrabberMotor.GetEncoder();
     frc::PIDController m_GrabberPid {Constants::kGrabberPidP, Constants::kGrabberPidI, Constants::kGrabberPidD};
+    
+    frc::PIDController m_ClimbPid {Constants::kClimbPidP, Constants::kClimbPidI, Constants::kClimbPidD};
 
     frc::Timer grabtimer;
 };

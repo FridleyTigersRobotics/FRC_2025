@@ -54,7 +54,7 @@ RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_Al
     ))); // <- This example method returns CommandPtr
 
   pathplanner::NamedCommands::registerCommand("ElevatorIntakeCoral", std::move(frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleDn, CoralIntake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleDn, CoralIntake::autoIntakeFwd ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralIntake ),
       m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp )
     ))); // <- This example method returns CommandPtr
@@ -266,7 +266,7 @@ void RobotContainer::ConfigureBindings() {
   m_buttons.Button(6).OnFalse( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
-      m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabHorizontal ),
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchHold, Climber::GrabHorizontal ),
       m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
     )
   );
@@ -330,11 +330,7 @@ void RobotContainer::TeleopInit() {
 void RobotContainer::AutonomousInit()
 {
   m_Drivetrain.AutonomousInit();
-  /*
-  frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
-      m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
-      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp, AlgaeIntake::intakeStop)
-    );
-  */
+    m_CoralIntake.ChangeState( CoralIntake::AngleUp, CoralIntake::intakeStop );
+    m_Elevator.ChangeState( Elevator::ElevatorStartingConfig );
+    m_AlgaeIntake.ChangeState( AlgaeIntake::AngleUp);
 } 

@@ -7,6 +7,8 @@
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
 
+int climberholdpos = 0;
+
 // ****************************************************************************
 Climber::Climber()
 {
@@ -15,7 +17,7 @@ Climber::Climber()
    m_ClimberGrabberState = GrabStop;
    m_CageEncoder.SetPosition(0.0);
    m_GrabberPid.SetIntegratorRange( -0.1, 0.1 ); //stops integrator wind-up
-   m_GrabberPid.SetTolerance(2.0);
+   m_GrabberPid.SetTolerance(Constants::kGrabPidTol);
    m_GrabberPid.Reset();
 
     rev::spark::SparkMaxConfig GrabMotorConfig;
@@ -28,8 +30,19 @@ Climber::Climber()
     //m_AlgaeAngleMotor.SetInverted(true); this is depreciated
     m_CageGrabberMotor.Configure(GrabMotorConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 
+    m_ClimbMotorEast.SetNeutralMode(NeutralMode::Brake);
+    m_ClimbMotorWest.SetNeutralMode(NeutralMode::Brake);
+
     grabtimer.Reset();
     grabtimer.Start();
+
+    m_ClimbMotorEast.Set( 0.0 );
+    m_ClimbMotorWest.Set( 0.0 );
+    m_ClimbPid.SetIntegratorRange(-0.1,0.1);//stops integrator wind-up
+    m_ClimbPid.SetTolerance( Constants::kClimbPidTol );
+    m_ClimbPid.Reset();
+    climberholdpos = 0.00;
+
 
 
 
@@ -123,6 +136,24 @@ void Climber::Periodic()
         
     }
 
+    if(m_ClimberWinchState == ClimberWinchHold)
+    {
+        if(winch_limit.Get())
+        {
+            m_ClimbMotorEast.Set( 0.0 );
+            m_ClimbMotorWest.Set( 0.0 );
+        }
+        else
+        {
+            double winchspeed=0.00;
+            m_ClimbPid.SetSetpoint(climberholdpos-Constants::kClimbSetpointOffset);
+            winchspeed = m_ClimbPid.Calculate(m_climberEncoderWest.Get());
+            winchspeed = std::clamp(winchspeed, -Constants::kClimbSpeed, Constants::kClimbSpeed);
+            m_ClimbMotorEast.Set( -winchspeed);
+            m_ClimbMotorWest.Set( winchspeed );  
+        }
+    }
+
     //if(m_ClimberWinchState == ClimberWinchMaintain)
     //{
     //    //do not change state, ignore update in Climber::ChangeState
@@ -196,6 +227,7 @@ void Climber::ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gst
 
    if(Gstate != GrabMaintain)
    {
+        climberholdpos = m_climberEncoderWest.Get();
         m_ClimberGrabberState = Gstate;
    }
 
@@ -217,6 +249,7 @@ void Climber::UpdateSmartDashboardData( )
     frc::SmartDashboard::PutNumber("Climb Winch Encoder East", m_climberEncoderEast.Get());
     frc::SmartDashboard::PutNumber("Climber: Cage Grabber", m_CageEncoder.GetPosition());
     frc::SmartDashboard::PutNumber("grabber staus", m_ClimberGrabberState);
+    frc::SmartDashboard::PutNumber("climber PID setpoint", m_ClimbPid.GetSetpoint());
 }
 
 

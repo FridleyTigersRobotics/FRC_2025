@@ -64,8 +64,14 @@ namespace Constants
     constexpr double kGrabberPidI{8.0e-1};
     constexpr double kGrabberPidD{0.00};
     constexpr double kGrab90{11.00};
+    constexpr double kGrabPidTol = 2.0;
     constexpr units::second_t kGrabDelay = units::second_t{1.50};
-    constexpr double kWinchTolerance = 1.00;
+    constexpr double kWinchTolerance = 1.50;
+    constexpr double kClimbPidP{16.0e-6};
+    constexpr double kClimbPidI{4.0e-6};
+    constexpr double kClimbPidD{0.00};
+    constexpr int kClimbPidTol = 10;
+    constexpr int kClimbSetpointOffset = 20000;//offset for 20ms loop of hold position, motor continues before updated speed
 
     // Coral Intake Control Values
     constexpr double kCoralAnglePidP     = 2.00;
