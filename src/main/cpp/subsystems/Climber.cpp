@@ -245,12 +245,12 @@ void Climber::ChangeState( ClimberWinchState_t Cstate, ClimberGrabberState_t Gst
 // ****************************************************************************
 void Climber::UpdateSmartDashboardData( )
 {
-    frc::SmartDashboard::PutBoolean("Winch Limit Switch", winch_limit.Get());
-    frc::SmartDashboard::PutNumber("Climb Winch Encoder West", m_climberEncoderWest.Get());
-    frc::SmartDashboard::PutNumber("Climb Winch Encoder East", m_climberEncoderEast.Get());
-    frc::SmartDashboard::PutNumber("Climber: Cage Grabber", m_CageEncoder.GetPosition());
-    frc::SmartDashboard::PutNumber("grabber status", m_ClimberGrabberState);
-    frc::SmartDashboard::PutNumber("climber PID setpoint", m_ClimbPid.GetSetpoint());
+    //frc::SmartDashboard::PutBoolean("Winch Limit Switch", winch_limit.Get());
+    //frc::SmartDashboard::PutNumber("Climb Winch Encoder West", m_climberEncoderWest.Get());
+    //frc::SmartDashboard::PutNumber("Climb Winch Encoder East", m_climberEncoderEast.Get());
+    //frc::SmartDashboard::PutNumber("Climber: Cage Grabber", m_CageEncoder.GetPosition());
+    //frc::SmartDashboard::PutNumber("grabber status", m_ClimberGrabberState);
+    //frc::SmartDashboard::PutNumber("climber PID setpoint", m_ClimbPid.GetSetpoint());
     m_grabhoriz->SetBoolean(grabberhoriz);
 
 }

@@ -113,7 +113,7 @@ void SwerveModule::SetDesiredState(
   m_driveMotor.Set( driveMotorOutput );
   m_turningMotor.Set( turnOutput );
 
-  frc::SmartDashboard::PutNumber( m_driveRawAngleName, m_turningEncoder.GetRawPos() );
-  frc::SmartDashboard::PutNumber( m_driveAngleName,    m_turningEncoder.GetDistance() );
-  frc::SmartDashboard::PutNumber( m_driveSpeedName,    driveMotorOutput );
+  //frc::SmartDashboard::PutNumber( m_driveRawAngleName, m_turningEncoder.GetRawPos() );
+  //frc::SmartDashboard::PutNumber( m_driveAngleName,    m_turningEncoder.GetDistance() );
+  //frc::SmartDashboard::PutNumber( m_driveSpeedName,    driveMotorOutput );
 }

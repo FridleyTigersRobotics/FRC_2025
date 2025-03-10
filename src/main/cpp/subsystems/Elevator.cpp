@@ -179,10 +179,10 @@ void Elevator::ChangeState( ElevatorState_t ElevatorPosition )
 // ****************************************************************************
 void Elevator::UpdateSmartDashboardData( )
 {
-    frc::SmartDashboard::PutNumber("Elevator Encoder Value", m_Elevator0Encoder.GetPosition());
-    frc::SmartDashboard::PutNumber("Elevator  Setpoint", m_ElevatorPid.GetSetpoint());
-    frc::SmartDashboard::PutNumber("Elevator Motor Value", m_Motor0.Get());
-    frc::SmartDashboard::PutBoolean("Elevator Moving", elevatormoving);
+    //frc::SmartDashboard::PutNumber("Elevator Encoder Value", m_Elevator0Encoder.GetPosition());
+    //frc::SmartDashboard::PutNumber("Elevator  Setpoint", m_ElevatorPid.GetSetpoint());
+    //frc::SmartDashboard::PutNumber("Elevator Motor Value", m_Motor0.Get());
+    //frc::SmartDashboard::PutBoolean("Elevator Moving", elevatormoving);
 
 }
 

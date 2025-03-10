@@ -110,9 +110,9 @@ void AlgaeIntake::ChangeState( AlgaeAngleState_t Astate )
 // ****************************************************************************
 void AlgaeIntake::UpdateSmartDashboardData( )
 {
-    frc::SmartDashboard::PutNumber("Algae Angle Encoder Value", m_AlgaeAngleEncoder.Get());
-    frc::SmartDashboard::PutNumber("Algae Angle Setpoint", m_AlgaeAnglePid.GetSetpoint());
-    frc::SmartDashboard::PutNumber("Algae Angle motor value", m_AlgaeAngleMotor.Get());
+    //frc::SmartDashboard::PutNumber("Algae Angle Encoder Value", m_AlgaeAngleEncoder.Get());
+    //frc::SmartDashboard::PutNumber("Algae Angle Setpoint", m_AlgaeAnglePid.GetSetpoint());
+    //frc::SmartDashboard::PutNumber("Algae Angle motor value", m_AlgaeAngleMotor.Get());
 }
 
 

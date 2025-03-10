@@ -191,11 +191,11 @@ void CoralIntake::ChangeState( CoralAngleState_t Astate, CoralIntakeState_t Ista
 // ****************************************************************************
 void CoralIntake::UpdateSmartDashboardData( )
 {
-    frc::SmartDashboard::PutNumber("Coral Angle Encoder Value", m_CoralAngleEncoder.Get());
-    frc::SmartDashboard::PutNumber("Coral Angle Setpoint", m_CoralAnglePid.GetSetpoint());
-    frc::SmartDashboard::PutNumber("Coral Intake Motor Encoder Value", m_CoralIntakeEncoder.GetPosition());
-    frc::SmartDashboard::PutNumber("Coral Angle motor value", m_CoralAngleMotor.Get());
-    frc::SmartDashboard::PutNumber("Coral TOF Sensor Value", m_CoralDetector.GetValue());
+    //frc::SmartDashboard::PutNumber("Coral Angle Encoder Value", m_CoralAngleEncoder.Get());
+    //frc::SmartDashboard::PutNumber("Coral Angle Setpoint", m_CoralAnglePid.GetSetpoint());
+    //frc::SmartDashboard::PutNumber("Coral Intake Motor Encoder Value", m_CoralIntakeEncoder.GetPosition());
+    //frc::SmartDashboard::PutNumber("Coral Angle motor value", m_CoralAngleMotor.Get());
+    //frc::SmartDashboard::PutNumber("Coral TOF Sensor Value", m_CoralDetector.GetValue());
 }
 
 

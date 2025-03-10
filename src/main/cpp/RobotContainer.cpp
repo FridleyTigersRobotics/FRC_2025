@@ -319,6 +319,7 @@ void RobotContainer::UpdateSmartDashboardData() {
   m_Elevator.UpdateSmartDashboardData();
   m_CoralIntake.UpdateSmartDashboardData();
   m_AlgaeIntake.UpdateSmartDashboardData();
+  m_AllianceDisp->SetString(DetermineAlliance());
 }
 
 
@@ -343,9 +344,10 @@ void RobotContainer::PlaceSmartdashboard() {
     .Add("Autonomous Mode", autoChooser)
     .WithSize(2, 1)
     .WithPosition(8, 0);
+}
 
-
-  //alliance color
+std::string RobotContainer::DetermineAlliance()
+{
   std::optional<frc::DriverStation::Alliance> alliance = frc::DriverStation::GetAlliance();
   std::optional<int> position = frc::DriverStation::GetLocation();
   std::string allianceColor = "Unknown"; // Default value
@@ -370,10 +372,5 @@ void RobotContainer::PlaceSmartdashboard() {
       }
 
     std::string allianceDisplay = "Alliance: " + allianceColor + " --- Position: " + positionStr;
-
-    frc::Shuffleboard::GetTab(Constants::kDriverTabName)
-    .Add("Alliance", allianceDisplay)
-    .WithWidget("Text View")
-    .WithSize(2, 1)
-    .WithPosition(8, 1);
+    return allianceDisplay;
 }

@@ -32,6 +32,7 @@ class RobotContainer {
   void TeleopInit();
   void AutonomousInit();
   void PlaceSmartdashboard();
+  std::string DetermineAlliance();
 
  private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -62,5 +63,13 @@ class RobotContainer {
   frc::SendableChooser<frc2::Command *> autoChooser;
   public:
   frc2::Command *GetAutonomousCommand();
+
+  private:
+  nt::GenericEntry *m_AllianceDisp = frc::Shuffleboard::GetTab(Constants::kDriverTabName)
+    .Add("Alliance", "Unknown")
+    .WithWidget("Text View")
+    .WithSize(2, 1)
+    .WithPosition(8, 1)
+    .GetEntry();
 
 };
