@@ -1,6 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+#define UseElasticNetTable 1
 
 #include "subsystems/Drivetrain.h"
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -26,6 +27,11 @@ Drivetrain::Drivetrain()
 {
     ResetIMU();
     ConfigureAutoBuilder();
+
+  #if UseElasticNetTable
+  DriveNetTable = DriveNetInst.GetTable("2227 Drivetrain");
+  DriveNetInst.StartServer();
+  #endif
     
 }
 
@@ -88,7 +94,13 @@ void Drivetrain::Periodic()
 
 void Drivetrain::UpdateSmartDashboardData()
 {
-
+  #if UseElasticNetTable
+  // The velocity is the Euclidean norm of the linear velocities
+  float xvel = m_imu.GetVelocityX();
+  float yvel = m_imu.GetVelocityY();
+  float rvel = std::sqrt( xvel * xvel + yvel * yvel );
+  DriveNetTable->PutNumber("Robot meters per second", rvel );
+  #endif
 }
 
 void Drivetrain::TeleopInit()

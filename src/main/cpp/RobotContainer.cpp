@@ -2,6 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#define UseShuffleboardAPI 0
+#define UseElasticNetTable 1
+
 #include "RobotContainer.h"
 
 #include <frc2/command/button/Trigger.h>
@@ -92,7 +95,15 @@ RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_Al
   // Configure the button bindings
   ConfigureBindings();
 
+#if UseElasticNetTable
+  ContainerNetTable = ContainerNetInst.GetTable("2227 RobotContainer");
+  ContainerNetInst.StartServer();
+#endif
+
+#if UseShuffleboardAPI
   PlaceSmartdashboard();
+#endif
+
 }
 
 void RobotContainer::ConfigureBindings() {
@@ -319,7 +330,6 @@ void RobotContainer::UpdateSmartDashboardData() {
   m_Elevator.UpdateSmartDashboardData();
   m_CoralIntake.UpdateSmartDashboardData();
   m_AlgaeIntake.UpdateSmartDashboardData();
-  m_AllianceDisp->SetString(DetermineAlliance());
 
   double matchTimeSeconds = frc::DriverStation::GetMatchTime().value(); // Convert to double
   // Convert match time to mm:ss format
@@ -328,9 +338,18 @@ void RobotContainer::UpdateSmartDashboardData() {
   std::ostringstream timeStream;
   timeStream << std::setw(2) << std::setfill('0') << minutes << ":"
               << std::setw(2) << std::setfill('0') << seconds;
-  
+ 
+  #if UseElasticNetTable
+  ContainerNetTable->PutString("Match_Time_Str",timeStream.str());
+  ContainerNetTable->PutNumber("Match_Time",frc::DriverStation::GetMatchTime().value());
+  ContainerNetTable->PutString("Alliance",DetermineAlliance());
+  #endif
+
+  #if UseShuffleboardAPI
+  m_AllianceDisp->SetString(DetermineAlliance());
   // Update the Shuffleboard entry
   m_matchTime->SetString(timeStream.str());
+  #endif
 
 }
 
@@ -350,6 +369,8 @@ void RobotContainer::AutonomousInit()
     m_AlgaeIntake.ChangeState( AlgaeIntake::AngleUp);
 } 
 
+#if UseShuffleboardAPI
+
 void RobotContainer::PlaceSmartdashboard() {
 
     frc::Shuffleboard::GetTab(Constants::kDriverTabName)
@@ -357,6 +378,8 @@ void RobotContainer::PlaceSmartdashboard() {
     .WithSize(2, 1)
     .WithPosition(0, 0);
 }
+
+#endif
 
 std::string RobotContainer::DetermineAlliance()
 {

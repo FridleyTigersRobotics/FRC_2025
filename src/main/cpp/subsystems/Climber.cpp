@@ -2,6 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#define UseShuffleboardAPI 0
+#define UseElasticNetTable 1
+
 #include "subsystems/Climber.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <rev/SparkMax.h>
@@ -44,6 +47,11 @@ Climber::Climber()
     m_ClimbPid.SetTolerance( Constants::kClimbPidTol );
     m_ClimbPid.Reset();
     climberholdpos = 0.00;
+
+    #if UseElasticNetTable
+     ClimberNetTable = ClimberNetInst.GetTable("2227 Climber");
+     ClimberNetInst.StartServer();
+    #endif
 
 };
 
@@ -251,7 +259,14 @@ void Climber::UpdateSmartDashboardData( )
     //frc::SmartDashboard::PutNumber("Climber: Cage Grabber", m_CageEncoder.GetPosition());
     //frc::SmartDashboard::PutNumber("grabber status", m_ClimberGrabberState);
     //frc::SmartDashboard::PutNumber("climber PID setpoint", m_ClimbPid.GetSetpoint());
+
+    #if UseElasticNetTable
+    ClimberNetTable->PutBoolean("Grabber_Horizontal",grabberhoriz);
+    #endif
+
+    #if UseShuffleboardAPI
     m_grabhoriz->SetBoolean(grabberhoriz);
+    #endif
 
 }
 

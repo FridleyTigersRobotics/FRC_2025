@@ -1,3 +1,5 @@
+#define UseShuffleboardAPI 0
+
 #include "subsystems/VisionSubsystem.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <cameraserver/CameraServer.h>
@@ -9,6 +11,7 @@ VisionSubsystem::VisionSubsystem() : camera1("Arducam OV9281 USB Camera 001"), c
     camera1.SetDriverMode(false); // Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
     camera2.SetDriverMode(false); // Driver mode is an unfiltered / normal view of the camera to be used while driving the robot.
 
+#if UseShuffleboardAPI
     frc::Shuffleboard::GetTab(Constants::kDriverTabName)
         .AddCamera("Climber Camera", "Arducam OV9281 USB Camera 001", std::vector<std::string>{"http://photonvision.local:1182/stream.mjpg"}) //http://photonvision.local:1182/stream.mjpg
         .WithSize(4, 4)
@@ -18,6 +21,7 @@ VisionSubsystem::VisionSubsystem() : camera1("Arducam OV9281 USB Camera 001"), c
         .AddCamera("Claw Camera", "Arducam OV9281 USB Camera 002", std::vector<std::string>{"http://photonvision.local:1184/stream.mjpg"})
         .WithSize(4, 4)
         .WithPosition(2, 0);
+#endif
 
   }
 

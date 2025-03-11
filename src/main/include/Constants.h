@@ -4,6 +4,8 @@
 
 #pragma once
 
+#define UseShuffleboardAPI 0
+
 /**
  * The Constants header provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants.  This should not be used for any other
@@ -16,6 +18,7 @@
 
 namespace Constants
 {
+
     // Analog IDs
     constexpr int kDriveEncoderBackRight  = 0;
     constexpr int kDriveEncoderBackLeft   = 1;
@@ -122,7 +125,9 @@ namespace Constants
     //other control values
     constexpr bool kJoystickFieldRelative = true; //operate joystick controls as field relative if true
 
+    #if UseShuffleboardAPI
     constexpr std::string_view kDriverTabName = "DriverView";
+    #endif
 
 }
 

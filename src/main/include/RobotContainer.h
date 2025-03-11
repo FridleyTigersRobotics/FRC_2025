@@ -4,11 +4,15 @@
 
 #pragma once
 
+#define UseShuffleboardAPI 0
+#define UseElasticNetTable 1
+
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
 #include <frc2/command/button/CommandGenericHID.h>
 #include <frc/filter/SlewRateLimiter.h>
+#include <networktables/NetworkTableInstance.h>
 
 #include "Constants.h"
 #include "subsystems/Climber.h"
@@ -31,8 +35,11 @@ class RobotContainer {
   void UpdateSmartDashboardData();
   void TeleopInit();
   void AutonomousInit();
-  void PlaceSmartdashboard();
   std::string DetermineAlliance();
+
+  #if UseShuffleboardAPI
+  void PlaceSmartdashboard();
+  #endif
 
  private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -65,6 +72,7 @@ class RobotContainer {
   frc2::Command *GetAutonomousCommand();
 
   private:
+  #if UseShuffleboardAPI
   nt::GenericEntry *m_AllianceDisp = frc::Shuffleboard::GetTab(Constants::kDriverTabName)
     .Add("Alliance", "Unknown")
     .WithWidget("Text View")
@@ -78,5 +86,12 @@ class RobotContainer {
     .WithSize(1, 1)
     .WithPosition(1, 2)
     .GetEntry();
+  #endif
+
+  #if UseElasticNetTable
+    nt::NetworkTableInstance ContainerNetInst = nt::NetworkTableInstance::GetDefault();
+    std::shared_ptr<nt::NetworkTable> ContainerNetTable;
+
+  #endif
 
 };

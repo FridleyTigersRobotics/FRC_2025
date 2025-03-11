@@ -4,8 +4,11 @@
 
 #pragma once
 
+#define UseElasticNetTable 1
+
 #include <frc2/command/SubsystemBase.h>
 #include <numbers>
+#include <networktables/NetworkTableInstance.h>
 
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/geometry/Translation2d.h>
@@ -71,6 +74,11 @@ class Drivetrain : public frc2::SubsystemBase {
        m_backLeft.GetPosition(), m_backRight.GetPosition()}};
 
   void ConfigureAutoBuilder();
+
+  #if UseElasticNetTable
+    nt::NetworkTableInstance DriveNetInst = nt::NetworkTableInstance::GetDefault();
+    std::shared_ptr<nt::NetworkTable> DriveNetTable;
+  #endif
 
 
 

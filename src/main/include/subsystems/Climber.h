@@ -3,6 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
+
+#define UseShuffleboardAPI 0
+#define UseElasticNetTable 1
+
 #include <Phoenix5.h>
 #include <Constants.h>
 #include <frc/DigitalInput.h>
@@ -22,6 +26,7 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc/Timer.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+#include <networktables/NetworkTableInstance.h>
 
 class Climber : public frc2::SubsystemBase {
  public:
@@ -81,11 +86,19 @@ class Climber : public frc2::SubsystemBase {
 
     frc::Timer grabtimer;
 
+    #if UseShuffleboardAPI
     nt::GenericEntry *m_grabhoriz = frc::Shuffleboard::GetTab(Constants::kDriverTabName)
     .Add("Grabber_Horizonal", false)
     .WithWidget("Boolean Box")
     .WithSize(1, 1)
     .WithPosition(0, 2)
     .GetEntry();
+    #endif
+
+     #if UseElasticNetTable
+    nt::NetworkTableInstance ClimberNetInst = nt::NetworkTableInstance::GetDefault();
+    std::shared_ptr<nt::NetworkTable> ClimberNetTable;
+
+     #endif
 
 };
