@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5881815159574466,
-        "y": 5.699484707446808
+        "x": 3.7342500000000003,
+        "y": 2.80625
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.588181515957446,
-        "y": 5.699484707446808
+        "x": 1.6477499999968663,
+        "y": 1.509500000004261
       },
       "isLocked": false,
-      "linkedName": "endpoint start"
+      "linkedName": "Coral shoot 3"
     },
     {
       "anchor": {
-        "x": 2.9113863031914895,
-        "y": 6.942220744680851
+        "x": 1.481999999996866,
+        "y": 7.07675000000426
       },
       "prevControl": {
-        "x": 2.5613198138297872,
-        "y": 7.508161569148935
+        "x": 3.6367499999968658,
+        "y": 6.209000000004261
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "P1 end"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -89.10482628978896
+    "rotation": 130.48601154199872
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -32.30733445488195
+    "rotation": 59.53445508054006
   },
   "useDefaultConstraints": true
 }

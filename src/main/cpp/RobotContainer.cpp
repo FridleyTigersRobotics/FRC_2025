@@ -35,7 +35,7 @@ RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_Al
   //Autonomous Commands ****************************************************************************
   // Register Named Commands. You must pass either a CommandPtr rvalue or a shared_ptr to the command, not the command directly.
   pathplanner::NamedCommands::registerCommand("ElevatorL1", std::move(frc2::cmd::Parallel(
-      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleHorizontal, CoralIntake::intakeStop ),
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleDn, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL1 ),
       m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain)
     ))); // <- This example method returns CommandPtr
@@ -75,6 +75,12 @@ RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_Al
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
       m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain )
     ))); // <- This example method returns CommandPtr
+
+    pathplanner::NamedCommands::registerCommand("CoralIntakeRev", std::move(frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeReverse ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain )
+    )));
 
   pathplanner::NamedCommands::registerCommand("CoralIntakeStop", std::move(frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
