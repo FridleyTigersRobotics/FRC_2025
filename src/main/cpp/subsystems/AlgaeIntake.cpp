@@ -25,6 +25,7 @@ AlgaeIntake::AlgaeIntake(  Elevator const &Elevator ) :
         .VoltageCompensation(12.0)
         .SmartCurrentLimit(15);
 
+
     //m_AlgaeAngleMotor.SetInverted(true); this is depreciated
     m_AlgaeAngleMotor.Configure(AlgaeAngleMotorConfig,SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
     /*

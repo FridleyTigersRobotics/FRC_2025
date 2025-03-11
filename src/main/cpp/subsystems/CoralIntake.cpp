@@ -20,10 +20,22 @@ CoralIntake::CoralIntake(  Elevator const &Elevator ) :
     m_CoralAnglePid.SetTolerance(0.001);
     m_CoralAnglePid.Reset();
 
+    SparkMaxConfig CoralIntakeMotorConfig;
+    CoralIntakeMotorConfig
+    .Inverted(false)
+    //ELI BOZO
+    .SmartCurrentLimit(10)
+    .VoltageCompensation(12);
+
     SparkMaxConfig CoralAngleMotorConfig;
-    CoralAngleMotorConfig.Inverted(true);
+    CoralAngleMotorConfig
+    .Inverted(true)
+    //ELI BOZO
+    .SmartCurrentLimit(15)
+    .VoltageCompensation(12);
     //m_CoralAngleMotor.SetInverted(true); this is depreciated
     m_CoralAngleMotor.Configure(CoralAngleMotorConfig,SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
+    m_CoralIntakeMotor.Configure(CoralIntakeMotorConfig,SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
     /*
    * Apply the configuration to the SPARKs.
    *

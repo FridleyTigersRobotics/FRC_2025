@@ -331,6 +331,10 @@ void RobotContainer::UpdateSmartDashboardData() {
   m_CoralIntake.UpdateSmartDashboardData();
   m_AlgaeIntake.UpdateSmartDashboardData();
 
+  double totalCurrent = ZipZap.GetTotalCurrent();
+  ContainerNetTable->PutNumber("Total Current", totalCurrent);
+
+
   double matchTimeSeconds = frc::DriverStation::GetMatchTime().value(); // Convert to double
   // Convert match time to mm:ss format
   int minutes = static_cast<int>(matchTimeSeconds) / 60;

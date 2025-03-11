@@ -33,11 +33,23 @@ Elevator::Elevator()
     m_ElevatorPid.SetTolerance(0.001);
     m_ElevatorPid.Reset();
 
-    
+    SparkMaxConfig Motor0Config;
+    Motor0Config
+    .Inverted(false)
+    //ELI BOZO
+    .SmartCurrentLimit(25)
+    .VoltageCompensation(12);
+
     SparkMaxConfig Motor1Config;
-    Motor1Config.Inverted(true);
+    Motor1Config
+    .Inverted(true)
+    //ELI BOZO
+    .SmartCurrentLimit(25)
+    .VoltageCompensation(12);
     //m_Motor1.SetInverted(true); this is depreciated
+
     m_Motor1.Configure(Motor1Config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
+    m_Motor0.Configure(Motor0Config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
     /*
    * Apply the configuration to the SPARKs.
    *

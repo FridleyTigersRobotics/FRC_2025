@@ -35,7 +35,14 @@ Climber::Climber()
     //m_AlgaeAngleMotor.SetInverted(true); this is depreciated
     m_CageGrabberMotor.Configure(GrabMotorConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 
+    m_ClimbMotorEast.ConfigContinuousCurrentLimit(25);
+    m_ClimbMotorEast.ConfigPeakCurrentLimit(50);
+    m_ClimbMotorEast.ConfigPeakCurrentDuration(200);
     m_ClimbMotorEast.SetNeutralMode(NeutralMode::Brake);
+
+    m_ClimbMotorWest.ConfigContinuousCurrentLimit(25);
+    m_ClimbMotorWest.ConfigPeakCurrentLimit(50);
+    m_ClimbMotorWest.ConfigPeakCurrentDuration(200);
     m_ClimbMotorWest.SetNeutralMode(NeutralMode::Brake);
 
     grabtimer.Reset();

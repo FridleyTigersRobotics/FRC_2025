@@ -14,6 +14,7 @@
 #include <frc/filter/SlewRateLimiter.h>
 #include <networktables/NetworkTableInstance.h>
 
+#include <frc/PowerDistribution.h>
 #include "Constants.h"
 #include "subsystems/Climber.h"
 #include "subsystems/Drivetrain.h"
@@ -72,6 +73,8 @@ class RobotContainer {
   frc2::Command *GetAutonomousCommand();
 
   private:
+  frc::PowerDistribution ZipZap{1, frc::PowerDistribution::ModuleType::kRev};
+
   #if UseShuffleboardAPI
   nt::GenericEntry *m_AllianceDisp = frc::Shuffleboard::GetTab(Constants::kDriverTabName)
     .Add("Alliance", "Unknown")
