@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.566198979591837,
-        "y": 2.9990114795918363
+        "x": 1.0446428571428572,
+        "y": 7.170121173469388
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.910279618799112,
-        "y": 2.9843990604064685
+        "x": 1.4795218646351747,
+        "y": 6.8185104883247964
       },
-      "isLocked": true,
-      "linkedName": "S5"
+      "isLocked": false,
+      "linkedName": "CstationL"
     },
     {
       "anchor": {
-        "x": 6.514094387755103,
-        "y": 2.9990114795918363
+        "x": 2.925,
+        "y": 3.8421874999999996
       },
       "prevControl": {
-        "x": 6.264106013648909,
-        "y": 3.0014224569334265
+        "x": 1.5893494897959182,
+        "y": 3.8048788265306115
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 127.26640190097714
   },
   "useDefaultConstraints": true
 }

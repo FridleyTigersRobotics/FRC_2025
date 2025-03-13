@@ -39,7 +39,7 @@ Drivetrain::Drivetrain()
 
 void Drivetrain::AutonomousInit()
 {
-  ResetIMU(); //reset imu here in case robot is moved after powerup
+  //ResetIMU(); //reset imu here in case robot is moved after powerup
 }
 
 
@@ -127,8 +127,8 @@ void Drivetrain::ConfigureAutoBuilder()
         [this](){ return getRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         [this](auto speeds, auto feedforwards){ drive(speeds, false, frc::TimedRobot::kDefaultPeriod); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
         std::make_shared<PPHolonomicDriveController>( // PPHolonomicController is the built in path following controller for holonomic drive trains
-            PIDConstants(4.0, 0.0, 0.0), // Translation PID constants default P5.0 I0.0 D0.0
-            PIDConstants(4.0, 0.0, 0.0) // Rotation PID constants default P5.0 I0.0 D0.0
+            PIDConstants(5.0, 0.0, 0.0), // Translation PID constants default P5.0 I0.0 D0.0
+            PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants default P5.0 I0.0 D0.0
         ),
         config, // The robot configuration
         []() {
