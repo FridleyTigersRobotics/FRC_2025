@@ -32,6 +32,8 @@ Drivetrain::Drivetrain()
   DriveNetTable = DriveNetInst.GetTable("2227 Drivetrain");
   DriveNetInst.StartServer();
   #endif
+
+  frc::SmartDashboard::PutData("Field",&m_field);
     
 }
 
@@ -100,6 +102,7 @@ void Drivetrain::UpdateSmartDashboardData()
   float yvel = m_imu.GetVelocityY();
   float rvel = std::sqrt( xvel * xvel + yvel * yvel );
   DriveNetTable->PutNumber("Robot meters per second", rvel );
+  m_field.SetRobotPose(Drivetrain::getPose());
   #endif
 }
 

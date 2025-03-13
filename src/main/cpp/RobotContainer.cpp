@@ -338,7 +338,9 @@ void RobotContainer::UpdateSmartDashboardData() {
   m_AlgaeIntake.UpdateSmartDashboardData();
 
   double totalCurrent = ZipZap.GetTotalCurrent();
+  double robotVoltage = ZipZap.GetVoltage();
   ContainerNetTable->PutNumber("Total Current", totalCurrent);
+  ContainerNetTable->PutNumber("Robot Voltage", robotVoltage);
 
 
   double matchTimeSeconds = frc::DriverStation::GetMatchTime().value(); // Convert to double

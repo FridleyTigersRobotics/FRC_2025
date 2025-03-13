@@ -19,6 +19,8 @@
 #include "Constants.h"
 #include <frc/SPI.h>
 #include <frc2/command/sysid/SysIdRoutine.h>
+#include <frc/smartdashboard/Field2d.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 using namespace Constants;
 
@@ -80,6 +82,7 @@ class Drivetrain : public frc2::SubsystemBase {
     std::shared_ptr<nt::NetworkTable> DriveNetTable;
   #endif
 
+  frc::Field2d m_field;
 
 
 
