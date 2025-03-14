@@ -5,27 +5,28 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "S2 to IJ"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "S2 to IJ"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorL1"
+                }
+              }
+            ]
           }
         },
         {
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ElevatorL1"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.0
-                }
-              },
               {
                 "type": "named",
                 "data": {
@@ -48,15 +49,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "IJ to CStationL"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevatorIntakeCoral"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "IJ to CStationL"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorIntakeCoral"
+                }
+              }
+            ]
           }
         },
         {
@@ -66,27 +74,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "CStationL to AB"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Copy of CStationL to AB"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorL1"
+                }
+              }
+            ]
           }
         },
         {
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ElevatorL1"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.0
-                }
-              },
               {
                 "type": "named",
                 "data": {

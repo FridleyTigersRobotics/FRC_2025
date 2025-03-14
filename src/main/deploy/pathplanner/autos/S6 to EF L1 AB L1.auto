@@ -5,13 +5,7 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "S2 to IJ"
-          }
-        },
-        {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -21,11 +15,18 @@
                 }
               },
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 0.0
+                  "pathName": "S6 to EF"
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
               {
                 "type": "named",
                 "data": {
@@ -48,15 +49,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "IJ to CStationL"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevatorIntakeCoral"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "EF to CStationC"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorIntakeCoral"
+                }
+              }
+            ]
           }
         },
         {
@@ -66,27 +74,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "CStationL to AB"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CStationC to AB"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorL1"
+                }
+              }
+            ]
           }
         },
         {
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ElevatorL1"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.0
-                }
-              },
               {
                 "type": "named",
                 "data": {
