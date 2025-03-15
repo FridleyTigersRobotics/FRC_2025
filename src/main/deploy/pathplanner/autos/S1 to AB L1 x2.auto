@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S2 to IJ"
+                  "pathName": "S1 to AB"
                 }
               },
               {
@@ -36,7 +36,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.5
+                  "waitTime": 2.0
                 }
               },
               {
@@ -55,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "IJ to CStationL"
+                  "pathName": "ABKL to CstationL2"
                 }
               },
               {
@@ -80,7 +80,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Copy of CStationL to AB"
+                  "pathName": "CStationL2 to AB"
                 }
               },
               {
@@ -105,7 +105,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.5
+                  "waitTime": 2.0
                 }
               },
               {

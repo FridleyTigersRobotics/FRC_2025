@@ -39,7 +39,7 @@ Drivetrain::Drivetrain()
 
 void Drivetrain::AutonomousInit()
 {
-  //ResetIMU(); //reset imu here in case robot is moved after powerup
+  //ResetIMU(); //reset imu here in case robot is moved after powerup, but messes up PathPlanner reset pose
 }
 
 
