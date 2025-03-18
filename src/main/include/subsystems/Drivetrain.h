@@ -21,12 +21,13 @@
 #include <frc2/command/sysid/SysIdRoutine.h>
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include "subsystems/Elevator.h"
 
 using namespace Constants;
 
 class Drivetrain : public frc2::SubsystemBase {
  public:
-  Drivetrain();
+  Drivetrain(Elevator const &Elevator);
 
   void AutonomousInit();
   
@@ -52,7 +53,11 @@ class Drivetrain : public frc2::SubsystemBase {
 
   void ResetIMU();
 
+  units::meters_per_second_t GetMaxSpeed() const;
+
  private:
+  Elevator const & m_Elevator;
+
   frc::Translation2d m_frontLeftLocation {+0.28575_m, +0.28575_m};
   frc::Translation2d m_frontRightLocation{+0.28575_m, -0.28575_m};
   frc::Translation2d m_backLeftLocation  {-0.28575_m, +0.28575_m};

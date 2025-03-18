@@ -59,7 +59,7 @@ class RobotContainer {
 
 
   Climber     m_Climber;
-  Drivetrain  m_Drivetrain;
+  Drivetrain  m_Drivetrain{ m_Elevator };
   Elevator    m_Elevator;
   CoralIntake m_CoralIntake{ m_Elevator };
   AlgaeIntake m_AlgaeIntake{ m_Elevator };

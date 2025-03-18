@@ -84,7 +84,7 @@ namespace Constants
     constexpr double kCoralAngleUp       = 0.410;
     constexpr double kCoralAngleDn       = 0.710;
     constexpr double kCoralAngleVertical = 0.652;
-    constexpr double kCoralAngleSpeed    = 0.75;
+    constexpr double kCoralAngleSpeed    = 1.00;//0.75 originally
     constexpr double kCoralAnglePlace    = 0.507;
     constexpr double kCoralAngleTopPlace = 0.500;
     constexpr double kCoralAngleHorizontal = 0.410;
@@ -120,7 +120,7 @@ namespace Constants
     constexpr double kElevatorPidP = {0.10};
     constexpr double kElevatorPidI = {0.00};
     constexpr double kElevatorPidD ={0.00};
-    constexpr double kElevatorSpeed = 0.5;
+    constexpr double kElevatorSpeed = 1.00;//0.5 originally
 
     //other control values
     constexpr bool kJoystickFieldRelative = true; //operate joystick controls as field relative if true

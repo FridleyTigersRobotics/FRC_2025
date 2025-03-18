@@ -23,6 +23,12 @@ bool Elevator::IsNearBottom() const
 }
 
 
+// Return the elevator height as a double from 0.0 (bottom) to 1.0 (top)
+double Elevator::GetElevatorHeight() const
+{
+    return m_Elevator0Encoder.GetPosition() / Constants::kPosCoralL4;
+}
+
 
 // ****************************************************************************
 Elevator::Elevator()

@@ -23,7 +23,8 @@ using namespace pathplanner;
 
 frc::ChassisSpeeds CurrentChassisSpeeds = frc::ChassisSpeeds{ units::meters_per_second_t {0.0}, units::meters_per_second_t {0.0}, units::radians_per_second_t {0.0} };
 
-Drivetrain::Drivetrain() 
+Drivetrain::Drivetrain( Elevator const &Elevator ) :
+    m_Elevator{ Elevator } 
 {
     ResetIMU();
     ConfigureAutoBuilder();
@@ -41,6 +42,20 @@ void Drivetrain::AutonomousInit()
 {
   //ResetIMU(); //reset imu here in case robot is moved after powerup, but messes up PathPlanner reset pose
 }
+
+units::meters_per_second_t Drivetrain::GetMaxSpeed() const
+{
+  units::meters_per_second_t maxSpeed = Drivetrain::kMaxSpeed;
+
+  if ( m_Elevator.GetElevatorHeight() > 0.3 )
+  {
+    maxSpeed *= 0.5;
+  }
+
+  return maxSpeed;
+}
+
+
 
 
 void Drivetrain::drive(frc::ChassisSpeeds chassisSpeedinput, bool fieldRelative,
