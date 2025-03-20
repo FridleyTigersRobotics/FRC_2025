@@ -127,8 +127,13 @@ void RobotContainer::ConfigureBindings() {
 
   m_Drivetrain.SetDefaultCommand(frc2::RunCommand(
       [this] {
+        #if 1
+        auto xspeed = - m_yspeedLimiter.Calculate(((m_driveController.GetLeftY() > 0.0) ? (1.0) : (-1.0))*pow(m_driveController.GetLeftY(), 2))  * m_Drivetrain.GetMaxSpeed();
+        auto yspeed = - m_xspeedLimiter.Calculate(((m_driveController.GetLeftX() > 0.0) ? (1.0) : (-1.0))*pow(m_driveController.GetLeftX(), 2))  * m_Drivetrain.GetMaxSpeed();
+        #else
         auto xspeed = - m_yspeedLimiter.Calculate(m_driveController.GetLeftY())  * m_Drivetrain.GetMaxSpeed();
         auto yspeed = - m_xspeedLimiter.Calculate(m_driveController.GetLeftX())  * m_Drivetrain.GetMaxSpeed();
+        #endif
         auto rotspeed = - m_rotLimiter.Calculate(m_driveController.GetRightX()) * Drivetrain::kMaxAngularSpeed;
         frc::ChassisSpeeds sendChassisSpeed = frc::ChassisSpeeds {xspeed, yspeed, rotspeed};
         m_Drivetrain.drive(
