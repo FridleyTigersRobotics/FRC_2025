@@ -68,7 +68,7 @@ namespace Constants
     constexpr double kGrabberPidD{0.00};
     constexpr double kGrab90{11.00};
     constexpr double kGrabPidTol = 2.0;
-    constexpr units::second_t kGrabDelay = units::second_t{1.50};
+    constexpr auto kGrabDelay = units::second_t{1.50};
     constexpr double kWinchTolerance = 1.50;
     constexpr double kClimbPidP{16.0e-6};
     constexpr double kClimbPidI{4.0e-6};
@@ -86,7 +86,7 @@ namespace Constants
     constexpr double kCoralAngleVertical = 0.652;
     constexpr double kCoralAngleSpeed    = 1.00;//0.75 originally
     constexpr double kCoralAnglePlace    = 0.507;
-    constexpr double kCoralAngleTopPlace = 0.500;
+    constexpr double kCoralAngleTopPlace = 0.561;//0.5
     constexpr double kCoralAngleHorizontal = 0.410;
     constexpr int kCoralDetectorMXPpin = 0;
     constexpr int kTOFtrigger = 1600;
