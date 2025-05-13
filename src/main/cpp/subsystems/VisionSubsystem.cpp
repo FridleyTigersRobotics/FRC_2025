@@ -5,6 +5,7 @@
 #include <cameraserver/CameraServer.h>
 #include <photon/PhotonCamera.h>
 #include <Constants.h>
+#include "subsystems/Vision.h"
 
 
 VisionSubsystem::VisionSubsystem() : camera1("Arducam OV9281 USB Camera 001"), camera2("Arducam OV9281 USB Camera 002") {

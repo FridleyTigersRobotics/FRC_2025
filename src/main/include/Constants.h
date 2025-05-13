@@ -3,7 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
-
+#include <frc/apriltag/AprilTagFieldLayout.h>
+#include <frc/apriltag/AprilTagFields.h>
+#include <frc/geometry/Transform3d.h>
+#include <frc/geometry/Translation2d.h>
 #define UseShuffleboardAPI 0
 
 /**
@@ -128,7 +131,17 @@ namespace Constants
     #if UseShuffleboardAPI
     constexpr std::string_view kDriverTabName = "DriverView";
     #endif
+    
+inline const Eigen::Matrix<double, 3, 1> kSingleTagStdDevs{4, 4, 8};
+inline const Eigen::Matrix<double, 3, 1> kMultiTagStdDevs{0.5, 0.5, 1};
 
+inline const frc::AprilTagFieldLayout kTagLayout{
+    frc::AprilTagFieldLayout::LoadField(frc::AprilTagField::kDefaultField)};
+
+    inline const frc::Transform3d kRobotToCam{
+    frc::Translation3d{0.5_m, 0.0_m, 0.5_m},
+    frc::Rotation3d{0_rad, -30_deg, 0_rad}};
+ 
 }
 
 

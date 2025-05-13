@@ -8,6 +8,7 @@
 #include <cameraserver/CameraServer.h>
 #include <Constants.h>
 
+
 class VisionSubsystem : public frc2::SubsystemBase {
  public:
     VisionSubsystem();
@@ -16,4 +17,9 @@ class VisionSubsystem : public frc2::SubsystemBase {
  private:
     photon::PhotonCamera camera1;
     photon::PhotonCamera camera2;
+
+
+
+
+    
 };
