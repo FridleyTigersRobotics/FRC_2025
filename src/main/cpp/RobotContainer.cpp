@@ -170,19 +170,19 @@ void RobotContainer::ConfigureBindings() {
       m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabVertical ),
       frc2::cmd::Wait(0.5_s),
       m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabHorizontal ),
-      frc2::cmd::Wait(0.5_s)
+      frc2::cmd::Wait(3.5_s)
     )
   );
 
   // Climber up/down
-  m_buttons.Button(4).ToggleOnTrue( 
-    frc2::cmd::RepeatingSequence(
-      m_Climber.ChangeStateCommand( Climber::ClimberWinchInManual, Climber::GrabVertical ),
-      frc2::cmd::Wait(1.5_s),
-      m_Climber.ChangeStateCommand( Climber::ClimberWinchOutManual, Climber::GrabVertical ),
-      frc2::cmd::Wait(1.5_s)
-    )
-  );
+  // m_buttons.Button(4).ToggleOnTrue( 
+  //   frc2::cmd::RepeatingSequence(
+  //     m_Climber.ChangeStateCommand( Climber::ClimberWinchInManual, Climber::GrabVertical ),
+  //     frc2::cmd::Wait(1.5_s),
+  //     m_Climber.ChangeStateCommand( Climber::ClimberWinchOutManual, Climber::GrabVertical ),
+  //     frc2::cmd::Wait(1.5_s)
+  //   )
+  // );
 
 
   // Elevator up/outtake
@@ -223,13 +223,13 @@ void RobotContainer::ConfigureBindings() {
     frc2::cmd::RepeatingSequence(
       frc2::cmd::Parallel(
         m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
-        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
         m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
       ),
       frc2::cmd::Wait(1.0_s),
       frc2::cmd::Parallel(
         m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
-        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
         m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn )
       ),
       frc2::cmd::Wait(1.0_s)

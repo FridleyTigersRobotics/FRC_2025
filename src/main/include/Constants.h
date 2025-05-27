@@ -102,7 +102,7 @@ namespace Constants
     constexpr double kAlgaeIntakeSpeed   = 0.5;
     constexpr double kAlgaeAngleUp       = 0.920;
     constexpr double kAlgaeAngleDn       = 0.642;
-    constexpr double kAlgaeAngleSpeed    = 0.75;
+    constexpr double kAlgaeAngleSpeed    = 0.55;
 
 
     //Elevator Control Values
