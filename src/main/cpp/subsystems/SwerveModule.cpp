@@ -110,8 +110,8 @@ void SwerveModule::SetDesiredState(
   double driveMotorOutput = double{ referenceState.speed.value() / m_maxSpeed };
 
   // Set the motor outputs.
-  m_driveMotor.Set( driveMotorOutput );
-  m_turningMotor.Set( turnOutput );
+  m_driveMotor.Set( 0.0 );
+  m_turningMotor.Set( 0.0 );
 
   //frc::SmartDashboard::PutNumber( m_driveRawAngleName, m_turningEncoder.GetRawPos() );
   //frc::SmartDashboard::PutNumber( m_driveAngleName,    m_turningEncoder.GetDistance() );
