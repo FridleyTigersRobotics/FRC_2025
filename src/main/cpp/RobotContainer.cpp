@@ -18,6 +18,8 @@
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/SwerveControllerCommand.h>
 #include <frc2/command/RunCommand.h>
+
+
 #include <frc/TimedRobot.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -114,6 +116,145 @@ RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_Al
 
 void RobotContainer::ConfigureBindings() {
   // Configure your trigger bindings here
+  m_Drivetrain.SetDefaultCommand(frc2::RunCommand(
+      [this] {
+        #if 0
+        auto xspeed = - m_yspeedLimiter.Calculate(m_driveController.GetLeftY()  * m_Drivetrain.GetMaxSpeed();
+        auto yspeed = - m_xspeedLimiter.Calculate(m_driveController.GetLeftX() * m_Drivetrain.GetMaxSpeed();
+        #else
+        auto xspeed = - m_yspeedLimiter.Calculate(m_driveController.GetLeftY())  * m_Drivetrain.GetMaxSpeed();
+        auto yspeed = - m_xspeedLimiter.Calculate(m_driveController.GetLeftX())  * m_Drivetrain.GetMaxSpeed();
+        #endif
+        auto rotspeed = - m_rotLimiter.Calculate(m_driveController.GetRightX()) * Drivetrain::kMaxAngularSpeed;
+        frc::ChassisSpeeds sendChassisSpeed = frc::ChassisSpeeds {xspeed, yspeed, rotspeed};
+        m_Drivetrain.drive(
+            // Multiply by max speed to map the joystick unitless inputs to
+            // actual units. This will map the [-1, 1] to [max speed backwards,
+            // max speed forwards], converting them to actual units.
+            sendChassisSpeed,
+            Constants::kJoystickFieldRelative, frc::TimedRobot::kDefaultPeriod);
+      }, 
+      {&m_Drivetrain}));
+
+  m_CoralIntake.SetDefaultCommand(frc2::RunCommand(
+      [this] {
+        m_CoralIntake.ChangeState( CoralIntake::AngleMaintain, CoralIntake::intakeMaintain );
+      },
+      {&m_CoralIntake}));
+
+  m_AlgaeIntake.SetDefaultCommand(frc2::RunCommand(
+      [this] {
+        m_AlgaeIntake.ChangeState( AlgaeIntake::AngleMaintain );
+      },
+      {&m_AlgaeIntake}));
+
+  m_Elevator.SetDefaultCommand(frc2::RunCommand(
+      [this] {
+        m_Elevator.ChangeState( Elevator::ElevatorMaintain );
+      },
+      {&m_Elevator}));
+
+  m_Climber.SetDefaultCommand(frc2::RunCommand(
+      [this] {
+        m_Climber.ChangeState( Climber::ClimberWinchMaintain, Climber::GrabMaintain );
+      },
+      {&m_Climber}));
+
+
+  // Cycle through things
+
+
+  // Climber Spin
+  m_buttons.Button(1).ToggleOnTrue( 
+    frc2::cmd::RepeatingSequence(
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabVertical ),
+      frc2::cmd::Wait(0.5_s),
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabHorizontal ),
+      frc2::cmd::Wait(0.5_s)
+    )
+  );
+
+  // Climber up/down
+  m_buttons.Button(4).ToggleOnTrue( 
+    frc2::cmd::RepeatingSequence(
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchInManual, Climber::GrabVertical ),
+      frc2::cmd::Wait(1.5_s),
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchOutManual, Climber::GrabVertical ),
+      frc2::cmd::Wait(1.5_s)
+    )
+  );
+
+
+  // Elevator up/outtake
+  m_buttons.Button(3).ToggleOnTrue( 
+    frc2::cmd::RepeatingSequence(
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      frc2::cmd::Wait(3.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeReverse ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp )
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      frc2::cmd::Wait(3.0_s)
+    )
+  );
+
+
+  // m_buttons.Button(3).WhileTrue( frc2::cmd::Parallel(
+  //     m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+  //     m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 ),
+  //     m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+  //   )
+  // );
+
+
+  // Elevator up/shake
+  m_buttons.Button(2).ToggleOnTrue( 
+    frc2::cmd::RepeatingSequence(
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL2 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn )
+      ),
+      frc2::cmd::Wait(1.0_s)
+    )
+  );
+
+
+
+  // Hold
+  m_buttons.Button(9).WhileTrue( frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain)
+    )
+  );
+
+  // All Down / stop
+  m_buttons.Button(10).WhileTrue( frc2::cmd::Parallel(
+      m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
+      m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+    )
+  );
+
+#if 0
 
   // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
   // frc2::Trigger([this] {
@@ -321,7 +462,7 @@ void RobotContainer::ConfigureBindings() {
     m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn)
   ));
 
-
+#endif
 
 }
 

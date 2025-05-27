@@ -123,7 +123,7 @@ namespace Constants
     constexpr double kElevatorPidP = {0.10};
     constexpr double kElevatorPidI = {0.00};
     constexpr double kElevatorPidD ={0.00};
-    constexpr double kElevatorSpeed = 0.80;//0.5 originally
+    constexpr double kElevatorSpeed = 0.40;//0.5 originally
 
     //other control values
     constexpr bool kJoystickFieldRelative = true; //operate joystick controls as field relative if true
