@@ -30,6 +30,87 @@
 #include <frc/DriverStation.h>
 
 
+#include "frc2/command/WaitCommand.h"
+
+#include <fmt/format.h>
+#include <wpi/sendable/SendableBuilder.h>
+
+using namespace frc2;
+
+
+#include <frc/Timer.h>
+#include <units/time.h>
+
+#include "frc2/command/Command.h"
+#include "frc2/command/CommandHelper.h"
+
+
+/**
+ * A command that does nothing but takes a specified amount of time to finish.
+ *
+ * This class is provided by the NewCommands VendorDep
+ */
+class WaitCommand2 : public CommandHelper<Command, WaitCommand2> {
+ public:
+  /**
+   * Creates a new WaitCommand.  This command will do nothing, and end after the
+   * specified duration.
+   *
+   * @param duration the time to wait
+   */
+  explicit WaitCommand2(units::second_t *duration);
+
+  WaitCommand2(WaitCommand2&& other) = default;
+
+  WaitCommand2(const WaitCommand2& other) = default;
+
+  void Initialize() override;
+
+  void End(bool interrupted) override;
+
+  bool IsFinished() override;
+
+  bool RunsWhenDisabled() const override;
+
+  void InitSendable(wpi::SendableBuilder& builder) override;
+
+ protected:
+  /// The timer used for waiting.
+  frc::Timer m_timer;
+
+ private:
+  units::second_t *m_duration;
+};
+
+
+WaitCommand2::WaitCommand2(units::second_t *duration) : m_duration{duration} {
+  SetName(fmt::format("{}: {}", GetName(), *duration));
+}
+
+void WaitCommand2::Initialize() {
+  m_timer.Restart();
+}
+
+void WaitCommand2::End(bool interrupted) {
+  m_timer.Stop();
+}
+
+bool WaitCommand2::IsFinished() {
+  return m_timer.HasElapsed(*m_duration);
+}
+
+bool WaitCommand2::RunsWhenDisabled() const {
+  return true;
+}
+
+void WaitCommand2::InitSendable(wpi::SendableBuilder& builder) {
+  Command::InitSendable(builder);
+  builder.AddDoubleProperty(
+      "duration", [this] { return m_duration->value(); }, nullptr);
+}
+
+
+
 
 RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_AlgaeIntake(m_Elevator) {
   // Initialize all of your commands and subsystems here
@@ -114,7 +195,13 @@ RobotContainer::RobotContainer() : m_Elevator(), m_CoralIntake(m_Elevator), m_Al
 
 }
 
+
+
+
 void RobotContainer::ConfigureBindings() {
+
+
+
   // Configure your trigger bindings here
   m_Drivetrain.SetDefaultCommand(frc2::RunCommand(
       [this] {
@@ -161,32 +248,135 @@ void RobotContainer::ConfigureBindings() {
       {&m_Climber}));
 
 
-  // Cycle through things
+
+  // Adjust delay
+  m_buttons.Button(2).OnTrue( 
+    frc2::RunCommand(
+      [this] {
+        if ( delayTime < 60.0_s )
+        {
+          delayTime += 5.0_s;
+        }
+      },
+      {}
+    ).ToPtr()
+  );
+
+  m_buttons.Button(5).OnTrue( 
+    frc2::RunCommand(
+      [this] {
+        if ( delayTime > 8.0_s )
+        {
+          delayTime -= 5.0_s;
+        }
+      },
+      {}
+    ).ToPtr()
+  );
 
 
-  // Climber Spin
+
+  // Cycle through things - cyc
   m_buttons.Button(1).ToggleOnTrue( 
     frc2::cmd::RepeatingSequence(
-      m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabVertical ),
-      frc2::cmd::Wait(0.5_s),
-      m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabHorizontal ),
-      frc2::cmd::Wait(3.5_s)
+      // place
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      frc2::cmd::Wait(3.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeReverse ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp )
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      //Down and wait
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      WaitCommand2(&delayTime).ToPtr(),
+      // Shake
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn )
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn )
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn )
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      frc2::cmd::Wait(1.0_s),
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL4 ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleDn )
+      ),
+      //Down and wait
+      frc2::cmd::Parallel(
+        m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
+        m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
+        m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      ),
+      WaitCommand2(&delayTime).ToPtr()
     )
   );
 
-  // Climber up/down
-  // m_buttons.Button(4).ToggleOnTrue( 
-  //   frc2::cmd::RepeatingSequence(
-  //     m_Climber.ChangeStateCommand( Climber::ClimberWinchInManual, Climber::GrabVertical ),
-  //     frc2::cmd::Wait(1.5_s),
-  //     m_Climber.ChangeStateCommand( Climber::ClimberWinchOutManual, Climber::GrabVertical ),
-  //     frc2::cmd::Wait(1.5_s)
-  //   )
-  // );
 
 
-  // Elevator up/outtake
-  m_buttons.Button(3).ToggleOnTrue( 
+
+  // Climber Spin - grab
+  m_buttons.Button(7).ToggleOnTrue( 
+    frc2::cmd::RepeatingSequence(
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabVertical ),
+      frc2::cmd::Wait(0.8_s),
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabHorizontal ),
+      frc2::cmd::Wait(5.5_s)
+    )
+  );
+
+  // Elevator up/outtake - plc
+  m_buttons.Button(4).ToggleOnTrue( 
     frc2::cmd::RepeatingSequence(
       frc2::cmd::Parallel(
         m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
@@ -205,21 +395,13 @@ void RobotContainer::ConfigureBindings() {
         m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
         m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
       ),
-      frc2::cmd::Wait(3.0_s)
+      frc2::cmd::Wait(delayTime)
     )
   );
 
 
-  // m_buttons.Button(3).WhileTrue( frc2::cmd::Parallel(
-  //     m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
-  //     m_Elevator.ChangeStateCommand( Elevator::ElevatorCoralL3 ),
-  //     m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
-  //   )
-  // );
-
-
-  // Elevator up/shake
-  m_buttons.Button(2).ToggleOnTrue( 
+  // Elevator up/shake - shk
+  m_buttons.Button(6).ToggleOnTrue( 
     frc2::cmd::RepeatingSequence(
       frc2::cmd::Parallel(
         m_CoralIntake.ChangeStateCommand( CoralIntake::AnglePlaceCoral, CoralIntake::intakeStop ),
@@ -237,20 +419,21 @@ void RobotContainer::ConfigureBindings() {
   );
 
 
-
   // Hold
-  m_buttons.Button(9).WhileTrue( frc2::cmd::Parallel(
+  m_buttons.Button(3).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleMaintain, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorMaintain ),
-      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain)
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleMaintain),
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabMaintain )
     )
   );
 
   // All Down / stop
-  m_buttons.Button(10).WhileTrue( frc2::cmd::Parallel(
+  m_buttons.Button(0).WhileTrue( frc2::cmd::Parallel(
       m_CoralIntake.ChangeStateCommand( CoralIntake::AngleUp, CoralIntake::intakeStop ),
       m_Elevator.ChangeStateCommand( Elevator::ElevatorStartingConfig ),
-      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp)
+      m_AlgaeIntake.ChangeStateCommand( AlgaeIntake::AngleUp),
+      m_Climber.ChangeStateCommand( Climber::ClimberWinchStop, Climber::GrabStop )
     )
   );
 

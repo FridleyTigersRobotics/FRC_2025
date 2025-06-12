@@ -22,6 +22,11 @@
 #include "subsystems/CoralIntake.h"
 #include "subsystems/AlgaeIntake.h"
 #include "subsystems/VisionSubsystem.h"
+#include <frc2/command/Command.h>
+#include <frc2/command/CommandPtr.h>
+#include <frc2/command/Commands.h>
+#include "frc2/command/WaitCommand.h"
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -71,9 +76,13 @@ class RobotContainer {
   frc::SendableChooser<frc2::Command *> autoChooser;
   public:
   frc2::Command *GetAutonomousCommand();
+  frc2::WaitCommand WaitBetweenActionsCommand{3.0_s};
+  //frc2::CommandPtr WaitBetweenActionsCommandPtr = WaitBetweenActionsCommand.ToPtr();
 
   private:
   frc::PowerDistribution ZipZap{1, frc::PowerDistribution::ModuleType::kRev};
+  units::time::second_t delayTime = 3.5_s;
+
 
   #if UseShuffleboardAPI
   nt::GenericEntry *m_AllianceDisp = frc::Shuffleboard::GetTab(Constants::kDriverTabName)
